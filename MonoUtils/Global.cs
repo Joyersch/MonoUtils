@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Content;
 using MonoUtils.Logic;
 using MonoUtils.Logic.Listener;
+using MonoUtils.Logic.Objects.Buttons;
 using MonoUtils.Objects;
 using MonoUtils.Objects.Buttons;
 using MonoUtils.Sound;
@@ -21,6 +22,8 @@ public static class Global
         Cursor.DefaultTexture = content.GetTexture("cursor");
         Letter.DefaultTexture = content.GetTexture("font");
         EmptyButton.DefaultTexture = content.GetTexture("emptybutton");
+        MiniTextButton.DefaultTexture = content.GetTexture("minibutton");
+        SquareTextButton.DefaultTexture = content.GetTexture("squarebutton");
     }
     
     public static string ReadFromResources(string file)
