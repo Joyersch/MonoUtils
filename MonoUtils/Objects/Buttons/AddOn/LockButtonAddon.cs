@@ -19,6 +19,10 @@ public class LockButtonAddon : ButtonAddonBase
     {
         _button = button;
         _text = new Text(Letter.ReverseParse(Letter.Character.LockLocked).ToString(), Position);
+        
+        // Button is locked by default
+        _button.SetDrawColor(Color.DarkGray);
+        
         UpdateText();
         Size = _text.Size;
         _button.SetIndicatorOffset((int) Size.X);

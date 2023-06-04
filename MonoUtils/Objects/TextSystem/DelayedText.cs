@@ -6,14 +6,17 @@ namespace MonoUtils.Objects.TextSystem;
 public class DelayedText : Text
 {
     public event Action FinishedPlaying;
-    
+
     private readonly string _toDisplayText;
     private string _currentlyDisplayed = string.Empty;
     private int _textPointer = int.MaxValue;
 
+    private Vector2 _fullSize;
+    
     private float _savedGameTime;
     private float _waitedStartTime;
     public float StartAfter = 0;
+    private bool _automaticStart;
 
     public bool IsPlaying { get; private set; }
 
@@ -22,38 +25,52 @@ public class DelayedText : Text
 
     public new static Vector2 DefaultLetterSize => new Vector2(16, 16);
 
-    public DelayedText(string text) : this(text, Vector2.Zero, DefaultLetterSize, 1)
+    public DelayedText(string text) : this(text, true, Vector2.Zero, DefaultLetterSize,
+        1)
     {
     }
     
-    public DelayedText(string text, Vector2 position) : this(text, position, DefaultLetterSize, 1)
+    public DelayedText(string text, bool automaticStart) : this(text, automaticStart, Vector2.Zero, DefaultLetterSize,
+        1)
     {
     }
 
-    public DelayedText(string text, Vector2 position, float scale) : this(text, position, DefaultLetterSize * scale, 1)
+    public DelayedText(string text, bool automaticStart, Vector2 position) : this(text, automaticStart, position,
+        DefaultLetterSize, 1)
     {
     }
 
-    public DelayedText(string text, Vector2 position, float scale, int spacing) : this(text, position,
+    public DelayedText(string text, bool automaticStart, Vector2 position, float scale) : this(text, automaticStart,
+        position,
+        DefaultLetterSize * scale, 1)
+    {
+    }
+
+    public DelayedText(string text, bool automaticStart, Vector2 position, float scale, int spacing) : this(text,
+        automaticStart,
+        position,
         DefaultLetterSize * scale, spacing)
     {
     }
 
-    public DelayedText(string text, Vector2 position, Vector2 letterSize, int spacing) : base(string.Empty, position,
-        letterSize, spacing)
+    public DelayedText(string text, bool automaticStart, Vector2 position, Vector2 letterSize, int spacing) : base(
+        string.Empty, position, letterSize, spacing)
     {
         _toDisplayText = text;
+        _automaticStart = automaticStart;
+        _fullSize = GetFullBaseCopy().GetSize();
     }
 
     public override void Update(GameTime gameTime)
     {
-        var passedGameTime =  (float) gameTime.ElapsedGameTime.TotalMilliseconds;
+        var passedGameTime = (float) gameTime.ElapsedGameTime.TotalMilliseconds;
         bool canDisplay = true;
         if (_waitedStartTime > 0)
         {
             _waitedStartTime -= passedGameTime;
             canDisplay = false;
         }
+
         if (_textPointer < _toDisplayText.Length && canDisplay)
             _savedGameTime += passedGameTime;
 
@@ -67,9 +84,9 @@ public class DelayedText : Text
 
         if (Value != _currentlyDisplayed)
             ChangeText(_currentlyDisplayed);
-        
+
         base.Update(gameTime);
-        
+
         if (IsPlaying && _textPointer == _toDisplayText.Length)
         {
             IsPlaying = false;
@@ -77,6 +94,9 @@ public class DelayedText : Text
             FinishedPlaying?.Invoke();
         }
     }
+
+    public override Vector2 GetSize()
+        => _fullSize;
 
     public void Start()
     {
@@ -86,6 +106,6 @@ public class DelayedText : Text
         IsPlaying = true;
     }
 
-    public Text GetBaseCopy()
+    public Text GetFullBaseCopy()
         => new Text(_toDisplayText, Position, Size, Spacing);
 }

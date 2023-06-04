@@ -13,6 +13,8 @@ public class OverTimeInvoker : IManageable
 
     public event Action Trigger;
 
+    public bool InvokeOnce { get; set; } = false;
+
     public OverTimeInvoker(double invokeTime, bool start = true)
     {
         _invokeTime = invokeTime;
@@ -31,6 +33,8 @@ public class OverTimeInvoker : IManageable
         {
             _currentTime -= _invokeTime;
             Trigger?.Invoke();
+            if (InvokeOnce)
+                Stop();
         }
     }
 

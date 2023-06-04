@@ -173,10 +173,10 @@ public class Text : IColorable, IMoveable, IManageable
         return build;
     }
 
-    public Vector2 GetPosition()
+    public virtual Vector2 GetPosition()
         => Position;
 
-    public Vector2 GetSize()
+    public virtual Vector2 GetSize()
         => Rectangle.Size.ToVector2();
 
     public void Move(Vector2 newPosition)
