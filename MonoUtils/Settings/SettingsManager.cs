@@ -19,7 +19,6 @@ public static class SettingsManager
 
     public static T Get<T>()
     {
-        Log.WriteLine( typeof(T).Name);
         return (T) _settings.First(s => s.Name == typeof(T).Name);
     }
 
