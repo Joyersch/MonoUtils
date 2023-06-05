@@ -6,7 +6,6 @@ using MonoUtils.Logic.Objects.Buttons;
 using MonoUtils.Objects;
 using MonoUtils.Objects.Buttons;
 using MonoUtils.Sound;
-using MonoUtils.Ui;
 using MonoUtils.Ui.TextSystem;
 
 namespace MonoUtils;
