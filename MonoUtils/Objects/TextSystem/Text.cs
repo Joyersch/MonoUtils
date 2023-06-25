@@ -90,6 +90,11 @@ public class Text : IColorable, IMoveable, IManageable
         CreateLetters(ParseArray(text.ToCharArray()));
     }
 
+    public void AppendText(string text)
+    {
+        ChangeText(_represent + text);
+    }
+
     private void CreateLetters(Letter.Character[] characters)
     {
         var letters = new List<Letter>();

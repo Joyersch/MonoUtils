@@ -21,13 +21,13 @@ public static class InputReaderKeyboard
 
         if (!onlyOnces)
             return isKeyDown;
-        
+
         if (!_currentlyPressedKeys.ContainsKey(search))
             _currentlyPressedKeys.Add(search, isKeyDown);
 
         var returnValue = !_currentlyPressedKeys[search] && isKeyDown;
         _currentlyPressedKeys[search] = isKeyDown;
-        
+
         return returnValue;
     }
 
@@ -39,7 +39,7 @@ public static class InputReaderKeyboard
     public static bool AnyKeyPress(bool onlyOnces)
     {
         if (Keyboard.GetState().GetPressedKeys().Length == 0)
-            return false;
+            return _anyKeyPressed = false;
 
         if (_anyKeyPressed)
             return false;
@@ -49,4 +49,7 @@ public static class InputReaderKeyboard
 
         return true;
     }
+
+    public static Dictionary<Keys, bool> GetCurrentKeys()
+        => _currentlyPressedKeys;
 }
