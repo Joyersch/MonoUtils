@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoUtils.Logic;
@@ -30,7 +31,7 @@ public class Text : IColorable, IMoveable, IManageable
     public Text(string text) : this(text, Vector2.Zero, 1, 1)
     {
     }
-    
+
     public Text(string text, float scale) : this(text, Vector2.Zero, DefaultLetterSize * scale, 1)
     {
     }
@@ -86,8 +87,9 @@ public class Text : IColorable, IMoveable, IManageable
 
     public void ChangeText(string text)
     {
-        _represent = text;
-        CreateLetters(ParseArray(text.ToCharArray()));
+        string input = PrepareText(text);
+        _represent = input;
+        CreateLetters(ParseArray(input.ToCharArray()));
     }
 
     public void AppendText(string text)
@@ -104,7 +106,7 @@ public class Text : IColorable, IMoveable, IManageable
         foreach (Letter.Character character in characters)
         {
             var letter = new Letter(new Vector2(length, 0) + Position, Size, character);
-            letter.Position += new Vector2(0, 8F * letter.InitialScale.Y) - new Vector2(0, letter.Rectangle.Height);
+            letter.Move(letter.Position + new Vector2(0, 8F * letter.InitialScale.Y) - new Vector2(0, letter.Rectangle.Height));
             length += (int) ((letter.FrameSpacing.Width + Spacing) * sizeScale);
             letters.Add(letter);
         }
@@ -150,21 +152,21 @@ public class Text : IColorable, IMoveable, IManageable
             return;
         GeneralDraw(spriteBatch);
     }
-    
+
     public virtual void DrawStatic(SpriteBatch spriteBatch)
     {
         if (!IsStatic)
             return;
         GeneralDraw(spriteBatch);
     }
-    
+
     protected virtual void GeneralDraw(SpriteBatch spriteBatch)
     {
         foreach (var letter in _letters)
         {
             letter.Draw(spriteBatch);
         }
-    } 
+    }
 
     private string BuildString()
     {
@@ -188,5 +190,23 @@ public class Text : IColorable, IMoveable, IManageable
     {
         ChangePosition(newPosition);
         UpdateRectangle();
+    }
+
+    private string PrepareText(string input)
+    {
+        StringBuilder result = new StringBuilder();
+
+        foreach (char c in input)
+        {
+            if (c == '\b')
+            {
+                if (result.Length > 0)
+                    result.Remove(result.Length - 1, 1);
+            }
+            else
+                result.Append(c);
+        }
+
+        return result.ToString();
     }
 }

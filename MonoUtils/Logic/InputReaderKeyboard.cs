@@ -38,7 +38,8 @@ public static class InputReaderKeyboard
     /// <returns>true if any key is pressed, else false</returns>
     public static bool AnyKeyPress(bool onlyOnces)
     {
-        if (Keyboard.GetState().GetPressedKeys().Length == 0)
+        var x = Keyboard.GetState().GetPressedKeys();
+        if (x.Length == 0)
             return _anyKeyPressed = false;
 
         if (_anyKeyPressed)

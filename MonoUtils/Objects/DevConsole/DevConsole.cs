@@ -1,4 +1,6 @@
 using System.Net.NetworkInformation;
+using System.Security.Cryptography;
+using System.Security.Principal;
 using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -24,6 +26,8 @@ public class DevConsole : GameObject
         }
     }
 
+    private bool _isActive;
+    public Keys Activator = Keys.F10;
     private Text _currentInput;
     private Backlog _backlog;
     private List<string> _toDisplay;
@@ -32,10 +36,12 @@ public class DevConsole : GameObject
 
     private Text[] _lines;
 
-    public DevConsole(Vector2 position, Vector2 size, float scale = 1F) : base(position, size)
+    public DevConsole(GameWindow window, Vector2 position, Vector2 size, float scale = 1F) : base(position, size)
     {
+        window.TextInput += Window_TextInput;
         background = new GameObject(position, size);
         _currentInput = new Text(string.Empty, scale);
+        
         _maxLinesY = (int) (size / _currentInput.Size).Y - 1;
         _backlog = new Backlog();
         _toDisplay = new List<string>();
@@ -52,8 +58,13 @@ public class DevConsole : GameObject
 
     public override void Update(GameTime gameTime)
     {
+        if (InputReaderKeyboard.CheckKey(Activator, true))
+            _isActive = !_isActive;
+
+        if (!_isActive)
+            return;
+
         base.Update(gameTime);
-        _currentInput.AppendText(InputProcessorKeyboard.GetPressedText());
 
         if (InputReaderKeyboard.CheckKey(Keys.Up, true))
             _backlog.MovePointerUp();
@@ -61,19 +72,11 @@ public class DevConsole : GameObject
         if (InputReaderKeyboard.CheckKey(Keys.Down, true))
             _backlog.MovePointerDown();
 
-        if (InputReaderKeyboard.CheckKey(Keys.Enter, true))
-        {
-            List<string> output = CommandProcessor.Process(_currentInput.Value);
-            _backlog.Add(_currentInput.Value);
-            _backlog.AddRange(output);
-            if (_backlog.Count > _maxLinesY)
-                _backlog.MovePointerDown();
-            _currentInput.ChangeText(string.Empty);
-        }
-
         _toDisplay = _backlog.GetRangeFromPointer(_maxLinesY);
+
         for (int line = 0; line < _lines.Length; line++)
         {
+            _lines[line].Move(Position + new Vector2(0, _currentInput.Size.Y) * line);
             if (_toDisplay.Count > line)
                 _lines[line].ChangeText(_toDisplay[line]);
             else
@@ -83,7 +86,7 @@ public class DevConsole : GameObject
 
     public override void Draw(SpriteBatch spriteBatch)
     {
-        if (_isStatic)
+        if (_isStatic || !_isActive)
             return;
 
         background.Draw(spriteBatch);
@@ -94,12 +97,33 @@ public class DevConsole : GameObject
 
     public override void DrawStatic(SpriteBatch spriteBatch)
     {
-        if (!_isStatic)
+        if (!_isStatic || !_isActive)
             return;
 
         background.DrawStatic(spriteBatch);
         foreach (Text text in _lines)
             text.DrawStatic(spriteBatch);
         _currentInput.DrawStatic(spriteBatch);
+    }
+
+    private void Window_TextInput(object sender, TextInputEventArgs e)
+    {
+        if (e.Key == Activator)
+            _isActive = !_isActive;
+
+        if (!_isActive)
+            return;
+        if (e.Key != Keys.Enter)
+        {
+            _currentInput.AppendText(e.Character.ToString());
+            return;
+        }
+        
+        List<string> output = CommandProcessor.Process(_currentInput.Value);
+        _backlog.Add(_currentInput.Value);
+        _backlog.AddRange(output);
+        if (_backlog.Count > _maxLinesY)
+            _backlog.MovePointerDown();
+        _currentInput.ChangeText(string.Empty);
     }
 }

@@ -4,6 +4,8 @@ public static class CommandProcessor
 {
     public static List<string> Process(string command)
     {
-        return new[] {command}.ToList();
+        if (command == "ping")
+            return new[] {"pong"}.ToList();
+        return new List<string>();
     } 
 }

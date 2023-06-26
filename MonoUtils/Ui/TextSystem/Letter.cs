@@ -140,7 +140,7 @@ public class Letter : GameObject, IMoveable
             Character.SmallI => new Rectangle(1, 0, 1, 8),
             Character.SmallJ => new Rectangle(1, 0, 2, 8),
             Character.SmallK => new Rectangle(1, 0, 3, 8),
-            Character.SmallL => new Rectangle(1, 0, 3, 8),
+            Character.SmallL => new Rectangle(1, 0, 2, 8),
             Character.SmallM => new Rectangle(1, 2, 5, 6),
             Character.SmallN => new Rectangle(1, 2, 4, 6),
             Character.SmallO => new Rectangle(1, 2, 4, 6),

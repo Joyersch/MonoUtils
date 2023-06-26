@@ -5,6 +5,10 @@ namespace MonoUtils.Objects;
 
 public static class InputProcessorKeyboard
 {
+    /// <summary>
+    /// Use the GameWindow.TextInput event instead!
+    /// </summary>
+    /// <returns>the text of the currently pressed keys</returns>
     public static string GetPressedText()
     {
         var builder = new StringBuilder();
