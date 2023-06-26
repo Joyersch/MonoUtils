@@ -5,7 +5,9 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using MonoUtils.Logic;
 using MonoUtils.Objects.TextSystem;
+using MonoUtils.Ui.TextSystem;
 
 namespace MonoUtils.Objects;
 
@@ -33,15 +35,19 @@ public class DevConsole : GameObject
     private List<string> _toDisplay;
     private int _maxLinesY;
     private GameObject background;
+    private bool _isDrawingCursor;
+    private OverTimeInvoker _drawCursorInvoker;
 
     private Text[] _lines;
+
+    public new static Vector2 DefaultSize = new Vector2(1280, 720);
 
     public DevConsole(GameWindow window, Vector2 position, Vector2 size, float scale = 1F) : base(position, size)
     {
         window.TextInput += Window_TextInput;
         background = new GameObject(position, size);
         _currentInput = new Text(string.Empty, scale);
-        
+
         _maxLinesY = (int) (size / _currentInput.Size).Y - 1;
         _backlog = new Backlog();
         _toDisplay = new List<string>();
@@ -53,9 +59,18 @@ public class DevConsole : GameObject
             _lines[i].Move(position + new Vector2(0, _currentInput.Size.Y) * i);
         }
 
+        _drawCursorInvoker = new OverTimeInvoker(500F);
+        _drawCursorInvoker.Trigger += UpdateCursor;
+
         _currentInput.Move(new Vector2(0, size.Y - _currentInput.Size.Y));
     }
 
+    private void UpdateCursor()
+    {
+        _isDrawingCursor = !_isDrawingCursor;
+        _currentInput.AppendText(_isDrawingCursor ? "_" : "\b");
+    }
+    
     public override void Update(GameTime gameTime)
     {
         if (InputReaderKeyboard.CheckKey(Activator, true))
@@ -66,6 +81,8 @@ public class DevConsole : GameObject
 
         base.Update(gameTime);
 
+        _drawCursorInvoker.Update(gameTime);
+        
         if (InputReaderKeyboard.CheckKey(Keys.Up, true))
             _backlog.MovePointerUp();
 
@@ -108,17 +125,28 @@ public class DevConsole : GameObject
 
     private void Window_TextInput(object sender, TextInputEventArgs e)
     {
+        string c = e.Character.ToString();
         if (e.Key == Activator)
             _isActive = !_isActive;
 
         if (!_isActive)
             return;
+        
+        if (_isDrawingCursor)
+            _currentInput.AppendText("\b");
+
+        if (Letter.Parse(e.Character) == Letter.Character.Full
+            && e.Character != '\b')
+            c = "";
+
         if (e.Key != Keys.Enter)
         {
-            _currentInput.AppendText(e.Character.ToString());
+            _currentInput.AppendText(c);
+            if (_isDrawingCursor)
+                _currentInput.AppendText("_");
             return;
         }
-        
+
         List<string> output = CommandProcessor.Process(_currentInput.Value);
         _backlog.Add(_currentInput.Value);
         _backlog.AddRange(output);
