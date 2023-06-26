@@ -70,7 +70,7 @@ public class DevConsole : GameObject
         _isDrawingCursor = !_isDrawingCursor;
         _currentInput.AppendText(_isDrawingCursor ? "_" : "\b");
     }
-    
+
     public override void Update(GameTime gameTime)
     {
         if (InputReaderKeyboard.CheckKey(Activator, true))
@@ -82,7 +82,7 @@ public class DevConsole : GameObject
         base.Update(gameTime);
 
         _drawCursorInvoker.Update(gameTime);
-        
+
         if (InputReaderKeyboard.CheckKey(Keys.Up, true))
             _backlog.MovePointerUp();
 
@@ -131,7 +131,7 @@ public class DevConsole : GameObject
 
         if (!_isActive)
             return;
-        
+
         if (_isDrawingCursor)
             _currentInput.AppendText("\b");
 
@@ -147,11 +147,16 @@ public class DevConsole : GameObject
             return;
         }
 
-        List<string> output = CommandProcessor.Process(_currentInput.Value);
+        var output = CommandProcessor.Process(this, _currentInput.Value);
         _backlog.Add(_currentInput.Value);
         _backlog.AddRange(output);
+
         if (_backlog.Count > _maxLinesY)
             _backlog.MovePointerDown();
+
         _currentInput.ChangeText(string.Empty);
     }
+
+    public void Write(string text)
+        => _backlog.Add(text);
 }

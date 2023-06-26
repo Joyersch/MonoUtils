@@ -4,9 +4,9 @@ namespace MonoUtils.Logging;
 
 public static class Log
 {
+    public static LogAdapter Out { get; set; }
     public static void WriteLine(string msg)
     {
-        // This is temporary
-        Console.WriteLine(msg);
+        Out.Write(msg);
     }
 }
