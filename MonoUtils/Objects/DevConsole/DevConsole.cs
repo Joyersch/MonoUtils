@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using MonoUtils.Logic;
 using MonoUtils.Objects.TextSystem;
+using MonoUtils.Ui;
 using MonoUtils.Ui.TextSystem;
 
 namespace MonoUtils.Objects;
@@ -21,10 +22,10 @@ public class DevConsole : GameObject
         set
         {
             _isStatic = value;
+            base.IsStatic = value;
             for (int i = 0; i < _maxLinesY; i++)
                 _lines[i].IsStatic = value;
             _currentInput.IsStatic = value;
-            background.IsStatic = value;
         }
     }
 
@@ -34,18 +35,33 @@ public class DevConsole : GameObject
     private Backlog _backlog;
     private List<string> _toDisplay;
     private int _maxLinesY;
-    private GameObject background;
     private bool _isDrawingCursor;
     private OverTimeInvoker _drawCursorInvoker;
+
+    public ContextProvider Context { get; private set; }
 
     private Text[] _lines;
 
     public new static Vector2 DefaultSize = new Vector2(1280, 720);
+    public new static Texture2D DefaultTexture;
 
-    public DevConsole(GameWindow window, Vector2 position, Vector2 size, float scale = 1F) : base(position, size)
+    public new static TextureHitboxMapping DefaultMapping => new TextureHitboxMapping()
+    {
+        ImageSize = new Vector2(128, 72),
+        Hitboxes = new[]
+        {
+            new Rectangle(0, 0, 128, 72)
+        }
+    };
+
+    public DevConsole(GameWindow window, Vector2 position) : base(position, DefaultSize, DefaultTexture, DefaultMapping)
+    {
+    }
+
+    public DevConsole(GameWindow window, Vector2 position, Vector2 size, float scale = 1F) : base(position, size,
+        DefaultTexture, DefaultMapping)
     {
         window.TextInput += Window_TextInput;
-        background = new GameObject(position, size);
         _currentInput = new Text(string.Empty, scale);
 
         _maxLinesY = (int) (size / _currentInput.Size).Y - 1;
@@ -63,6 +79,8 @@ public class DevConsole : GameObject
         _drawCursorInvoker.Trigger += UpdateCursor;
 
         _currentInput.Move(new Vector2(0, size.Y - _currentInput.Size.Y));
+
+        Context = new ContextProvider();
     }
 
     private void UpdateCursor()
@@ -105,8 +123,8 @@ public class DevConsole : GameObject
     {
         if (_isStatic || !_isActive)
             return;
-
-        background.Draw(spriteBatch);
+        
+        base.Draw(spriteBatch);
         foreach (Text text in _lines)
             text.Draw(spriteBatch);
         _currentInput.Draw(spriteBatch);
@@ -117,7 +135,7 @@ public class DevConsole : GameObject
         if (!_isStatic || !_isActive)
             return;
 
-        background.DrawStatic(spriteBatch);
+        base.DrawStatic(spriteBatch);
         foreach (Text text in _lines)
             text.DrawStatic(spriteBatch);
         _currentInput.DrawStatic(spriteBatch);
@@ -147,7 +165,7 @@ public class DevConsole : GameObject
             return;
         }
 
-        var output = CommandProcessor.Process(this, _currentInput.Value);
+        var output = CommandProcessor.Process(this, _currentInput.Value, Context);
         _backlog.Add(_currentInput.Value);
         _backlog.AddRange(output);
 

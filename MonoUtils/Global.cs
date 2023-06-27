@@ -23,6 +23,7 @@ public static class Global
         EmptyButton.DefaultTexture = content.GetTexture("emptybutton");
         MiniTextButton.DefaultTexture = content.GetTexture("minibutton");
         SquareTextButton.DefaultTexture = content.GetTexture("squarebutton");
+        DevConsole.DefaultTexture = content.GetTexture("console");
     }
     
     public static string ReadFromResources(string file)
