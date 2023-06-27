@@ -38,7 +38,7 @@ public static class SettingsManager
             }
             catch (Exception exception)
             {
-                Log.WriteLine(exception.Message);
+                Log.Write(exception.Message);
             }
         }
            

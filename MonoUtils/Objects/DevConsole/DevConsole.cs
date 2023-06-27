@@ -12,7 +12,7 @@ using MonoUtils.Ui.TextSystem;
 
 namespace MonoUtils.Objects;
 
-public class DevConsole : GameObject
+public class DevConsole : GameObject, IMoveable
 {
     private bool _isStatic;
 
@@ -123,7 +123,7 @@ public class DevConsole : GameObject
     {
         if (_isStatic || !_isActive)
             return;
-        
+
         base.Draw(spriteBatch);
         foreach (Text text in _lines)
             text.Draw(spriteBatch);
@@ -175,6 +175,28 @@ public class DevConsole : GameObject
         _currentInput.ChangeText(string.Empty);
     }
 
-    public void Write(string text)
-        => _backlog.Add(text);
+    public void Write(string text, int line = -1)
+    {
+        if (line == -1 || _backlog.Count <= line)
+            _backlog.Add(text);
+        else
+            _backlog[line] = text;
+    }
+
+    public Vector2 GetPosition()
+        => Position;
+
+    public Vector2 GetSize()
+        => Size;
+
+    public void Move(Vector2 newPosition)
+    {
+        var offset = newPosition - Position;
+
+        foreach (var line in _lines)
+            line.Move(line.Position + offset);
+
+        _currentInput.Move(_currentInput.Position + offset);
+        Position = newPosition;
+    }
 }

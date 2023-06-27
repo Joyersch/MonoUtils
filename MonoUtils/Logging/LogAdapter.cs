@@ -7,6 +7,8 @@ public class LogAdapter
     private readonly TextWriter _writer;
     private readonly DevConsole _console;
 
+    private int _line;
+
     public LogAdapter(TextWriter writer)
     {
         _writer = writer;
@@ -17,11 +19,21 @@ public class LogAdapter
         _console = console;
     }
 
-    public void Write(string text)
+    public void SetLine(int line)
     {
         if (_writer is not null)
+            throw new Exception("line not supported by TextWriter");
+        _line = line;
+    }
+
+    public void Write(string text)
+    {
+
+        if (_writer is not null)
             _writer.Write(text);
+
         if (_console is not null)
-            _console.Write(text);
+            _console.Write(text, _line);
+            
     }
 }
