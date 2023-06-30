@@ -13,12 +13,7 @@ public class OpacityCommand : ICommand
         if (!float.TryParse(options[0].ToString(), out float value))
             return new[] {@$"Invalid value ""{value}"""};
 
-        if (value > 1)
-            return new[] {"Value to big"};
-
-        if (value < 0)
-            return new[] {"Value to small"};
-        console.DrawColor = new Color(console.DrawColor, value);
+        console.DrawColor = new Color(value, value, value, value);
         return new[] {"Changed opacity for console"};
     }
 }
