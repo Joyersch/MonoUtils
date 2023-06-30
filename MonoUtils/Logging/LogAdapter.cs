@@ -4,8 +4,8 @@ namespace MonoUtils.Logging;
 
 public class LogAdapter
 {
-    private readonly TextWriter _writer;
-    private readonly DevConsole _console;
+    private TextWriter _writer;
+    private DevConsole _console;
 
     private int _line;
 
@@ -35,5 +35,17 @@ public class LogAdapter
         if (_console is not null)
             _console.Write(text, _line);
             
+    }
+
+    public void UpdateReference(DevConsole console)
+    {
+        _console = console;
+        _writer = null;
+    }
+    
+    public void UpdateReference(TextWriter writer)
+    {
+        _console = null;
+        _writer = writer;
     }
 }

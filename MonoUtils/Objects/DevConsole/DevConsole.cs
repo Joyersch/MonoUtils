@@ -1,7 +1,4 @@
 using System.Net.NetworkInformation;
-using System.Security.Cryptography;
-using System.Security.Principal;
-using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -32,7 +29,7 @@ public class DevConsole : GameObject, IMoveable
     private bool _isActive;
     public Keys Activator = Keys.F10;
     private Text _currentInput;
-    private Backlog _backlog;
+    public Backlog Backlog { get; private set; }
     private List<string> _toDisplay;
     private int _maxLinesY;
     private bool _isDrawingCursor;
@@ -42,7 +39,7 @@ public class DevConsole : GameObject, IMoveable
 
     private Text[] _lines;
 
-    public new static Vector2 DefaultSize = new Vector2(1280, 720);
+    public new static Vector2 DefaultSize = new Vector2(1280, 720) / 2;
     public new static Texture2D DefaultTexture;
 
     public new static TextureHitboxMapping DefaultMapping => new TextureHitboxMapping()
@@ -54,18 +51,24 @@ public class DevConsole : GameObject, IMoveable
         }
     };
 
-    public DevConsole(GameWindow window, Vector2 position) : base(position, DefaultSize, DefaultTexture, DefaultMapping)
+    public DevConsole(GameWindow window, Vector2 position) : this(window, position, 1F, null)
     {
     }
 
-    public DevConsole(GameWindow window, Vector2 position, Vector2 size, float scale = 1F) : base(position, size,
+    public DevConsole(GameWindow window, Vector2 position, float scale) : this(window, position, scale, null)
+    {
+    }
+
+    public DevConsole(GameWindow window, Vector2 position, float scale, DevConsole? console) : base(position,
+        DefaultSize * scale,
         DefaultTexture, DefaultMapping)
     {
         window.TextInput += Window_TextInput;
         _currentInput = new Text(string.Empty, scale);
 
-        _maxLinesY = (int) (size / _currentInput.Size).Y - 1;
-        _backlog = new Backlog();
+        Backlog = console is null ? new Backlog() : console.Backlog;
+
+        _maxLinesY = (int) (Size / _currentInput.Size).Y - 1;
         _toDisplay = new List<string>();
 
         _lines = new Text[_maxLinesY];
@@ -78,9 +81,12 @@ public class DevConsole : GameObject, IMoveable
         _drawCursorInvoker = new OverTimeInvoker(500F);
         _drawCursorInvoker.Trigger += UpdateCursor;
 
-        _currentInput.Move(new Vector2(0, size.Y - _currentInput.Size.Y));
+        _currentInput.Move(new Vector2(0, Size.Y - _currentInput.Size.Y));
 
-        Context = new ContextProvider();
+        Context = console is null ? new ContextProvider() : console.Context;
+        IsStatic = console?.IsStatic ?? false;
+        DrawColor = console?.DrawColor ?? DrawColor;
+        _isActive = console?._isActive ?? false;
     }
 
     private void UpdateCursor()
@@ -102,12 +108,12 @@ public class DevConsole : GameObject, IMoveable
         _drawCursorInvoker.Update(gameTime);
 
         if (InputReaderKeyboard.CheckKey(Keys.Up, true))
-            _backlog.MovePointerUp();
+            Backlog.MovePointerUp();
 
         if (InputReaderKeyboard.CheckKey(Keys.Down, true))
-            _backlog.MovePointerDown();
+            Backlog.MovePointerDown();
 
-        _toDisplay = _backlog.GetRangeFromPointer(_maxLinesY);
+        _toDisplay = Backlog.GetRangeFromPointer(_maxLinesY);
 
         for (int line = 0; line < _lines.Length; line++)
         {
@@ -166,21 +172,21 @@ public class DevConsole : GameObject, IMoveable
         }
 
         var output = CommandProcessor.Process(this, _currentInput.Value, Context);
-        _backlog.Add(_currentInput.Value);
-        _backlog.AddRange(output);
+        Backlog.Add(_currentInput.Value);
+        Backlog.AddRange(output);
 
-        if (_backlog.Count > _maxLinesY)
-            _backlog.MovePointerDown();
+        if (Backlog.Count > _maxLinesY)
+            Backlog.MovePointerDown();
 
         _currentInput.ChangeText(string.Empty);
     }
 
     public void Write(string text, int line = -1)
     {
-        if (line == -1 || _backlog.Count <= line)
-            _backlog.Add(text);
+        if (line == -1 || Backlog.Count <= line)
+            Backlog.Add(text);
         else
-            _backlog[line] = text;
+            Backlog[line] = text;
     }
 
     public Vector2 GetPosition()
@@ -188,6 +194,7 @@ public class DevConsole : GameObject, IMoveable
 
     public Vector2 GetSize()
         => Size;
+
 
     public void Move(Vector2 newPosition)
     {

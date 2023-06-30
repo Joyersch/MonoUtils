@@ -38,8 +38,7 @@ public class MousePointer : GameObject, IMoveable
         DefaultTexture,
         DefaultMapping)
     {
-        _window = window;
-        _windowCenter = new Point((int) _window.X / 2, (int) _window.Y / 2);
+        UpdateWindow(window);
         _camera = camera;
         _draw = draw;
     }
@@ -74,7 +73,10 @@ public class MousePointer : GameObject, IMoveable
     }
 
     public void UpdateWindow(Vector2 window)
-        => _window = window;
+    {
+        _window = window;
+        _windowCenter = new Point((int) _window.X / 2, (int) _window.Y / 2);
+    }
 
     public Vector2 GetPosition()
         => Position;

@@ -37,7 +37,7 @@ public class Display
         Target = new RenderTarget2D(this._device, (int) CustomWidth, (int) CustomHeight);
     }
 
-    public void Update(GameTime gameTime)
+    public void Update()
     {
         Screen = _device.PresentationParameters.Bounds;
         Bounds = _device.PresentationParameters.Bounds.Size.ToVector2();
