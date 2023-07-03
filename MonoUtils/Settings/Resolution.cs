@@ -1,8 +1,7 @@
-using System;
 using Microsoft.Xna.Framework;
 using MonoUtils.Logic;
 
-namespace NoNameButtonGame.Storage;
+namespace MonoUtils.Settings;
 
 public class Resolution : IChangeable
 {

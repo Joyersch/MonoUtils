@@ -1,4 +1,4 @@
-using MonoUtils.Objects;
+using MonoUtils.Ui.Objects.Console;
 
 namespace MonoUtils.Logging;
 

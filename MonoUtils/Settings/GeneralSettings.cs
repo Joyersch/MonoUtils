@@ -1,6 +1,6 @@
 using MonoUtils.Logic;
 
-namespace NoNameButtonGame.Storage;
+namespace MonoUtils.Settings;
 
 public class GeneralSettings : ISettings, IChangeable
 {

@@ -1,0 +1,17 @@
+namespace MonoUtils.Ui.Objects.Console;
+
+public class ContextProvider
+{
+    private Dictionary<string, object> Context { get; set; } = new();
+
+    public void RegisterContext(string index, object context)
+    {
+        if (Context.All(d => d.Key != index))
+            Context.Add(index, context);
+    }
+
+    public T GetValue<T> (string index)
+        => (T) Context
+            .Where(d => d.Key == index)
+            .Select(d => d.Value).FirstOrDefault();
+}

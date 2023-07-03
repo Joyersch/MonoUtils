@@ -1,8 +1,7 @@
-using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using MonoUtils.Ui.Color;
 
-namespace MonoUtils.Logic.Listener;
+namespace MonoUtils.Ui.Logic.Listener;
 
 public class ColorListener
 {

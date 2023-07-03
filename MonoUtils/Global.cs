@@ -2,11 +2,11 @@
 using Microsoft.Xna.Framework.Content;
 using MonoUtils.Logic;
 using MonoUtils.Logic.Listener;
-using MonoUtils.Logic.Objects.Buttons;
-using MonoUtils.Objects;
-using MonoUtils.Objects.Buttons;
 using MonoUtils.Sound;
-using MonoUtils.Ui.TextSystem;
+using MonoUtils.Ui.Objects;
+using MonoUtils.Ui.Objects.Buttons;
+using MonoUtils.Ui.Objects.Console;
+using MonoUtils.Ui.Objects.TextSystem;
 
 namespace MonoUtils;
 

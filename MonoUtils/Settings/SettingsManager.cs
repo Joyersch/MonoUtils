@@ -1,7 +1,6 @@
 using MonoUtils.Logging;
-using Newtonsoft.Json;
 
-namespace NoNameButtonGame.Storage;
+namespace MonoUtils.Settings;
 
 public static class SettingsManager
 {

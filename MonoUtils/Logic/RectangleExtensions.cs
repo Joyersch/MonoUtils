@@ -1,6 +1,6 @@
 using Framework = Microsoft.Xna.Framework;
 
-namespace NoNameButtonGame.Extensions;
+namespace MonoUtils.Ui.Logic;
 
 public static class RectangleExtensions
 {

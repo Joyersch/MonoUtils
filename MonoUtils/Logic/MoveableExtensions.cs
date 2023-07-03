@@ -1,5 +1,3 @@
-using MonoUtils.Logic;
-
 namespace MonoUtils.Logic;
 
 public static class MoveableExtension

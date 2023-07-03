@@ -1,4 +1,4 @@
-namespace NoNameButtonGame.Storage;
+namespace MonoUtils.Settings;
 
 public static class FileManager
 {
