@@ -13,8 +13,9 @@ public class VelocityAdapter : IManageable, IInteractable, IHitbox
     {
         Object = @object;
     }
-    
+
     public Rectangle Rectangle => Object.Rectangle;
+
     public void Update(GameTime gameTime)
     {
         Object.Update(gameTime);
@@ -27,23 +28,30 @@ public class VelocityAdapter : IManageable, IInteractable, IHitbox
 
     public void UpdateInteraction(GameTime gameTime, IHitbox toCheck)
     {
-        var time = (float)gameTime.ElapsedGameTime.TotalMinutes;
+        var time = (float) gameTime.ElapsedGameTime.TotalMinutes;
         var hitboxes = toCheck.Hitbox.ToList();
-        //Sort floor "List" by distance to sender object
-        hitboxes.Sort((a, b)
-            => (int) (Vector2.Distance(Object.Position, a.Location.ToVector2()) -
-                      Vector2.Distance(Object.Position, b.Location.ToVector2())));
-        foreach (var hitbox in hitboxes)
+        var velocityRange = Rectangle.Union(Object.Rectangle
+            , new Rectangle((Object.Position + Velocity).ToPoint(), Object.Rectangle.Size));
+        
+        var inRange = hitboxes.Where(h => h.Intersects(velocityRange)).ToList();
+        
+        //sort hitboxes by distance
+        inRange.Sort((a, b)
+            => (int) (Vector2.Distance(Object.Rectangle.Center.ToVector2(), a.Center.ToVector2()) -
+                      Vector2.Distance(Object.Rectangle.Center.ToVector2(), b.Center.ToVector2())));
+        
+        foreach (var hitbox in inRange)
         {
-            if (Rectangles.DynamicRectangleVsRectangle(Object.Rectangle, Velocity,  time, hitbox,
+            if (Rectangles.DynamicRectangleVsRectangle(Object.Rectangle, Velocity, time, hitbox,
                     out Vector2 contactPoint,
                     out Vector2 ContactNormal, out float ContactTime))
             {
                 Velocity += ContactNormal *
-                                  new Vector2(Math.Abs(Velocity.X), Math.Abs(Velocity.Y)) *
-                                  (1 - ContactTime);
+                            new Vector2(Math.Abs(Velocity.X), Math.Abs(Velocity.Y)) *
+                            (1 - ContactTime);
             }
         }
+
         Object.Move(Object.Position + Velocity * time);
     }
 
@@ -51,7 +59,7 @@ public class VelocityAdapter : IManageable, IInteractable, IHitbox
 
     public void SetVelocity(Vector2 newVelocity)
         => Velocity = newVelocity;
-    
+
     public void AddVelocity(Vector2 newVelocity)
         => Velocity += newVelocity;
 }
