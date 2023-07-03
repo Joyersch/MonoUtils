@@ -4,7 +4,7 @@ using MonoUtils.Logic;
 
 namespace MonoUtils.Ui.Objects;
 
-public class Cursor : GameObject, IMoveable
+public class Cursor : GameObject
 {
     public new static Vector2 DefaultSize => DefaultMapping.ImageSize;
     public new static Texture2D DefaultTexture;
@@ -38,13 +38,4 @@ public class Cursor : GameObject, IMoveable
     {
         ImageLocation = Rectangle.Empty;
     }
-
-    public Vector2 GetPosition()
-        => Position;
-
-    public Vector2 GetSize()
-        => Size;
-
-    public void Move(Vector2 newPosition)
-        => Position = newPosition;
 }

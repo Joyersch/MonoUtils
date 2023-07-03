@@ -1,15 +1,16 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using MonoUtils.Logic;
 using MonoUtils.Logic.Hitboxes;
 using MonoUtils.Logic.Management;
 
-namespace MonoUtils.Ui.Objects;
+namespace MonoUtils;
 
-public class GameObject : IHitbox, IManageable
+public class GameObject : IHitbox, IManageable, IMoveable
 {
     protected readonly Texture2D Texture;
-    public Vector2 Position;
-    public Vector2 Size;
+    public Vector2 Position { get; protected set; }
+    public Vector2 Size { get; protected set; }
     protected Vector2 FrameSize;
     protected Rectangle ImageLocation;
     public Microsoft.Xna.Framework.Color DrawColor;
@@ -18,8 +19,6 @@ public class GameObject : IHitbox, IManageable
     protected TextureHitboxMapping TextureHitboxMapping;
     protected Rectangle[] Hitboxes;
     protected Vector2 ScaleToTexture;
-
-    public bool IsStatic;
 
     public Rectangle[] Hitbox => Hitboxes;
 
@@ -73,25 +72,11 @@ public class GameObject : IHitbox, IManageable
 
     public virtual void Draw(SpriteBatch spriteBatch)
     {
-        if (IsStatic)
-            return;
-        GeneralDraw(spriteBatch);
-    }
-
-    public virtual void DrawStatic(SpriteBatch spriteBatch)
-    {
-        if (!IsStatic)
-            return;
-        GeneralDraw(spriteBatch);
-    }
-
-    protected virtual void GeneralDraw(SpriteBatch spriteBatch)
-    {
         if (ImageLocation == Rectangle.Empty)
             spriteBatch.Draw(Texture, Rectangle, DrawColor);
         else
             spriteBatch.Draw(Texture, Rectangle, ImageLocation, DrawColor);
-    } 
+    }
 
     protected virtual void UpdateRectangle()
         => Rectangle = new Rectangle(Position.ToPoint(), Size.ToPoint());
@@ -123,4 +108,13 @@ public class GameObject : IHitbox, IManageable
             , (int) (Position.Y + hitbox.Y * ScaleToTexture.Y)
             , (int) (hitbox.Width * ScaleToTexture.X)
             , (int) (hitbox.Height * ScaleToTexture.Y));
+
+    public virtual Vector2 GetPosition()
+        => Position;
+
+    public virtual Vector2 GetSize()
+        => Size;
+
+    public virtual void Move(Vector2 newPosition)
+        => Position = newPosition;
 }

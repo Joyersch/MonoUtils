@@ -1,8 +1,9 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using MonoUtils.Logic;
 using MonoUtils.Logic.Management;
 
-namespace MonoUtils.Logic;
+namespace MonoUtils.Ui.Logic;
 
 public class OverTimeMover : IManageable
 {

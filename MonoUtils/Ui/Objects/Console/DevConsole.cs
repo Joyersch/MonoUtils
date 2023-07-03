@@ -6,22 +6,8 @@ using MonoUtils.Ui.Objects.TextSystem;
 
 namespace MonoUtils.Ui.Objects.Console;
 
-public class DevConsole : GameObject, IMoveable
+public class DevConsole : GameObject
 {
-    private bool _isStatic;
-
-    public new bool IsStatic
-    {
-        get => _isStatic;
-        set
-        {
-            _isStatic = value;
-            base.IsStatic = value;
-            for (int i = 0; i < _maxLinesY; i++)
-                _lines[i].IsStatic = value;
-            _currentInput.IsStatic = value;
-        }
-    }
 
     private bool _isActive;
     public Keys Activator = Keys.F10;
@@ -81,7 +67,6 @@ public class DevConsole : GameObject, IMoveable
         _currentInput.Move(new Vector2(0, Size.Y - _currentInput.Size.Y));
 
         Context = console is null ? new ContextProvider() : console.Context;
-        IsStatic = console?.IsStatic ?? false;
         DrawColor = console?.DrawColor ?? DrawColor;
         _isActive = console?._isActive ?? false;
     }
@@ -124,24 +109,13 @@ public class DevConsole : GameObject, IMoveable
 
     public override void Draw(SpriteBatch spriteBatch)
     {
-        if (_isStatic || !_isActive)
+        if (!_isActive)
             return;
 
         base.Draw(spriteBatch);
         foreach (Text text in _lines)
             text.Draw(spriteBatch);
         _currentInput.Draw(spriteBatch);
-    }
-
-    public override void DrawStatic(SpriteBatch spriteBatch)
-    {
-        if (!_isStatic || !_isActive)
-            return;
-
-        base.DrawStatic(spriteBatch);
-        foreach (Text text in _lines)
-            text.DrawStatic(spriteBatch);
-        _currentInput.DrawStatic(spriteBatch);
     }
 
     private void Window_TextInput(object sender, TextInputEventArgs e)
@@ -185,15 +159,8 @@ public class DevConsole : GameObject, IMoveable
         else
             Backlog[line] = text;
     }
-
-    public Vector2 GetPosition()
-        => Position;
-
-    public Vector2 GetSize()
-        => Size;
-
-
-    public void Move(Vector2 newPosition)
+    
+    public override void Move(Vector2 newPosition)
     {
         var offset = newPosition - Position;
 

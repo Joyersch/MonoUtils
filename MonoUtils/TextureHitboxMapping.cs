@@ -1,6 +1,6 @@
 using Microsoft.Xna.Framework;
 
-namespace MonoUtils.Ui;
+namespace MonoUtils;
 
 public struct TextureHitboxMapping
 {

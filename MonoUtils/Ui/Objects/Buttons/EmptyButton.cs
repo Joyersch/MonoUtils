@@ -8,7 +8,7 @@ using MonoUtils.Ui;
 
 namespace MonoUtils.Ui.Objects.Buttons;
 
-public class EmptyButton : GameObject, IMouseActions, IMoveable, IInteractable, IDisposable
+public class EmptyButton : GameObject, IMouseActions, IInteractable, IDisposable
 {
     public event Action<object> Leave;
     public event Action<object> Enter;
@@ -74,16 +74,6 @@ public class EmptyButton : GameObject, IMouseActions, IMoveable, IInteractable, 
         ImageLocation = new Rectangle(isMouseHovering ? (int) FrameSize.X : 0, 0, (int) FrameSize.X, (int) FrameSize.Y);
         Hover = isMouseHovering;
     }
-
-
-    public Vector2 GetPosition()
-        => Position;
-
-    public Vector2 GetSize()
-        => Size;
-
-    public virtual void Move(Vector2 newPosition)
-        => Position = newPosition;
 
     protected void InvokeClickEventHandler()
     {

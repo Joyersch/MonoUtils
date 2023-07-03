@@ -8,7 +8,7 @@ namespace MonoUtils.Ui.Objects;
 /// <summary>
 /// Not Tested. Use with caution!
 /// </summary>
-public class DragableObject : GameObject, IMoveable, IInteractable
+public class DragableObject : GameObject, IInteractable
 {
     private bool _hover;
     private bool _isDrag;
@@ -16,17 +16,6 @@ public class DragableObject : GameObject, IMoveable, IInteractable
 
     public DragableObject(Vector2 position, Vector2 size) : base(position, size)
     {
-    }
-
-    public Vector2 GetPosition()
-        => Position;
-
-    public Vector2 GetSize()
-        => Size;
-
-    public void Move(Vector2 newPosition)
-    {
-        Position = newPosition;
     }
 
     public void UpdateInteraction(GameTime gameTime, IHitbox toCheck)

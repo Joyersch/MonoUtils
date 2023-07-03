@@ -8,14 +8,15 @@ public abstract class ButtonAddonBase : GameObject, IInteractable, IMoveable, IB
 {
     public event Action<object, IButtonAddon.CallState> Callback;
 
-    public ButtonAddonBase(ButtonAddonAdapter button) : base(button.Position, button.Size, DefaultTexture, DefaultMapping)
+    public ButtonAddonBase(ButtonAddonAdapter button) : base(button.Position, button.Size, DefaultTexture,
+        DefaultMapping)
     {
         button.Callback += ButtonCallback;
     }
 
     protected virtual void ButtonCallback(object sender, IButtonAddon.CallState state)
     {
-        Callback?.Invoke(sender,state);
+        Callback?.Invoke(sender, state);
     }
 
     public abstract Rectangle GetRectangle();
@@ -26,11 +27,15 @@ public abstract class ButtonAddonBase : GameObject, IInteractable, IMoveable, IB
 
     public abstract void SetDrawColor(Microsoft.Xna.Framework.Color color);
 
-    public abstract Vector2 GetPosition();
+    public override Vector2 GetPosition()
+        => Vector2.Zero;
 
-    public abstract Vector2 GetSize();
+    public override Vector2 GetSize()
+        => Vector2.Zero;
 
-    public abstract void Move(Vector2 newPosition);
+    public override void Move(Vector2 newPosition)
+    {
+    }
 
     public abstract void MoveIndicatorBy(Vector2 newPosition);
 }

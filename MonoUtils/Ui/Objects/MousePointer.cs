@@ -4,7 +4,7 @@ using MonoUtils.Logic;
 
 namespace MonoUtils.Ui.Objects;
 
-public class MousePointer : GameObject, IMoveable
+public class MousePointer : GameObject
 {
     private readonly bool _draw;
     private readonly Camera _camera;
@@ -61,14 +61,14 @@ public class MousePointer : GameObject, IMoveable
         base.Update(gameTime);
     }
 
-    protected override void GeneralDraw(SpriteBatch spriteBatch)
+    public override void Draw(SpriteBatch spriteBatch)
     {
         if (!_draw)
             return;
 
         spriteBatch.Draw(Texture, new Rectangle((int) _drawPosition.X - 3, (int) _drawPosition.Y - 3, 6, 6),
             DrawColor);
-        base.GeneralDraw(spriteBatch);
+        base.Draw(spriteBatch);
     }
 
     public void UpdateWindow(Vector2 window)
@@ -76,15 +76,6 @@ public class MousePointer : GameObject, IMoveable
         _window = window;
         _windowCenter = new Point((int) _window.X / 2, (int) _window.Y / 2);
     }
-
-    public Vector2 GetPosition()
-        => Position;
-
-    public Vector2 GetSize()
-        => Size;
-
-    public void Move(Vector2 newPosition)
-        => Position = newPosition;
 
     private void SetMousePositionToCenter()
         => Microsoft.Xna.Framework.Input.Mouse.SetPosition(_windowCenter.X, _windowCenter.Y);

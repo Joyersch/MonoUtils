@@ -17,8 +17,6 @@ public class Text : IColorable, IMoveable, IManageable
     public Rectangle Rectangle { get; private set; }
     public string Value => _represent;
 
-    public bool IsStatic;
-
     public Letter this[int i] => _letters[i];
 
     public int Length => _letters.Count;
@@ -144,20 +142,6 @@ public class Text : IColorable, IMoveable, IManageable
         => BuildString();
 
     public virtual void Draw(SpriteBatch spriteBatch)
-    {
-        if (IsStatic)
-            return;
-        GeneralDraw(spriteBatch);
-    }
-
-    public virtual void DrawStatic(SpriteBatch spriteBatch)
-    {
-        if (!IsStatic)
-            return;
-        GeneralDraw(spriteBatch);
-    }
-
-    protected virtual void GeneralDraw(SpriteBatch spriteBatch)
     {
         foreach (var letter in _letters)
         {
