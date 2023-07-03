@@ -24,6 +24,7 @@ public class CollisionResolver : IManageable
 
     public void Update(GameTime gameTime)
     {
+        Rectangle = _camera.Rectangle;
         foreach (var stationary in _stationaries)
             stationary.Update(gameTime);
         foreach (var dynamic in _dynamics)
