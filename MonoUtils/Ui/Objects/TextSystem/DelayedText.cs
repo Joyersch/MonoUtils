@@ -11,11 +11,10 @@ public class DelayedText : Text
     private int _textPointer = int.MaxValue;
 
     private Vector2 _fullSize;
-    
+
     private float _savedGameTime;
     private float _waitedStartTime;
     public float StartAfter = 0;
-    private bool _automaticStart;
 
     public bool IsPlaying { get; private set; }
 
@@ -28,7 +27,7 @@ public class DelayedText : Text
         1)
     {
     }
-    
+
     public DelayedText(string text, bool automaticStart) : this(text, automaticStart, Vector2.Zero, DefaultLetterSize,
         1)
     {
@@ -56,8 +55,9 @@ public class DelayedText : Text
         string.Empty, position, letterSize, spacing)
     {
         _toDisplayText = text;
-        _automaticStart = automaticStart;
         _fullSize = GetFullBaseCopy().GetSize();
+        if (automaticStart)
+            Start();
     }
 
     public override void Update(GameTime gameTime)
