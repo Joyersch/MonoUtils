@@ -17,6 +17,8 @@ public class DevConsole : GameObject
     private int _maxLinesY;
     private bool _isDrawingCursor;
     private OverTimeInvoker _drawCursorInvoker;
+    
+    public CommandProcessor Processor { get; private set; }
 
     public ContextProvider Context { get; private set; }
 
@@ -34,19 +36,22 @@ public class DevConsole : GameObject
         }
     };
 
-    public DevConsole(GameWindow window, Vector2 position) : this(window, position, 1F, null)
+    public DevConsole(CommandProcessor processor, GameWindow window, Vector2 position) : this(processor, window, position, 1F, null)
     {
     }
 
-    public DevConsole(GameWindow window, Vector2 position, float scale) : this(window, position, scale, null)
+    public DevConsole(CommandProcessor processor, GameWindow window, Vector2 position, float scale) : this(processor, window, position, scale, null)
     {
     }
 
-    public DevConsole(GameWindow window, Vector2 position, float scale, DevConsole? console) : base(position,
+    public DevConsole(CommandProcessor processor, GameWindow window, Vector2 position, float scale, DevConsole? console) : base(position,
         DefaultSize * scale,
         DefaultTexture, DefaultMapping)
     {
         window.TextInput += Window_TextInput;
+        
+        Processor = console is null ? processor : console.Processor;
+        
         _currentInput = new Text(string.Empty, scale);
 
         Backlog = console is null ? new Backlog() : console.Backlog;
@@ -101,7 +106,7 @@ public class DevConsole : GameObject
         {
             _lines[line].Move(Position + new Vector2(0, _currentInput.Size.Y) * line);
             if (_toDisplay.Count > line)
-                _lines[line].ChangeText(_toDisplay[line]);
+                _lines[line].ChangeText(_toDisplay[line] ?? string.Empty);
             else
                 _lines[line].ChangeText(string.Empty);
         }
@@ -132,17 +137,17 @@ public class DevConsole : GameObject
 
         if (Letter.Parse(e.Character) == Letter.Character.Full
             && e.Character != '\b')
-            c = "";
+            c = string.Empty;
 
         if (e.Key != Keys.Enter)
         {
-            _currentInput.AppendText(c);
+            _currentInput.AppendText(c ?? string.Empty);
             if (_isDrawingCursor)
                 _currentInput.AppendText("_");
             return;
         }
 
-        var output = CommandProcessor.Process(this, _currentInput.Value, Context);
+        var output = Processor.Process(this, _currentInput.Value, Context);
         Backlog.Add(_currentInput.Value);
         Backlog.AddRange(output);
 

@@ -22,7 +22,8 @@ public class LogAdapter
     public void SetLine(int line)
     {
         if (_writer is not null)
-            throw new Exception("line not supported by TextWriter");
+            return;
+        
         _line = line;
     }
 

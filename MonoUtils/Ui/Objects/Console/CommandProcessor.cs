@@ -3,11 +3,11 @@ using System.Reflection;
 
 namespace MonoUtils.Ui.Objects.Console;
 
-public static class CommandProcessor
+public class CommandProcessor : IProcessor
 {
-    public static List<(string Name, string Description, ICommand Command)> Commands = new();
+    public List<(string Name, string Description, ICommand Command)> Commands = new();
 
-    public static void Initialize()
+    public void Initialize()
     {
         var callingClasses = Assembly.GetCallingAssembly().GetTypes().Where(t =>
             t.IsClass && t.GetMethods().Any(m => m.GetCustomAttribute<CommandAttribute>() is not null));
@@ -33,7 +33,7 @@ public static class CommandProcessor
         }
     }
 
-    public static IEnumerable<string> Process(DevConsole caller, string fullCommand, ContextProvider context)
+    public IEnumerable<string> Process(DevConsole caller, string fullCommand, ContextProvider context)
     {
         var commandSplit = fullCommand.Split(" ");
 

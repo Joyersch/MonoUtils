@@ -14,6 +14,8 @@ public static class Global
 {
     public static readonly SoundEffectsCache SoundEffects = new();
 
+    public static readonly CommandProcessor CommandProcessor = new();
+
     public static SoundSettingsListener SoundSettingsListener;
     public static void Initialize(ContentManager content)
     {
@@ -24,6 +26,8 @@ public static class Global
         MiniTextButton.DefaultTexture = content.GetTexture("minibutton");
         SquareTextButton.DefaultTexture = content.GetTexture("squarebutton");
         DevConsole.DefaultTexture = content.GetTexture("console");
+        
+        CommandProcessor.Initialize();
     }
     
     public static string ReadFromResources(string file)
