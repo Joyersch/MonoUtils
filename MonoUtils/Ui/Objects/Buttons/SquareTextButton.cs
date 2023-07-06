@@ -22,6 +22,9 @@ public class SquareTextButton : TextButton
     public SquareTextButton(string text) : this(Vector2.Zero, text)
     {
     }
+    public SquareTextButton(string text, float scale) :this(Vector2.Zero,DefaultSize * scale, string.Empty, text, DefaultTextSize * scale)
+    {
+    }
     public SquareTextButton(Vector2 position, string text) : this(position, string.Empty, text)
     {
     }
