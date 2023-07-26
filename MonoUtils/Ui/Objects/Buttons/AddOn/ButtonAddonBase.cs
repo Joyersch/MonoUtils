@@ -7,10 +7,12 @@ namespace MonoUtils.Ui.Objects.Buttons.AddOn;
 public abstract class ButtonAddonBase : GameObject, IInteractable, IMoveable, IButtonAddon
 {
     public event Action<object, IButtonAddon.CallState> Callback;
+    protected float _scale;
 
-    public ButtonAddonBase(ButtonAddonAdapter button) : base(button.Position, button.Size, DefaultTexture,
+    public ButtonAddonBase(ButtonAddonAdapter button, float scale) : base(button.Position, button.Size, DefaultTexture,
         DefaultMapping)
     {
+        _scale = scale;
         button.Callback += ButtonCallback;
     }
 

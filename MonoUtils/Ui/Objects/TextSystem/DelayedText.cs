@@ -74,7 +74,7 @@ public class DelayedText : Text
             _savedGameTime += passedGameTime;
 
 
-        while (_savedGameTime > DisplayDelay && canDisplay)
+        while (_savedGameTime > DisplayDelay && canDisplay && _textPointer < _toDisplayText.Length)
         {
             _savedGameTime -= DisplayDelay;
             _currentlyDisplayed += _toDisplayText[_textPointer];

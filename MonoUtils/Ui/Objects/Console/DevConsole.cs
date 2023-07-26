@@ -78,7 +78,7 @@ public class DevConsole : GameObject
         _currentInput.Move(new Vector2(0, Size.Y - _currentInput.Size.Y));
 
         Context = console is null ? new ContextProvider() : console.Context;
-        DrawColor = console?.DrawColor ?? DrawColor;
+        DrawColor = console?.DrawColor ?? new Microsoft.Xna.Framework.Color(75, 75, 75);;
         _isActive = console?._isActive ?? false;
     }
 

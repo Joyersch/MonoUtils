@@ -14,13 +14,13 @@ public class HoldButtonAddon : ButtonAddonBase
     private bool _hasReachedZero;
     private bool _pressStartOnObject;
 
-    public HoldButtonAddon(ButtonAddonAdapter button, float startTime) : base(button)
+    public HoldButtonAddon(ButtonAddonAdapter button, float startTime, float scale = 1F) : base(button, scale)
     {
         _button = button;
         _startTime = startTime;
         _time = _startTime;
         _timer = new TextSystem.Text($"{_startTime / 1000F:n2}",
-            Position);
+            Position, _scale);
         Size = _timer.Rectangle.Size.ToVector2();
         _button.SetIndicatorOffset((int) Size.X);
         _pressStartOnObject = !InputReaderMouse.CheckKey(InputReaderMouse.MouseKeys.Left, false);

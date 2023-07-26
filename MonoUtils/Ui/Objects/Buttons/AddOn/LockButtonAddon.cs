@@ -13,10 +13,10 @@ public class LockButtonAddon : ButtonAddonBase
     private readonly ButtonAddonAdapter _button;
     private readonly Text _text;
 
-    public LockButtonAddon(ButtonAddonAdapter button) : base(button)
+    public LockButtonAddon(ButtonAddonAdapter button, float scale = 1F) : base(button, scale)
     {
         _button = button;
-        _text = new Text(Letter.ReverseParse(Letter.Character.LockLocked).ToString(), Position);
+        _text = new Text(Letter.ReverseParse(Letter.Character.LockLocked).ToString(), Position, _scale);
         
         // Button is locked by default
         _button.SetDrawColor(Microsoft.Xna.Framework.Color.DarkGray);

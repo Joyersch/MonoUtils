@@ -23,6 +23,10 @@ public class MiniTextButton : TextButton
     public MiniTextButton(string text) : this(Vector2.Zero, text)
     {
     }
+    
+    public MiniTextButton(string text, float scale) : this(Vector2.Zero, scale, string.Empty, text)
+    {
+    }
 
     public MiniTextButton(Vector2 position, string text) : this(position, string.Empty, text)
     {
@@ -33,12 +37,7 @@ public class MiniTextButton : TextButton
     }
 
     public MiniTextButton(Vector2 position, float scale, string name, string text) : this(position,
-        DefaultSize * scale, name, text)
-    {
-    }
-
-    public MiniTextButton(Vector2 position, Vector2 size, string name, string text) : this(position, size, name, text,
-        DefaultTextSize)
+        DefaultSize * scale, name, text, DefaultTextSize * scale)
     {
     }
 
