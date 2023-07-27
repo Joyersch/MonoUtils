@@ -117,4 +117,9 @@ public class GameObject : IHitbox, IManageable, IMoveable
 
     public virtual void Move(Vector2 newPosition)
         => Position = newPosition;
+
+    protected void MoveImageLocation(Vector2 imageLocation)
+    {
+        ImageLocation.Location = imageLocation.ToPoint();
+    }
 }

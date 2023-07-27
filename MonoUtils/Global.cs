@@ -26,6 +26,7 @@ public static class Global
         MiniTextButton.DefaultTexture = content.GetTexture("minibutton");
         SquareTextButton.DefaultTexture = content.GetTexture("squarebutton");
         DevConsole.DefaultTexture = content.GetTexture("console");
+        ConnectedGameObject.DefaultTexture = content.GetTexture("connectedsample");
     }
     
     public static string ReadFromResources(string file)
