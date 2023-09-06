@@ -113,4 +113,6 @@ public class ButtonAddonAdapter : IMoveable, IButtonAddon
         if (_isAddon)
             _addon.MoveIndicatorBy(newPosition);
     }
+
+    public bool IsHover() => _isAddon ? _addon.IsHover() : _button.IsHover();
 }

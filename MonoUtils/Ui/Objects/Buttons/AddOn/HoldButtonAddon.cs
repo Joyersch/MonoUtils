@@ -6,7 +6,6 @@ namespace MonoUtils.Ui.Objects.Buttons.AddOn;
 
 public class HoldButtonAddon : ButtonAddonBase
 {
-    private readonly ButtonAddonAdapter _button;
     private readonly TextSystem.Text _timer;
     private readonly float _startTime;
     private bool _isHover;
@@ -16,20 +15,16 @@ public class HoldButtonAddon : ButtonAddonBase
 
     public HoldButtonAddon(ButtonAddonAdapter button, float startTime, float scale = 1F) : base(button, scale)
     {
-        _button = button;
         _startTime = startTime;
         _time = _startTime;
         _timer = new TextSystem.Text($"{_startTime / 1000F:n2}",
-            Position, _scale);
+            Position, Scale);
         Size = _timer.Rectangle.Size.ToVector2();
-        _button.SetIndicatorOffset((int) Size.X);
+        Button.SetIndicatorOffset((int) Size.X);
         _pressStartOnObject = !InputReaderMouse.CheckKey(InputReaderMouse.MouseKeys.Left, false);
     }
 
-    public override void SetIndicatorOffset(int x)
-    {
-        _button.SetIndicatorOffset(x);
-    }
+
 
     protected override void ButtonCallback(object sender, IButtonAddon.CallState state)
     {
@@ -43,7 +38,7 @@ public class HoldButtonAddon : ButtonAddonBase
 
     public override void UpdateInteraction(GameTime gameTime, IHitbox toCheck)
     {
-        _button.UpdateInteraction(gameTime, toCheck);
+        Button.UpdateInteraction(gameTime, toCheck);
 
 
         float passedGameTime = 0F;
@@ -62,7 +57,7 @@ public class HoldButtonAddon : ButtonAddonBase
             {
                 _time = 0;
                 _hasReachedZero = true;
-                base.ButtonCallback(_button, IButtonAddon.CallState.Click);
+                base.ButtonCallback(Button, IButtonAddon.CallState.Click);
             }
         }
         else
@@ -83,30 +78,30 @@ public class HoldButtonAddon : ButtonAddonBase
     {
         base.Update(gameTime);
         _timer.Update(gameTime);
-        _button.Update(gameTime);
+        Button.Update(gameTime);
     }
 
     public override void Draw(SpriteBatch spriteBatch)
     {
-        _button.Draw(spriteBatch);
+        Button.Draw(spriteBatch);
         _timer.Draw(spriteBatch);
     }
 
     public override Vector2 GetPosition()
-        => _button.GetPosition();
+        => Button.GetPosition();
 
     public override Vector2 GetSize()
-        => _button.GetSize();
+        => Button.GetSize();
 
     public override void SetDrawColor(Microsoft.Xna.Framework.Color color)
-        => _button.SetDrawColor(color);
+        => Button.SetDrawColor(color);
 
     public override Rectangle GetRectangle()
-        => _button.GetRectangle();
+        => Button.GetRectangle();
 
     public override void Move(Vector2 newPosition)
     {
-        _button.Move(newPosition);
+        Button.Move(newPosition);
         _timer.Move(newPosition);
         Position = newPosition;
     }

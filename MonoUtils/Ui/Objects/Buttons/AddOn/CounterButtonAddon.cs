@@ -9,46 +9,40 @@ namespace MonoUtils.Ui.Objects.Buttons.AddOn;
 public class CounterButtonAddon : ButtonAddonBase
 {
     private int _states;
-    private readonly ButtonAddonAdapter _button;
     private readonly Text _text;
 
     public CounterButtonAddon(ButtonAddonAdapter button, int startStates, float scale = 1F) : base(button, scale)
     {
-        _button = button;
         _states = startStates;
         _text = new Text(Letter.ReverseParse(Letter.Character.LockLocked).ToString(),
-            Position, _scale);
+            Position, Scale);
         Size = _text.Rectangle.Size.ToVector2();
-        _button.SetIndicatorOffset((int) Size.X);
+        Button.SetIndicatorOffset((int) Size.X);
         UpdateText();
     }
 
-    public override void SetIndicatorOffset(int x)
-    {
-        _button.SetIndicatorOffset(x);
-    }
-
     public override Rectangle GetRectangle()
-        => _button.GetRectangle();
+        => Button.GetRectangle();
 
     public override void SetDrawColor(Microsoft.Xna.Framework.Color color)
-        => _button.SetDrawColor(color);
+        => Button.SetDrawColor(color);
+
 
     public override void UpdateInteraction(GameTime gameTime, IHitbox toCheck)
     {
-        _button.UpdateInteraction(gameTime, toCheck);
+        Button.UpdateInteraction(gameTime, toCheck);
     }
 
     public override void Update(GameTime gameTime)
     {
         base.Update(gameTime);
         _text.Update(gameTime);
-        _button.Update(gameTime);
+        Button.Update(gameTime);
     }
 
     public override void Draw(SpriteBatch spriteBatch)
     {
-        _button.Draw(spriteBatch);
+        Button.Draw(spriteBatch);
         _text.Draw(spriteBatch);
     }
 
@@ -72,14 +66,14 @@ public class CounterButtonAddon : ButtonAddonBase
     }
 
     public override Vector2 GetPosition()
-        => _button.GetPosition();
+        => Button.GetPosition();
 
     public override Vector2 GetSize()
-        => _button.GetSize();
+        => Button.GetSize();
 
     public override void Move(Vector2 newPosition)
     {
-        _button.Move(newPosition);
+        Button.Move(newPosition);
         _text.Move(newPosition);
         Position = newPosition;
     }

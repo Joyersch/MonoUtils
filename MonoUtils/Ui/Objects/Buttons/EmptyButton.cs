@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 using MonoUtils.Logic;
 using MonoUtils.Logic.Hitboxes;
 using MonoUtils.Ui;
+using MonoUtils.Ui.Logic;
 
 namespace MonoUtils.Ui.Objects.Buttons;
 
@@ -13,9 +14,9 @@ public class EmptyButton : GameObject, IMouseActions, IInteractable, IDisposable
     public event Action<object> Leave;
     public event Action<object> Enter;
     public event Action<object> Click;
-    protected bool Hover;
 
     private SoundEffectInstance _soundEffectInstance;
+    private MouseActionsMat _mouseMat;
 
     public new static Vector2 DefaultSize => DefaultMapping.ImageSize * 4;
 
@@ -51,28 +52,17 @@ public class EmptyButton : GameObject, IMouseActions, IInteractable, IDisposable
         base(position, size, texture, mapping)
     {
         _soundEffectInstance = Global.SoundEffects.GetSfxInstance("ButtonSound");
+        _mouseMat = new MouseActionsMat(this);
+        _mouseMat.Leave += _ => InvokeLeaveEventHandler();
+        _mouseMat.Enter += _ => InvokeEnterEventHandler();
+        _mouseMat.Click += _ => InvokeClickEventHandler();
     }
 
     public virtual void UpdateInteraction(GameTime gameTime, IHitbox toCheck)
     {
-        bool isMouseHovering = false;
-        foreach (Rectangle rectangle in toCheck.Hitbox)
-            if (HitboxCheck(rectangle))
-                isMouseHovering = true;
+        _mouseMat.UpdateInteraction(gameTime, toCheck);
 
-        if (isMouseHovering)
-        {
-            if (!Hover)
-                InvokeEnterEventHandler();
-
-            if (InputReaderMouse.CheckKey(InputReaderMouse.MouseKeys.Left, true))
-                InvokeClickEventHandler();
-        }
-        else if (Hover)
-            InvokeLeaveEventHandler();
-
-        ImageLocation = new Rectangle(isMouseHovering ? (int) FrameSize.X : 0, 0, (int) FrameSize.X, (int) FrameSize.Y);
-        Hover = isMouseHovering;
+        ImageLocation = new Rectangle(_mouseMat.IsHover ? (int) FrameSize.X : 0, 0, (int) FrameSize.X, (int) FrameSize.Y);
     }
 
     protected void InvokeClickEventHandler()
@@ -98,4 +88,6 @@ public class EmptyButton : GameObject, IMouseActions, IInteractable, IDisposable
     {
         _soundEffectInstance?.Dispose();
     }
+
+    public bool IsHover() => _mouseMat.IsHover;
 }

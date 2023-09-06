@@ -7,12 +7,14 @@ namespace MonoUtils.Ui.Objects.Buttons.AddOn;
 public abstract class ButtonAddonBase : GameObject, IInteractable, IMoveable, IButtonAddon
 {
     public event Action<object, IButtonAddon.CallState> Callback;
-    protected float _scale;
+    protected readonly ButtonAddonAdapter Button;
+    protected readonly float Scale;
 
     public ButtonAddonBase(ButtonAddonAdapter button, float scale) : base(button.Position, button.Size, DefaultTexture,
         DefaultMapping)
     {
-        _scale = scale;
+        Button = button;
+        Scale = scale;
         button.Callback += ButtonCallback;
     }
 
@@ -25,7 +27,10 @@ public abstract class ButtonAddonBase : GameObject, IInteractable, IMoveable, IB
 
     public abstract void UpdateInteraction(GameTime gameTime, IHitbox toCheck);
 
-    public abstract void SetIndicatorOffset(int x);
+    public virtual void SetIndicatorOffset(int x)
+    {
+        Button.SetIndicatorOffset(x);
+    }
 
     public abstract void SetDrawColor(Microsoft.Xna.Framework.Color color);
 
@@ -40,4 +45,6 @@ public abstract class ButtonAddonBase : GameObject, IInteractable, IMoveable, IB
     }
 
     public abstract void MoveIndicatorBy(Vector2 newPosition);
+
+    public virtual bool IsHover() => Button.IsHover();
 }

@@ -10,25 +10,18 @@ public class LockButtonAddon : ButtonAddonBase
 {
     public bool IsLocked { get; private set; } = true;
 
-    private readonly ButtonAddonAdapter _button;
     private readonly Text _text;
 
     public LockButtonAddon(ButtonAddonAdapter button, float scale = 1F) : base(button, scale)
     {
-        _button = button;
-        _text = new Text(Letter.ReverseParse(Letter.Character.LockLocked).ToString(), Position, _scale);
+        _text = new Text(Letter.ReverseParse(Letter.Character.LockLocked).ToString(), Position, Scale);
         
         // Button is locked by default
-        _button.SetDrawColor(Microsoft.Xna.Framework.Color.DarkGray);
+        Button.SetDrawColor(Microsoft.Xna.Framework.Color.DarkGray);
         
         UpdateText();
         Size = _text.Size;
-        _button.SetIndicatorOffset((int) Size.X);
-    }
-
-    public override void SetIndicatorOffset(int x)
-    {
-        _button.SetIndicatorOffset(x);
+        Button.SetIndicatorOffset((int) Size.X);
     }
 
     protected override void ButtonCallback(object sender, IButtonAddon.CallState state)
@@ -42,35 +35,35 @@ public class LockButtonAddon : ButtonAddonBase
     public override void UpdateInteraction(GameTime gameTime, IHitbox toCheck)
     {
         if (!IsLocked)
-            _button.UpdateInteraction(gameTime, toCheck);
+            Button.UpdateInteraction(gameTime, toCheck);
         else
-            _button.UpdateInteraction(gameTime, new EmptyHitbox());
+            Button.UpdateInteraction(gameTime, new EmptyHitbox());
     }
 
     public override void Update(GameTime gameTime)
     {
         base.Update(gameTime);
         _text.Update(gameTime);
-        _button.Update(gameTime);
+        Button.Update(gameTime);
     }
 
     public override void Draw(SpriteBatch spriteBatch)
     {
-        _button.Draw(spriteBatch);
+        Button.Draw(spriteBatch);
         _text.Draw(spriteBatch);
     }
 
     public void Unlock()
     {
         IsLocked = false;
-        _button.SetDrawColor(Microsoft.Xna.Framework.Color.White);
+        Button.SetDrawColor(Microsoft.Xna.Framework.Color.White);
         UpdateText();
     }
 
     public void Lock()
     {
         IsLocked = true;
-        _button.SetDrawColor(Microsoft.Xna.Framework.Color.DarkGray);
+        Button.SetDrawColor(Microsoft.Xna.Framework.Color.DarkGray);
         UpdateText();
     }
 
@@ -83,20 +76,20 @@ public class LockButtonAddon : ButtonAddonBase
     }
 
     public override Vector2 GetPosition()
-        => _button.GetPosition();
+        => Button.GetPosition();
 
     public override Vector2 GetSize()
-        => _button.GetSize();
+        => Button.GetSize();
 
     public override Rectangle GetRectangle()
-        => _button.GetRectangle();
+        => Button.GetRectangle();
 
     public override void SetDrawColor(Microsoft.Xna.Framework.Color color)
-        => _button.SetDrawColor(color);
+        => Button.SetDrawColor(color);
 
     public override void Move(Vector2 newPosition)
     {
-        _button.Move(newPosition);
+        Button.Move(newPosition);
         _text.Move(newPosition);
         Position = newPosition;
     }
