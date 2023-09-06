@@ -2,7 +2,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoUtils.Logic.Hitboxes;
 
-namespace MonoUtils.Ui.Objects.Buttons;
+namespace MonoUtils.Ui.Objects.Buttons.AddOn;
 
 public interface IButtonAddon
 {
@@ -21,6 +21,9 @@ public interface IButtonAddon
    public event Action<object, CallState> Callback;
 
    public void SetDrawColor(Microsoft.Xna.Framework.Color color);
+
+   public bool IsHover();
+
    public enum CallState
    {
       Leave,
