@@ -99,6 +99,9 @@ public class ConnectedGameObject : GameObject
     public void SetTextureLocation(List<ConnectedGameObject> surroundingObjects)
     {
         ImageLocations = new List<Vector2>();
+        Vector2 mainImageLocation = Vector2.Zero;
+        List<Vector2> imageLocations = new List<Vector2>();
+
         bool[] values = new bool[8];
         foreach (var surroundingObject in surroundingObjects)
         {
@@ -138,7 +141,7 @@ public class ConnectedGameObject : GameObject
             }
         }
 
-        ImageLocations.Add(GetImageLocation(OnTextureRef.Center));
+        mainImageLocation = GetImageLocation(OnTextureRef.Center);
 
         bool topLeft = !values[0];
         bool top = !values[1];
@@ -150,49 +153,53 @@ public class ConnectedGameObject : GameObject
         bool bottomRight = !values[7];
 
 
+
         if (left)
-            ImageLocations.Add(GetImageLocation(OnTextureRef.Left));
+            mainImageLocation = GetImageLocation(OnTextureRef.Left);
 
         if (right)
-            ImageLocations.Add(GetImageLocation(OnTextureRef.Right));
+            mainImageLocation = GetImageLocation(OnTextureRef.Right);
 
         if (top)
-            ImageLocations.Add(GetImageLocation(OnTextureRef.Top));
+            mainImageLocation = GetImageLocation(OnTextureRef.Top);
 
         if (bottom)
-            ImageLocations.Add(GetImageLocation(OnTextureRef.Bottom));
+            mainImageLocation = GetImageLocation(OnTextureRef.Bottom);
 
 
         if (topLeft)
         {
             if (left && top)
-                ImageLocations.Add(GetImageLocation(OnTextureRef.TopLeft));
+                mainImageLocation = GetImageLocation(OnTextureRef.TopLeft);
             else if (!left && !top)
-                ImageLocations.Add(GetImageLocation(OnTextureRef.CornerBottomRight));
+                imageLocations.Add(GetImageLocation(OnTextureRef.CornerBottomRight));
         }
 
         if (topRight)
         {
             if (right && top)
-                ImageLocations.Add(GetImageLocation(OnTextureRef.TopRight));
+                mainImageLocation = GetImageLocation(OnTextureRef.TopRight);
             else if (!right && !top)
-                ImageLocations.Add(GetImageLocation(OnTextureRef.CornerBottomLeft));
+                imageLocations.Add(GetImageLocation(OnTextureRef.CornerBottomLeft));
         }
 
         if (bottomLeft)
         {
             if (left && bottom)
-                ImageLocations.Add(GetImageLocation(OnTextureRef.BottomLeft));
+                mainImageLocation = GetImageLocation(OnTextureRef.BottomLeft);
             else if (!left && !bottom)
-                ImageLocations.Add(GetImageLocation(OnTextureRef.CornerTopRight));
+                imageLocations.Add(GetImageLocation(OnTextureRef.CornerTopRight));
         }
 
         if (bottomRight)
         {
             if (right && bottom)
-                ImageLocations.Add(GetImageLocation(OnTextureRef.BottomRight));
+                mainImageLocation = GetImageLocation(OnTextureRef.BottomRight);
             else if (!right && !bottom)
-                ImageLocations.Add(GetImageLocation(OnTextureRef.CornerTopLeft));
+                imageLocations.Add(GetImageLocation(OnTextureRef.CornerTopLeft));
         }
+
+        ImageLocations.Add(mainImageLocation);
+        ImageLocations.AddRange(imageLocations);
     }
 }
