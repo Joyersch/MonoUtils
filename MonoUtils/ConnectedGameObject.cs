@@ -15,7 +15,6 @@ public class ConnectedGameObject : GameObject
         Top,
         TopRight,
         Left,
-        Center,
         Right,
         BottomLeft,
         Bottom,
@@ -23,14 +22,18 @@ public class ConnectedGameObject : GameObject
         CornerTopLeft,
         CornerTopRight,
         CornerBottomLeft,
-        CornerBottomRight
+        CornerBottomRight,
+        Center,
+        VariationCenter1,
+        VariationCenter2
     }
 
     public new static Vector2 DefaultSize => DefaultMapping.ImageSize;
 
     public new static Texture2D DefaultTexture;
 
-    private List<Vector2> ImageLocations;
+    private List<Vector2> _imageLocations;
+    private int _variation = 0;
 
     public new static TextureHitboxMapping DefaultMapping => new TextureHitboxMapping()
     {
@@ -41,27 +44,28 @@ public class ConnectedGameObject : GameObject
         }
     };
 
-    public ConnectedGameObject()
+    public ConnectedGameObject(int variation = 0): this(Vector2.Zero, variation)
     {
     }
 
-    public ConnectedGameObject(Vector2 position) : this(position, 1F)
+    public ConnectedGameObject(Vector2 position, int variation) : this(position, 1F, variation)
     {
     }
 
-    public ConnectedGameObject(Vector2 position, float scale) : this(position, scale * DefaultSize)
+    public ConnectedGameObject(Vector2 position, float scale, int variation) : this(position, scale * DefaultSize, variation)
     {
     }
 
-    public ConnectedGameObject(Vector2 position, Vector2 size) : this(position, size, DefaultTexture, DefaultMapping)
+    public ConnectedGameObject(Vector2 position, Vector2 size, int variation) : this(position, size, variation, DefaultTexture, DefaultMapping)
     {
     }
 
-    public ConnectedGameObject(Vector2 position, Vector2 size, Texture2D texture, TextureHitboxMapping mapping) : base(
+    public ConnectedGameObject(Vector2 position, Vector2 size, int variation, Texture2D texture, TextureHitboxMapping mapping) : base(
         position, size, texture, mapping)
     {
-        ImageLocations = new List<Vector2>();
-        ImageLocations.Add(GetImageLocation(OnTextureRef.Center));
+        _imageLocations = new List<Vector2>();
+        _imageLocations.Add(GetImageLocation(OnTextureRef.Center + variation));
+        _variation = variation;
     }
 
     public override void Update(GameTime gameTime)
@@ -71,7 +75,7 @@ public class ConnectedGameObject : GameObject
 
     public override void Draw(SpriteBatch spriteBatch)
     {
-        foreach (var imageLocation in ImageLocations)
+        foreach (var imageLocation in _imageLocations)
         {
             MoveImageLocation(imageLocation * ImageLocation.Size.ToVector2());
             base.Draw(spriteBatch);
@@ -93,12 +97,14 @@ public class ConnectedGameObject : GameObject
             OnTextureRef.CornerTopRight => new Vector2(4, 1),
             OnTextureRef.CornerBottomLeft => new Vector2(3, 2),
             OnTextureRef.CornerBottomRight => new Vector2(4, 2),
+            OnTextureRef.VariationCenter1 =>  new Vector2(3,0),
+            OnTextureRef.VariationCenter2 =>  new Vector2(4,0),
             _ => new Vector2(1, 1)
         };
 
     public void SetTextureLocation(List<ConnectedGameObject> surroundingObjects)
     {
-        ImageLocations = new List<Vector2>();
+        _imageLocations = new List<Vector2>();
         Vector2 mainImageLocation = Vector2.Zero;
         List<Vector2> imageLocations = new List<Vector2>();
 
@@ -141,7 +147,7 @@ public class ConnectedGameObject : GameObject
             }
         }
 
-        mainImageLocation = GetImageLocation(OnTextureRef.Center);
+        mainImageLocation = GetImageLocation(OnTextureRef.Center + _variation);
 
         bool topLeft = !values[0];
         bool top = !values[1];
@@ -199,7 +205,7 @@ public class ConnectedGameObject : GameObject
                 imageLocations.Add(GetImageLocation(OnTextureRef.CornerTopLeft));
         }
 
-        ImageLocations.Add(mainImageLocation);
-        ImageLocations.AddRange(imageLocations);
+        _imageLocations.Add(mainImageLocation);
+        _imageLocations.AddRange(imageLocations);
     }
 }
