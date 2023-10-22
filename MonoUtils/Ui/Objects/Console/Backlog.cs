@@ -16,4 +16,5 @@ public class Backlog : List<string>
         int startIndex = Math.Min(pointer, endIndex);
         return GetRange(startIndex, endIndex - startIndex);
     }
+
 }

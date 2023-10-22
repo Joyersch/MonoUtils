@@ -62,7 +62,7 @@ public class DevConsole : GameObject
 
         Backlog = console is null ? new Backlog() : console.Backlog;
 
-        _maxLinesY = (int) (Size / _currentInput.Size).Y - 1;
+        _maxLinesY = (int)(Size / _currentInput.Size).Y - 1;
         _toDisplay = new List<string>();
 
         _lines = new Text[_maxLinesY];
@@ -78,7 +78,8 @@ public class DevConsole : GameObject
         _currentInput.Move(new Vector2(0, Size.Y - _currentInput.Size.Y));
 
         Context = console is null ? new ContextProvider() : console.Context;
-        DrawColor = console?.DrawColor ?? new Microsoft.Xna.Framework.Color(75, 75, 75);;
+        DrawColor = console?.DrawColor ?? new Microsoft.Xna.Framework.Color(75, 75, 75);
+        ;
         _isActive = console?._isActive ?? false;
     }
 
@@ -175,9 +176,11 @@ public class DevConsole : GameObject
         var output = Processor.Process(this, _currentInput.Value, Context);
         Backlog.Add(_currentInput.Value);
         Backlog.AddRange(output);
+        var length = output.Count();
 
         if (Backlog.Count > _maxLinesY)
-            Backlog.MovePointerDown();
+            for (int i = -1; i < length; i++)
+                Backlog.MovePointerDown();
 
         _currentInput.ChangeText(string.Empty);
     }
@@ -185,7 +188,11 @@ public class DevConsole : GameObject
     public void Write(string text, int line = -1)
     {
         if (line == -1 || Backlog.Count <= line)
+        {
             Backlog.Add(text);
+            if (Backlog.Count > _maxLinesY)
+                Backlog.MovePointerDown();
+        }
         else
             Backlog[line] = text;
     }
