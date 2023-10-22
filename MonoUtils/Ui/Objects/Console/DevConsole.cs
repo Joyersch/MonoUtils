@@ -14,7 +14,7 @@ public class DevConsole : GameObject
     public Keys? Activator = Keys.F10;
     private Text _currentInput;
     public Backlog Backlog { get; private set; }
-    private List<string> _toDisplay;
+    private List<BacklogRow> _toDisplay;
     private int _maxLinesY;
     private bool _isDrawingCursor;
     private OverTimeInvoker _drawCursorInvoker;
@@ -63,7 +63,7 @@ public class DevConsole : GameObject
         Backlog = console is null ? new Backlog() : console.Backlog;
 
         _maxLinesY = (int)(Size / _currentInput.Size).Y - 1;
-        _toDisplay = new List<string>();
+        _toDisplay = new List<BacklogRow>();
 
         _lines = new Text[_maxLinesY];
         for (int i = 0; i < _maxLinesY; i++)
@@ -114,9 +114,13 @@ public class DevConsole : GameObject
         {
             _lines[line].Move(Position + new Vector2(0, _currentInput.Size.Y) * line);
             if (_toDisplay.Count > line)
-                _lines[line].ChangeText(_toDisplay[line] ?? string.Empty);
+            {
+                _lines[line].ChangeText(_toDisplay[line].Text);
+                _lines[line].ChangeColor(_toDisplay[line].ColorSet.Color);
+            }
             else
                 _lines[line].ChangeText(string.Empty);
+
         }
     }
 
@@ -173,8 +177,8 @@ public class DevConsole : GameObject
             return;
         }
 
-        var output = Processor.Process(this, _currentInput.Value, Context);
-        Backlog.Add(_currentInput.Value);
+        var output = Processor.Process(this, _currentInput.Value, Context).Select(s => new BacklogRow(s));
+        Backlog.Add(new BacklogRow(_currentInput.Value));
         Backlog.AddRange(output);
         var length = output.Count();
 
@@ -189,12 +193,27 @@ public class DevConsole : GameObject
     {
         if (line == -1 || Backlog.Count <= line)
         {
-            Backlog.Add(text);
+            Backlog.Add(new BacklogRow(text));
             if (Backlog.Count > _maxLinesY)
                 Backlog.MovePointerDown();
         }
         else
-            Backlog[line] = text;
+            Backlog[line].SetText(text);
+    }
+
+    public void WriteColor(string text, BacklogColorSet color, int line = -1)
+    {
+        if (line == -1 || Backlog.Count <= line)
+        {
+            Backlog.Add(new BacklogRow(text, color));
+            if (Backlog.Count > _maxLinesY)
+                Backlog.MovePointerDown();
+        }
+        else
+        {
+            Backlog[line].SetText(text);
+            Backlog[line].SetColor(color);
+        }
     }
 
     public override void Move(Vector2 newPosition)

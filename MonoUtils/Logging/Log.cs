@@ -1,4 +1,5 @@
 using System;
+using Microsoft.Xna.Framework;
 
 namespace MonoUtils.Logging;
 
@@ -16,5 +17,11 @@ public static class Log
     {
         Out.SetLine(line);
         Out.Write(msg);
+    }
+
+    public static void WriteColor(string msg, Color[] colors)
+    {
+        Out.SetLine(-1);
+        Out.WriteColor(msg, colors);
     }
 }

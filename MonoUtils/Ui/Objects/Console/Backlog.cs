@@ -1,6 +1,6 @@
 namespace MonoUtils.Ui.Objects.Console;
 
-public class Backlog : List<string>
+public class Backlog : List<BacklogRow>
 {
     private int pointer;
 
@@ -10,7 +10,7 @@ public class Backlog : List<string>
     public void MovePointerDown()
         => pointer = pointer++ < Count ? pointer : Count;
     
-    public List<string> GetRangeFromPointer(int size)
+    public List<BacklogRow> GetRangeFromPointer(int size)
     {
         int endIndex = Math.Min(pointer + size, Count);
         int startIndex = Math.Min(pointer, endIndex);

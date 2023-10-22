@@ -1,3 +1,4 @@
+using Microsoft.Xna.Framework;
 using MonoUtils.Ui.Objects.Console;
 
 namespace MonoUtils.Logging;
@@ -36,6 +37,17 @@ public class LogAdapter
         if (_console is not null)
             _console.Write(text, _line);
             
+    }
+
+    public void WriteColor(string text, Color[] color)
+    {
+        if (_writer is not null)
+            return;
+
+        if (_console is null)
+            return;
+
+        _console.WriteColor(text, new BacklogColorSet(color));
     }
 
     public void UpdateReference(DevConsole console)
