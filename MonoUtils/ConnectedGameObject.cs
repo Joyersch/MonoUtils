@@ -9,7 +9,7 @@ namespace MonoUtils;
 
 public class ConnectedGameObject : GameObject
 {
-    private enum OnTextureRef
+    public enum OnTextureReference
     {
         TopLeft,
         Top,
@@ -64,7 +64,7 @@ public class ConnectedGameObject : GameObject
         position, size, texture, mapping)
     {
         _imageLocations = new List<Vector2>();
-        _imageLocations.Add(GetImageLocation(OnTextureRef.Center + variation));
+        _imageLocations.Add(GetImageLocation(OnTextureReference.Center + variation));
         _variation = variation;
     }
 
@@ -82,23 +82,23 @@ public class ConnectedGameObject : GameObject
         }
     }
 
-    private Vector2 GetImageLocation(OnTextureRef onTexture)
+    private Vector2 GetImageLocation(OnTextureReference onTexture)
         => onTexture switch
         {
-            OnTextureRef.TopLeft => new Vector2(0, 0),
-            OnTextureRef.Top => new Vector2(1, 0),
-            OnTextureRef.TopRight => new Vector2(2, 0),
-            OnTextureRef.Left => new Vector2(0, 1),
-            OnTextureRef.Right => new Vector2(2, 1),
-            OnTextureRef.BottomLeft => new Vector2(0, 2),
-            OnTextureRef.Bottom => new Vector2(1, 2),
-            OnTextureRef.BottomRight => new Vector2(2, 2),
-            OnTextureRef.CornerTopLeft => new Vector2(3, 1),
-            OnTextureRef.CornerTopRight => new Vector2(4, 1),
-            OnTextureRef.CornerBottomLeft => new Vector2(3, 2),
-            OnTextureRef.CornerBottomRight => new Vector2(4, 2),
-            OnTextureRef.VariationCenter1 =>  new Vector2(3,0),
-            OnTextureRef.VariationCenter2 =>  new Vector2(4,0),
+            OnTextureReference.TopLeft => new Vector2(0, 0),
+            OnTextureReference.Top => new Vector2(1, 0),
+            OnTextureReference.TopRight => new Vector2(2, 0),
+            OnTextureReference.Left => new Vector2(0, 1),
+            OnTextureReference.Right => new Vector2(2, 1),
+            OnTextureReference.BottomLeft => new Vector2(0, 2),
+            OnTextureReference.Bottom => new Vector2(1, 2),
+            OnTextureReference.BottomRight => new Vector2(2, 2),
+            OnTextureReference.CornerTopLeft => new Vector2(3, 1),
+            OnTextureReference.CornerTopRight => new Vector2(4, 1),
+            OnTextureReference.CornerBottomLeft => new Vector2(3, 2),
+            OnTextureReference.CornerBottomRight => new Vector2(4, 2),
+            OnTextureReference.VariationCenter1 =>  new Vector2(3,0),
+            OnTextureReference.VariationCenter2 =>  new Vector2(4,0),
             _ => new Vector2(1, 1)
         };
 
@@ -147,7 +147,7 @@ public class ConnectedGameObject : GameObject
             }
         }
 
-        mainImageLocation = GetImageLocation(OnTextureRef.Center + _variation);
+        mainImageLocation = GetImageLocation(OnTextureReference.Center + _variation);
 
         bool topLeft = !values[0];
         bool top = !values[1];
@@ -161,48 +161,48 @@ public class ConnectedGameObject : GameObject
 
 
         if (left)
-            mainImageLocation = GetImageLocation(OnTextureRef.Left);
+            mainImageLocation = GetImageLocation(OnTextureReference.Left);
 
         if (right)
-            mainImageLocation = GetImageLocation(OnTextureRef.Right);
+            mainImageLocation = GetImageLocation(OnTextureReference.Right);
 
         if (top)
-            mainImageLocation = GetImageLocation(OnTextureRef.Top);
+            mainImageLocation = GetImageLocation(OnTextureReference.Top);
 
         if (bottom)
-            mainImageLocation = GetImageLocation(OnTextureRef.Bottom);
+            mainImageLocation = GetImageLocation(OnTextureReference.Bottom);
 
 
         if (topLeft)
         {
             if (left && top)
-                mainImageLocation = GetImageLocation(OnTextureRef.TopLeft);
+                mainImageLocation = GetImageLocation(OnTextureReference.TopLeft);
             else if (!left && !top)
-                imageLocations.Add(GetImageLocation(OnTextureRef.CornerBottomRight));
+                imageLocations.Add(GetImageLocation(OnTextureReference.CornerBottomRight));
         }
 
         if (topRight)
         {
             if (right && top)
-                mainImageLocation = GetImageLocation(OnTextureRef.TopRight);
+                mainImageLocation = GetImageLocation(OnTextureReference.TopRight);
             else if (!right && !top)
-                imageLocations.Add(GetImageLocation(OnTextureRef.CornerBottomLeft));
+                imageLocations.Add(GetImageLocation(OnTextureReference.CornerBottomLeft));
         }
 
         if (bottomLeft)
         {
             if (left && bottom)
-                mainImageLocation = GetImageLocation(OnTextureRef.BottomLeft);
+                mainImageLocation = GetImageLocation(OnTextureReference.BottomLeft);
             else if (!left && !bottom)
-                imageLocations.Add(GetImageLocation(OnTextureRef.CornerTopRight));
+                imageLocations.Add(GetImageLocation(OnTextureReference.CornerTopRight));
         }
 
         if (bottomRight)
         {
             if (right && bottom)
-                mainImageLocation = GetImageLocation(OnTextureRef.BottomRight);
+                mainImageLocation = GetImageLocation(OnTextureReference.BottomRight);
             else if (!right && !bottom)
-                imageLocations.Add(GetImageLocation(OnTextureRef.CornerTopLeft));
+                imageLocations.Add(GetImageLocation(OnTextureReference.CornerTopLeft));
         }
 
         _imageLocations.Add(mainImageLocation);
