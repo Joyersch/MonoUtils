@@ -9,8 +9,8 @@ namespace MonoUtils.Ui.Menu;
 
 public class LoadingScreen : GameObject
 {
-    private int _max;
-    private int _current;
+    private long _max;
+    private long _current;
 
     private int _dots;
 
@@ -70,12 +70,12 @@ public class LoadingScreen : GameObject
         _rainbowColor = new Rainbow() { GameTimeStepInterval = 50F, Increment = 5 };
     }
 
-    public void SetCurrent(int current)
+    public void SetCurrent(long current)
     {
         _current = current;
     }
 
-    public void SetMax(int max)
+    public void SetMax(long max)
     {
         _max = max;
     }
@@ -105,7 +105,8 @@ public class LoadingScreen : GameObject
         }
 
 
-        int done = 30 * _current / _max;
+        // if this crashes do to int long cast than something else is broken because this should be a percentage (0..1 * 30)
+        int done = (int)(30 * _current / _max);
         ColorBuilder colorBuilder = new ColorBuilder();
 
         _rainbowColor.Update(gameTime);
