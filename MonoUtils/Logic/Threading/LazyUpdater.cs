@@ -11,7 +11,7 @@ public class LazyUpdater
 {
     private Func<bool> _loadingTasks;
 
-    public float FrameLimit { get; set; } = 10F;
+    public float FrameLimit { get; set; } = 6F;
     private Stopwatch _stopwatch = new Stopwatch();
     private bool _success;
     public void Update(GameTime gameTime)

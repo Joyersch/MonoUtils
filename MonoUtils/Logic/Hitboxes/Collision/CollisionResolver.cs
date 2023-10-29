@@ -12,6 +12,15 @@ public class CollisionResolver : IManageable
     private List<GameObject> _stationaries;
     private HitboxCollection _hitboxCollection;
 
+    public bool ManageStationaryUpdate { get; set; } = true;
+
+    public bool ManageStationaryDraw { get; set; } = true;
+
+    public bool ManageDynamicUpdate { get; set; } = true;
+
+    public bool ManageDynamicDraw { get; set; } = true;
+
+
     public CollisionResolver(Camera camera)
     {
         _camera = camera;
@@ -25,27 +34,33 @@ public class CollisionResolver : IManageable
     public void Update(GameTime gameTime)
     {
         Rectangle = _camera.Rectangle;
-        foreach (var stationary in _stationaries)
-            stationary.Update(gameTime);
+        if (ManageStationaryUpdate)
+            foreach (var stationary in _stationaries)
+                stationary.Update(gameTime);
         foreach (var dynamic in _dynamics)
         {
             dynamic.UpdateInteraction(gameTime, _hitboxCollection);
-            dynamic.Update(gameTime);
+            if (ManageDynamicUpdate)
+                dynamic.Update(gameTime);
         }
     }
 
     public void Draw(SpriteBatch spriteBatch)
     {
-        foreach (var stationary in _stationaries)
-        {
-            if (stationary.Rectangle.Intersects(_camera.Rectangle))
+        if (ManageStationaryDraw)
+            foreach (var stationary in _stationaries.Where(stationary =>
+                         stationary.Rectangle.Intersects(_camera.Rectangle)))
+            {
                 stationary.Draw(spriteBatch);
-        }
+            }
 
-        foreach (var dynamic in _dynamics)
+        if (!ManageDynamicDraw)
+            return;
+
+        foreach (var dynamic in _dynamics.Where(dynamic =>
+                     dynamic.Rectangle.Intersects(_camera.Rectangle)))
         {
-            if (dynamic.Rectangle.Intersects(_camera.Rectangle))
-                dynamic.Draw(spriteBatch);
+            dynamic.Draw(spriteBatch);
         }
     }
 

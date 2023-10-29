@@ -2,6 +2,7 @@ using System.Runtime.CompilerServices;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoUtils.Logging;
+using MonoUtils.Logic;
 using MonoUtils.Ui.Logic;
 using Newtonsoft.Json.Serialization;
 

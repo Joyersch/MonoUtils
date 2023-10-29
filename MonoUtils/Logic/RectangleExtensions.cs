@@ -1,12 +1,12 @@
 using Framework = Microsoft.Xna.Framework;
 
-namespace MonoUtils.Ui.Logic;
+namespace MonoUtils.Logic;
 
 public static class RectangleExtensions
 {
     public static Framework.Rectangle ExtendFromCenter(this Framework.Rectangle sender, float scale)
-        => new((int) (sender.Center.X - sender.Width * scale / 2F), (int) (sender.Center.Y - sender.Height * scale / 2F),
-            (int) (sender.Width * scale), (int) (sender.Height * scale));
+        => new((int)(sender.Center.X - sender.Width * scale / 2F), (int)(sender.Center.Y - sender.Height * scale / 2F),
+            (int)(sender.Width * scale), (int)(sender.Height * scale));
 
     public static Framework.Vector2 BottomRightCorner(this Framework.Rectangle sender)
         => sender.Location.ToVector2() + sender.Size.ToVector2();

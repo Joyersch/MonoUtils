@@ -10,6 +10,7 @@ namespace MonoUtils.Ui.Menu;
 public class LoadingScreen : GameObject
 {
     private long _max;
+    private string _goal;
     private long _current;
 
     private int _dots;
@@ -19,6 +20,7 @@ public class LoadingScreen : GameObject
     private readonly Text _loading;
     private readonly Text _progress;
     private readonly Text _bar;
+    private int _loadbarLength = 196;
 
     private OverTimeInvoker _lazyDots;
     private Rainbow _rainbowColor;
@@ -26,9 +28,10 @@ public class LoadingScreen : GameObject
     public bool ProgressEnabled = true;
 
 
-    public LoadingScreen(Vector2 position, Vector2 size, int max, float scale) : base(position, size)
+    public LoadingScreen(Vector2 position, Vector2 size, long max, float scale, string goal) : base(position, size)
     {
         _max = max;
+        _goal = goal;
         _area = new Rectangle(position.ToPoint(), size.ToPoint());
 
         _loading = new Text("Loading", 5F * scale);
@@ -38,14 +41,18 @@ public class LoadingScreen : GameObject
             .Centered()
             .Move();
 
-        _progress = new Text(string.Empty, 2F * scale);
+        _progress = new Text(goal, 2F * scale);
         _progress.GetCalculator(_area)
             .OnCenter()
             .OnY(0.45F)
             .Centered()
             .Move();
 
-        _bar = new Text("⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜", Vector2.Zero, 2F * scale, 0);
+        StringBuilder builder = new();
+        for (int i = 0; i < _loadbarLength; i++)
+            builder.Append('|');
+
+        _bar = new Text(builder.ToString(), Vector2.Zero, 2F * scale, 0);
         _bar.GetCalculator(_area)
             .OnCenter()
             .OnY(0.6F)
@@ -67,7 +74,7 @@ public class LoadingScreen : GameObject
                 _dots = 0;
         };
 
-        _rainbowColor = new Rainbow() { GameTimeStepInterval = 50F, Increment = 5 };
+        _rainbowColor = new Rainbow() { GameTimeStepInterval = 6F, Increment = 2, Offset = 64 };
     }
 
     public void SetCurrent(long current)
@@ -78,6 +85,11 @@ public class LoadingScreen : GameObject
     public void SetMax(long max)
     {
         _max = max;
+    }
+
+    public void SetGoal(string goal)
+    {
+        _goal = goal;
     }
 
     public override void Update(GameTime gameTime)
@@ -95,7 +107,7 @@ public class LoadingScreen : GameObject
 
         if (ProgressEnabled)
         {
-            _progress.ChangeText($"Progress: {_current}/{_max}");
+            _progress.ChangeText($"{_goal}: {_current}/{_max}");
             _progress.Update(gameTime);
             _progress.GetCalculator(_area)
                 .OnCenter()
@@ -104,15 +116,17 @@ public class LoadingScreen : GameObject
                 .Move();
         }
 
+        if (_max == 0)
+            return;
 
         // if this crashes do to int long cast than something else is broken because this should be a percentage (0..1 * 30)
-        int done = (int)(30 * _current / _max);
+        int done = (int)(_loadbarLength * _current / _max);
         ColorBuilder colorBuilder = new ColorBuilder();
 
         _rainbowColor.Update(gameTime);
 
         colorBuilder.AddColor(_rainbowColor.GetColor(done));
-        colorBuilder.AddColor(Microsoft.Xna.Framework.Color.White, 30 - done);
+        colorBuilder.AddColor(Microsoft.Xna.Framework.Color.White, _loadbarLength - done);
 
         _bar.ChangeColor(colorBuilder.GetColor());
         _bar.Update(gameTime);

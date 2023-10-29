@@ -36,10 +36,6 @@ public class AnimatedColor : IManageable
     {
     }
 
-    public void DrawStatic(SpriteBatch spriteBatch)
-    {
-    }
-
     public Microsoft.Xna.Framework.Color[] GetColor(int length)
     {
         var getColor = new Microsoft.Xna.Framework.Color[length];

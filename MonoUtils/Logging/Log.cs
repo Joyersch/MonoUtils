@@ -24,4 +24,28 @@ public static class Log
         Out.SetLine(-1);
         Out.WriteColor(msg, colors);
     }
+
+    public static void WriteError(string msg)
+    {
+        Out.SetLine(-1);
+        Out.WriteColor($"[Error] {msg}", Color.Red);
+    }
+
+    public static void WriteCritical(string msg)
+    {
+        Out.SetLine(-1);
+        Out.WriteColor($"[Critical] {msg}", Color.DarkRed);
+    }
+
+    public static void WriteWarning(string msg)
+    {
+        Out.SetLine(-1);
+        Out.WriteColor($"[Warning] {msg}", Color.Gold);
+    }
+
+    public static void WriteInformation(string msg)
+    {
+        Out.SetLine(-1);
+        Out.WriteColor($"[Info] {msg}", Color.DeepSkyBlue);
+    }
 }

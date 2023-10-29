@@ -50,6 +50,17 @@ public class LogAdapter
         _console.WriteColor(text, new BacklogColorSet(color));
     }
 
+    public void WriteColor(string text, Color color)
+    {
+        if (_writer is not null)
+            return;
+
+        if (_console is null)
+            return;
+
+        _console.WriteColor(text, new BacklogColorSet(color, text.Length));
+    }
+
     public void UpdateReference(DevConsole console)
     {
         _console = console;

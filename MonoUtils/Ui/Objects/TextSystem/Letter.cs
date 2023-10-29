@@ -159,6 +159,7 @@ public class Letter : GameObject, IMoveable
             Character.Bean => new Rectangle(1,0,7,8),
             Character.CurlyBracketOpen => new Rectangle(0, 0, 3, 8),
             Character.CurlyBracketClose => new Rectangle(0, 0, 3, 8),
+            Character.Pipe => new Rectangle(0,0, 1, 8),
             _ => new Rectangle(0, 0, 8, 8)
         };
     }
@@ -262,6 +263,7 @@ public class Letter : GameObject, IMoveable
         Bean,
         CurlyBracketOpen,
         CurlyBracketClose,
+        Pipe,
     }
 
     public static Character Parse(char character)
@@ -364,6 +366,7 @@ public class Letter : GameObject, IMoveable
             Bean => Character.Bean,
             '{' => Character.CurlyBracketOpen,
             '}' => Character.CurlyBracketClose,
+            '|' => Character.Pipe,
             _ => Character.Full,
         };
 
@@ -467,6 +470,7 @@ public class Letter : GameObject, IMoveable
             Character.Bean => Bean,
             Character.CurlyBracketOpen =>  '{',
             Character.CurlyBracketClose => '}',
+            Character.Pipe => '|',
             _ => '⬜'
         };
 
