@@ -32,7 +32,8 @@ public static class Global
     public static string ReadFromResources(string file)
     {
         var assembly = Assembly.GetCallingAssembly();
-        if (!assembly.GetManifestResourceNames().Contains(file))
+        var files = assembly.GetManifestResourceNames();
+        if (!files.Contains(file))
             throw new ArgumentException("Resource does not exists!");
         using Stream stream = assembly.GetManifestResourceStream(file);
         using StreamReader reader = new StreamReader(stream);

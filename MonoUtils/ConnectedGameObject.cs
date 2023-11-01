@@ -104,6 +104,8 @@ public class ConnectedGameObject : GameObject
         };
 
     public void SetTextureLocation(List<ConnectedGameObject> surroundingObjects)
+        => SetTextureLocation(surroundingObjects.ToArray());
+    public void SetTextureLocation(ConnectedGameObject[] surroundingObjects)
     {
         _imageLocations = new List<Vector2>();
         Vector2 mainImageLocation = Vector2.Zero;

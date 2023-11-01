@@ -1,4 +1,5 @@
 using MonoUtils.Logic;
+using MonoUtils.Logic.Text;
 
 namespace MonoUtils.Settings;
 
@@ -70,6 +71,18 @@ public class GeneralSettings : ISettings, IChangeable
         set
         {
             _sfxVolume = value;
+            HasChanged?.Invoke(this, EventArgs.Empty);
+        }
+    }
+
+    private TextProvider.Language _localization;
+    public TextProvider.Language Localization
+    {
+        get => _localization;
+        set
+        {
+            _localization = value;
+            TextProvider.Localization = value;
             HasChanged?.Invoke(this, EventArgs.Empty);
         }
     }
