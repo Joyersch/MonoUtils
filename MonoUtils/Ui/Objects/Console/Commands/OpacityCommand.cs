@@ -6,12 +6,18 @@ public class OpacityCommand : ICommand
     public IEnumerable<string> Execute(DevConsole console, object[] options, ContextProvider context)
     {
         if (options.Length < 1)
-            return new[] {"Usage:", "opacity [0..1]"};
+            return new[] { "Usage:", "opacity [0..1]" };
 
-        if (!float.TryParse(options[0].ToString(), out float value))
-            return new[] {@$"Invalid value ""{value}"""};
+        if (!float.TryParse(options[0].ToString().Replace('.', ','), out float value))
+            return new[] { @$"Invalid value ""{value}""" };
 
-        console.DrawColor = new Microsoft.Xna.Framework.Color(value, value, value, value);
-        return new[] {"Changed opacity for console"};
+        _color ??= console.DrawColor;
+        console.DrawColor.R = (byte)(value * _color.Value.R);
+        console.DrawColor.G = (byte)(value * _color.Value.G);
+        console.DrawColor.B = (byte)(value * _color.Value.B);
+        console.DrawColor.A = (byte)(value * _color.Value.A);
+        return new[] { "Changed opacity for console" };
     }
+
+    private Microsoft.Xna.Framework.Color? _color = null;
 }
