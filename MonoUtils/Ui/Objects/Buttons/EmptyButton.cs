@@ -9,7 +9,7 @@ using MonoUtils.Ui.Logic;
 
 namespace MonoUtils.Ui.Objects.Buttons;
 
-public class EmptyButton : GameObject, IMouseActions, IInteractable, IDisposable
+public class EmptyButton : GameObject, IMouseActions, IInteractable
 {
     public event Action<object> Leave;
     public event Action<object> Enter;
@@ -51,7 +51,6 @@ public class EmptyButton : GameObject, IMouseActions, IInteractable, IDisposable
     public EmptyButton(Vector2 position, Vector2 size, Texture2D texture, TextureHitboxMapping mapping) :
         base(position, size, texture, mapping)
     {
-        _soundEffectInstance = Global.SoundEffects.GetSfxInstance("ButtonSound");
         _mouseMat = new MouseActionsMat(this);
         _mouseMat.Leave += _ => InvokeLeaveEventHandler();
         _mouseMat.Enter += _ => InvokeEnterEventHandler();
@@ -67,8 +66,6 @@ public class EmptyButton : GameObject, IMouseActions, IInteractable, IDisposable
 
     protected void InvokeClickEventHandler()
     {
-        _soundEffectInstance.Stop();
-        _soundEffectInstance.Play();
         Click?.Invoke(this);
     }
 
@@ -78,16 +75,7 @@ public class EmptyButton : GameObject, IMouseActions, IInteractable, IDisposable
     protected void InvokeLeaveEventHandler()
         => Leave?.Invoke(this);
 
-    public void ChangeSoundEffect(string key)
-    {
-        _soundEffectInstance.Dispose();
-        _soundEffectInstance = Global.SoundEffects.GetSfxInstance(key);
-    }
 
-    public void Dispose()
-    {
-        _soundEffectInstance?.Dispose();
-    }
 
     public bool IsHover() => _mouseMat.IsHover;
 }
