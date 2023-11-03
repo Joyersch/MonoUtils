@@ -15,6 +15,7 @@ public class GeneralSettings : ISettings, IChangeable
         MusicVolume = copy.MusicVolume;
         SfxVolume = copy.SfxVolume;
         Resolution = copy.Resolution;
+        Localization = copy.Localization;
         Resolution.HasChanged += (_, _) => HasChanged?.Invoke(this, EventArgs.Empty);
     }
 
@@ -97,6 +98,7 @@ public class GeneralSettings : ISettings, IChangeable
         IsFixedStep = true;
         MusicVolume = 5;
         SfxVolume = 5;
+        Localization = TextProvider.Language.en_US;
         Resolution.HasChanged += (_, _) => HasChanged?.Invoke(this, EventArgs.Empty);
     }
 }

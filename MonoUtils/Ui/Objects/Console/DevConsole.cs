@@ -10,15 +10,12 @@ public class DevConsole : GameObject
 {
     private readonly GameWindow _window;
 
-    private bool _isActive;
-    public Keys? Activator = Keys.F10;
     private Text _currentInput;
     public Backlog Backlog { get; private set; }
     private List<BacklogRow> _toDisplay;
     private int _maxLinesY;
     private bool _isDrawingCursor;
     private OverTimeInvoker _drawCursorInvoker;
-    private bool _inputRegistered;
 
     public CommandProcessor Processor { get; private set; }
 
@@ -38,27 +35,24 @@ public class DevConsole : GameObject
         }
     };
 
-    public DevConsole(CommandProcessor processor, GameWindow window, Vector2 position) : this(processor, window,
+    public DevConsole(CommandProcessor processor, Vector2 position) : this(processor,
         position, 1F, null)
     {
     }
 
-    public DevConsole(CommandProcessor processor, GameWindow window, Vector2 position, float scale) : this(processor,
-        window, position, scale, null)
+    public DevConsole(CommandProcessor processor, Vector2 position, float scale) : this(processor, position, scale,
+        null)
     {
     }
 
-    public DevConsole(CommandProcessor processor, GameWindow window, Vector2 position, float scale,
-        DevConsole? console) : base(position,
+    public DevConsole(CommandProcessor processor, Vector2 position, float scale, DevConsole? console) : base(position,
         DefaultSize * scale,
         DefaultTexture, DefaultMapping)
     {
-        _window = window;
-        ActivateInput();
-
         Processor = console is null ? processor : console.Processor;
 
         _currentInput = new Text(string.Empty, scale);
+
 
         Backlog = console is null ? new Backlog() : console.Backlog;
 
@@ -75,12 +69,10 @@ public class DevConsole : GameObject
         _drawCursorInvoker = new OverTimeInvoker(500F);
         _drawCursorInvoker.Trigger += UpdateCursor;
 
-        _currentInput.Move(new Vector2(0, Size.Y - _currentInput.Size.Y));
+        _currentInput.Move(position + new Vector2(0, Size.Y - _currentInput.Size.Y));
 
         Context = console is null ? new ContextProvider() : console.Context;
         DrawColor = console?.DrawColor ?? new Microsoft.Xna.Framework.Color(75, 75, 75);
-        ;
-        _isActive = console?._isActive ?? false;
     }
 
     private void UpdateCursor()
@@ -91,16 +83,9 @@ public class DevConsole : GameObject
 
     public override void Update(GameTime gameTime)
     {
-        if (Activator is not null && InputReaderKeyboard.CheckKey(Activator.Value, true))
-            _isActive = !_isActive;
-
-        if (!_isActive)
-            return;
-
         base.Update(gameTime);
 
-        if (_inputRegistered)
-            _drawCursorInvoker.Update(gameTime);
+        _drawCursorInvoker.Update(gameTime);
 
         if (InputReaderKeyboard.CheckKey(Keys.Up, true))
             Backlog.MovePointerUp();
@@ -120,47 +105,20 @@ public class DevConsole : GameObject
             }
             else
                 _lines[line].ChangeText(string.Empty);
-
         }
     }
 
     public override void Draw(SpriteBatch spriteBatch)
     {
-        if (!_isActive)
-            return;
-
         base.Draw(spriteBatch);
         foreach (Text text in _lines)
             text.Draw(spriteBatch);
         _currentInput.Draw(spriteBatch);
     }
 
-    public void ActivateInput()
-    {
-        if (_inputRegistered)
-            return;
-
-        _window.TextInput += Window_TextInput;
-        _inputRegistered = true;
-    }
-
-    public void DeactivateInput()
-    {
-        if (!_inputRegistered)
-            return;
-
-        _window.TextInput -= Window_TextInput;
-        _inputRegistered = false;
-    }
-
-    private void Window_TextInput(object sender, TextInputEventArgs e)
+    public void TextInput(object sender, TextInputEventArgs e)
     {
         string c = e.Character.ToString();
-        if (e.Key == Activator)
-            _isActive = !_isActive;
-
-        if (!_isActive)
-            return;
 
         if (_isDrawingCursor)
             _currentInput.AppendText("\b");
@@ -226,10 +184,4 @@ public class DevConsole : GameObject
         _currentInput.Move(_currentInput.Position + offset);
         Position = newPosition;
     }
-
-    public void Activate()
-        => _isActive = true;
-
-    public void Deactivate()
-        => _isActive = false;
 }
