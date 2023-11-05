@@ -11,6 +11,9 @@ public class OpacityCommand : ICommand
         if (!float.TryParse(options[0].ToString().Replace('.', ','), out float value))
             return new[] { @$"Invalid value ""{value}""" };
 
+        if (value > 1F)
+            value = 1F;
+
         _color ??= console.DrawColor;
         console.DrawColor.R = (byte)(value * _color.Value.R);
         console.DrawColor.G = (byte)(value * _color.Value.G);

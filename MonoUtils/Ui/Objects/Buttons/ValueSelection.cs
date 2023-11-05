@@ -1,5 +1,6 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using MonoUtils.Logging;
 using MonoUtils.Logic;
 using MonoUtils.Logic.Hitboxes;
 using MonoUtils.Ui.Objects.TextSystem;
@@ -15,28 +16,47 @@ public class ValueSelection : GameObject, IMoveable, IInteractable
     private readonly string _left = Letter.ReverseParse(Letter.Character.Left).ToString();
     private readonly string _right = Letter.ReverseParse(Letter.Character.Right).ToString();
 
-    public event Action<string> ValueChanged;
+    public event Action<object> ValueChanged;
 
-    public List<string> ValidValues { get; private set; }
+    public List<object> ValidValues { get; private set; }
 
-    public string Value => ValidValues[_pointer];
+    public string Value => ValidValues[_pointer].ToString();
 
     public bool LoopOverValues = false;
 
     private int _pointer;
-    
-    public ValueSelection(Vector2 position, float scale, List<string> validValues, int startValueIndex) : base(
+
+    public ValueSelection(Vector2 position, float scale, List<object> validValues, int startValueIndex) : base(
         position, SquareTextButton.DefaultSize * scale, DefaultTexture, DefaultMapping)
     {
         ValidValues = validValues;
         _pointer = startValueIndex;
         _decreaseButton = new SquareTextButton(position, scale, _left, _left);
         _decreaseButton.Click += DecreaseClicked;
-        _display = new Text(validValues[_pointer], Vector2.One, scale);
 
-        _increaseButton = new SquareTextButton(Vector2.Zero, scale, _right, _right);
+        // get the longest value
+        int longestValidValue = 0;
+        foreach (var validValue in validValues)
+        {
+            var text = new Text(validValue.ToString());
+            if (longestValidValue < text.Rectangle.Width)
+                longestValidValue = text.Rectangle.Width;
+        }
+
+        _increaseButton =
+            new SquareTextButton(position + new Vector2(_decreaseButton.Rectangle.Width + longestValidValue + 8, 0),
+                scale, _right, _right);
         _increaseButton.Click += IncreaseClicked;
-        Move(Position);
+
+        Rectangle = Rectangle.Union(_decreaseButton.Rectangle, _increaseButton.Rectangle);
+        Position = Rectangle.Location.ToVector2();
+        Size = Rectangle.Size.ToVector2();
+
+        _display = new Text(validValues[_pointer].ToString(),Vector2.Zero, scale);
+        _display.GetCalculator(Rectangle)
+            .OnCenter()
+            .Centered()
+            .Move();
     }
 
     private void IncreaseClicked(object obj)
@@ -59,7 +79,7 @@ public class ValueSelection : GameObject, IMoveable, IInteractable
     {
         _display.ChangeText(Value);
         Move(Position);
-        ValueChanged?.Invoke(_display.Value);
+        ValueChanged?.Invoke(ValidValues[_pointer]);
     }
 
     public Vector2 GetPosition()
@@ -70,13 +90,13 @@ public class ValueSelection : GameObject, IMoveable, IInteractable
 
     public void Move(Vector2 newPosition)
     {
-        _decreaseButton.Move(newPosition);
+        var offset = newPosition - Position;
+        _decreaseButton.Move(_decreaseButton.Position + offset);
 
-        _display.Move(_decreaseButton.Position + new Vector2(_decreaseButton.Rectangle.Width + 4,
-            _decreaseButton.Rectangle.Height / 2 - _display.Rectangle.Height / 2));
+        _display.Move(_display.Position + offset);
 
-        _increaseButton.Move(_display.Position + new Vector2(_display.Rectangle.Width + 4,
-            _display.Rectangle.Height / 2 - _increaseButton.Rectangle.Height / 2));
+        _increaseButton.Move(_increaseButton.Position + offset);
+        Position = newPosition;
     }
 
     public void UpdateInteraction(GameTime gameTime, IHitbox toCheck)
@@ -87,10 +107,14 @@ public class ValueSelection : GameObject, IMoveable, IInteractable
 
     public override void Update(GameTime gameTime)
     {
+        base.Update(gameTime);
+        _display.GetCalculator(Rectangle)
+            .OnCenter()
+            .Centered()
+            .Move();
         _display.Update(gameTime);
         _increaseButton.Update(gameTime);
         _decreaseButton.Update(gameTime);
-        base.Update(gameTime);
     }
 
     public override void Draw(SpriteBatch spriteBatch)
@@ -102,7 +126,7 @@ public class ValueSelection : GameObject, IMoveable, IInteractable
 
     protected override void UpdateRectangle()
     {
-        Rectangle = Rectangle.Union(_display.Rectangle,
-            Rectangle.Union(_decreaseButton.Rectangle, _increaseButton.Rectangle));
+        Rectangle = Rectangle.Union(_decreaseButton.Rectangle, _increaseButton.Rectangle);
     }
+
 }

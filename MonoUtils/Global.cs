@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using MonoUtils.Logic;
 using MonoUtils.Logic.Listener;
@@ -17,6 +18,7 @@ public static class Global
     public static readonly CommandProcessor CommandProcessor = new();
 
     public static SoundSettingsListener SoundSettingsListener;
+
     public static void Initialize(ContentManager content)
     {
         GameObject.DefaultTexture = content.GetTexture("placeholder");
@@ -28,7 +30,7 @@ public static class Global
         DevConsole.DefaultTexture = content.GetTexture("console");
         ConnectedGameObject.DefaultTexture = content.GetTexture("connectedsample");
     }
-    
+
     public static string ReadFromResources(string file)
     {
         var assembly = Assembly.GetCallingAssembly();
@@ -39,4 +41,8 @@ public static class Global
         using StreamReader reader = new StreamReader(stream);
         return reader.ReadToEnd();
     }
+
+    private static Color? _color;
+
+    public static Color Color => _color ??= new Color(161, 0, 255); // #a100ff
 }
