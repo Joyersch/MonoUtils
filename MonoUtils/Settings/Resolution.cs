@@ -1,32 +1,23 @@
 using Microsoft.Xna.Framework;
-using MonoUtils.Logic;
 
 namespace MonoUtils.Settings;
 
-public class Resolution : IChangeable
+public class Resolution
 {
-    private int _width;
-    public int Width
+    public int Width { get; set; }
+    public int Height { get; set; }
+
+    public Resolution(int width, int height)
     {
-        get => _width;
-        set
-        {
-            _width = value;
-            HasChanged?.Invoke(this, EventArgs.Empty);
-        }
+        Width = width;
+        Height = height;
     }
 
-    private int _height;
-    public int Height
+    public override string ToString()
     {
-        get => _height;
-        set
-        {
-            _height = value;
-            HasChanged?.Invoke(this, EventArgs.Empty);
-        }
+        return Width + "x" + Height;
     }
-    public event EventHandler HasChanged;
 
-    public Vector2 ToVector2() => new(_width, _height);
+    public Vector2 ToVector2()
+        => new Vector2(Width, Height);
 }

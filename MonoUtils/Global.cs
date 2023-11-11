@@ -33,13 +33,18 @@ public static class Global
 
     public static string ReadFromResources(string file)
     {
-        var assembly = Assembly.GetCallingAssembly();
-        var files = assembly.GetManifestResourceNames();
-        if (!files.Contains(file))
-            throw new ArgumentException("Resource does not exists!");
-        using Stream stream = assembly.GetManifestResourceStream(file);
-        using StreamReader reader = new StreamReader(stream);
-        return reader.ReadToEnd();
+        var assemblies = AppDomain.CurrentDomain.GetAssemblies();
+        foreach (var assembly in assemblies)
+        {
+            var files = assembly.GetManifestResourceNames();
+            if (!files.Contains(file))
+                continue;
+            using Stream stream = assembly.GetManifestResourceStream(file);
+            using StreamReader reader = new StreamReader(stream);
+            return reader.ReadToEnd();
+        }
+
+        return string.Empty;
     }
 
     private static Color? _color;

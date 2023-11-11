@@ -1,48 +1,83 @@
+using System.Reflection;
 using MonoUtils.Logging;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace MonoUtils.Settings;
 
-public static class SettingsManager
+public class SettingsManager
 {
-    private static string _basePath;
-    private static readonly List<ISettings> _settings;
+    private string _basePath;
+    private readonly int _saveNumber;
+    private readonly Dictionary<string, object> _settings;
+    private readonly List<Type> _settingsImplementations;
 
-    static SettingsManager()
+    public SettingsManager(string basePath, int saveNumber)
     {
-        _settings = new List<ISettings>();
-        _settings.Add(new GeneralSettings());
-    }
+        _basePath = basePath;
+        _saveNumber = saveNumber;
+        _settings = new Dictionary<string, object>();
+        _settingsImplementations = new List<Type>();
 
-    public static void Add(ISettings settings)
-        => _settings.Add(settings);
+        var settingsType = typeof(ISettings);
+        var assemblies = AppDomain.CurrentDomain.GetAssemblies();
 
-    public static T Get<T>()
-    {
-        return (T) _settings.First(s => s.Name == typeof(T).Name);
-    }
-
-    public static void Save()
-    {
-        foreach (var settings in _settings)
-            settings.Save(_basePath);
-    }
-
-    public static void Load()
-    {
-        foreach (var settings in _settings)
+        foreach (var assembly in assemblies)
         {
-            try
+            var settingsImplementations = assembly.GetTypes()
+                .Where(type =>
+                    settingsType.IsAssignableFrom(type) && type is { IsInterface: false, IsAbstract: false });
+
+            foreach (var implementation in settingsImplementations)
             {
-                settings.Load(_basePath);
-            }
-            catch (Exception exception)
-            {
-                Log.Write(exception.Message);
+                var instance = Activator.CreateInstance(implementation);
+                if (instance is not ISettings settingsInstance)
+                    continue;
+
+                var type = instance.GetType();
+                _settingsImplementations.Add(type);
+                _settings.Add(type.Namespace.Split('.')[^1] + "." +  type.Name, instance);
             }
         }
-           
     }
 
-    public static void SetBasePath(string path)
-        => _basePath = path;
+    public T GetSetting<T>() where T : ISettings
+        => (T)_settings[typeof(T).Namespace.Split('.')[^1] + "." + typeof(T).Name];
+
+    public void Save()
+    {
+        string filePath = $@"{_basePath}/save_{_saveNumber}.json";
+        FileStream stream = null;
+        if (!File.Exists(filePath))
+            stream = File.Create(filePath);
+
+        string file = Newtonsoft.Json.JsonConvert.SerializeObject(_settings);
+        using StreamWriter writer = stream is null ? new StreamWriter(filePath) : new StreamWriter(stream);
+        writer.Write(file);
+    }
+
+    public bool Load()
+    {
+        string filePath = $@"{_basePath}/save_{_saveNumber}.json";
+
+        if (!File.Exists(filePath))
+            return false;
+
+        string json = File.ReadAllText(filePath);
+        JObject jsonObject = JObject.Parse(json);
+
+        foreach (var pair in jsonObject)
+        {
+            string key = pair.Key;
+            JToken value = pair.Value;
+
+            Type settingsType = _settingsImplementations.First(i => i.Namespace.Split('.')[^1] + "." + i.Name == key);
+            if (settingsType != null && _settings.ContainsKey(key))
+            {
+                object settingsInstance = JsonConvert.DeserializeObject(value.ToString(), settingsType);
+                _settings[key] = settingsInstance;
+            }
+        }
+        return true;
+    }
 }

@@ -7,13 +7,15 @@ public class SoundSettingsListener
 {
     private readonly List<(SoundEffectInstance effect, bool music)> _instances;
 
-    private GeneralSettings _settings;
+    /*private GeneralSettings _settings;*/
 
-    public SoundSettingsListener(GeneralSettings settings)
+    public SoundSettingsListener(/*GeneralSettings settings*/)
     {
         _instances = new List<(SoundEffectInstance, bool)>();
+        /*
         _settings = settings;
         _settings.HasChanged += SettingsOnHasChanged;
+        */
     }
 
     private void SettingsOnHasChanged(object sender, EventArgs e)
@@ -28,10 +30,12 @@ public class SoundSettingsListener
                 continue;
             }
 
+            /*
             if (instance.music)
                 instance.effect.Volume = _settings.MusicVolume / 10F;
             else
                 instance.effect.Volume = _settings.SfxVolume / 10F;
+                */
         }
 
         // Remove disposed effects.
@@ -42,7 +46,9 @@ public class SoundSettingsListener
     public SoundEffectInstance Register(SoundEffectInstance soundEffect, bool music)
     {
         _instances.Add((soundEffect, music));
+        /*
         SettingsOnHasChanged(_settings, EventArgs.Empty);
+        */
         return soundEffect;
     }
 }

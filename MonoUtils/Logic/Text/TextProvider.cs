@@ -28,9 +28,16 @@ public static class TextProvider
         if (index == -1)
             return new TextComponent(string.Empty);
 
-        var assembly = Assembly.GetCallingAssembly();
-        using Stream stream = assembly.GetManifestResourceStream(Files[index]);
-        using StreamReader reader = new StreamReader(stream);
-        return new TextComponent(reader.ReadToEnd());
+        var assemblies = AppDomain.CurrentDomain.GetAssemblies();
+        foreach (var assembly in assemblies)
+        {
+            using Stream stream = assembly.GetManifestResourceStream(Files[index]);
+            if (stream is null)
+                continue;
+            using StreamReader reader = new StreamReader(stream);
+            return new TextComponent(reader.ReadToEnd());
+        }
+
+        return new TextComponent(string.Empty);
     }
 }
