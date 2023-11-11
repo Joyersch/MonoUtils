@@ -49,7 +49,7 @@ public class Letter : GameObject, IMoveable
     public void UpdateCharacter(Character character)
     {
         FrameSpacing = GetCharacterSpacing(character);
-        var inImagePosition = new Rectangle(new Point((int) character % 5 * 8, (int) character / 5 * 8),
+        var inImagePosition = new Rectangle(new Point((int)character % 5 * 8, (int)character / 5 * 8),
             (FrameSize).ToPoint());
         ImageLocation = new Rectangle(
             inImagePosition.X + FrameSpacing.X
@@ -156,10 +156,16 @@ public class Letter : GameObject, IMoveable
             Character.SmallZ => new Rectangle(1, 2, 5, 6),
             Character.OpenSquaredBrackets => new Rectangle(1, 0, 2, 8),
             Character.CloseSquaredBrackets => new Rectangle(1, 0, 2, 8),
-            Character.Bean => new Rectangle(1,0,7,8),
+            Character.Bean => new Rectangle(1, 0, 7, 8),
             Character.CurlyBracketOpen => new Rectangle(0, 0, 3, 8),
             Character.CurlyBracketClose => new Rectangle(0, 0, 3, 8),
-            Character.Pipe => new Rectangle(0,0, 1, 8),
+            Character.Pipe => new Rectangle(0, 0, 1, 8),
+            Character.BigÄ => new Rectangle(1, 0, 5, 8),
+            Character.BigÖ => new Rectangle(1, 0, 5, 8),
+            Character.BigÜ => new Rectangle(1, 0, 5, 8),
+            Character.SmallÄ => new Rectangle(1, 0, 5, 8),
+            Character.SmallÖ => new Rectangle(1, 0, 4, 8),
+            Character.SmallÜ => new Rectangle(1, 0, 4, 8),
             _ => new Rectangle(0, 0, 8, 8)
         };
     }
@@ -264,6 +270,12 @@ public class Letter : GameObject, IMoveable
         CurlyBracketOpen,
         CurlyBracketClose,
         Pipe,
+        BigÄ,
+        BigÖ,
+        BigÜ,
+        SmallÄ,
+        SmallÖ,
+        SmallÜ,
     }
 
     public static Character Parse(char character)
@@ -367,6 +379,12 @@ public class Letter : GameObject, IMoveable
             '{' => Character.CurlyBracketOpen,
             '}' => Character.CurlyBracketClose,
             '|' => Character.Pipe,
+            'Ä' => Character.BigÄ,
+            'Ö' => Character.BigÖ,
+            'Ü' => Character.BigÜ,
+            'ä' => Character.SmallÄ,
+            'ö' => Character.SmallÖ,
+            'ü' => Character.SmallÜ,
             _ => Character.Full,
         };
 
@@ -468,9 +486,15 @@ public class Letter : GameObject, IMoveable
             Character.OpenSquaredBrackets => '[',
             Character.CloseSquaredBrackets => ']',
             Character.Bean => Bean,
-            Character.CurlyBracketOpen =>  '{',
+            Character.CurlyBracketOpen => '{',
             Character.CurlyBracketClose => '}',
             Character.Pipe => '|',
+            Character.BigÄ => 'Ä',
+            Character.BigÖ => 'Ö',
+            Character.BigÜ => 'Ü',
+            Character.SmallÄ => 'ä',
+            Character.SmallÖ => 'ö',
+            Character.SmallÜ => 'ü',
             _ => '⬜'
         };
 
