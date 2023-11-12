@@ -41,14 +41,14 @@ public class Checkbox : SquareTextButton
     public Checkbox(string text, float scale, bool state) : base(text, scale)
     {
         _checked = state;
-        Text.ChangeText(_checked ? Letter.Crossout.ToString() : Letter.Checkmark.ToString());
-        Text.ChangeColor(new[] { _checked ? Microsoft.Xna.Framework.Color.Red : Microsoft.Xna.Framework.Color.Green });
+        Text.ChangeText(_checked ? Letter.Checkmark.ToString() : Letter.Crossout.ToString());
+        Text.ChangeColor(new[] { _checked ? Microsoft.Xna.Framework.Color.Green : Microsoft.Xna.Framework.Color.Red });
         Click += delegate
         {
             _checked = !_checked;
-            Text.ChangeText(_checked ? Letter.Crossout.ToString() : Letter.Checkmark.ToString());
+            Text.ChangeText(_checked ? Letter.Checkmark.ToString() : Letter.Crossout.ToString());
             Text.ChangeColor(new[]
-                { _checked ? Microsoft.Xna.Framework.Color.Red : Microsoft.Xna.Framework.Color.Green });
+                { _checked ? Microsoft.Xna.Framework.Color.Green : Microsoft.Xna.Framework.Color.Red });
             ValueChanged?.Invoke(_checked);
         };
     }
