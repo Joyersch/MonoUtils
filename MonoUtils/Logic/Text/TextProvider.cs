@@ -11,8 +11,8 @@ public static class TextProvider
 
     public enum Language
     {
+        en_US,
         de_DE,
-        en_US
     }
 
     public static void Initialize()
