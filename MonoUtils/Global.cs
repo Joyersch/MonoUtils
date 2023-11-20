@@ -1,6 +1,7 @@
 ﻿using System.Reflection;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
+using MonoUtils.Logging;
 using MonoUtils.Logic;
 using MonoUtils.Logic.Listener;
 using MonoUtils.Sound;
@@ -34,17 +35,28 @@ public static class Global
     public static string ReadFromResources(string file)
     {
         var assemblies = AppDomain.CurrentDomain.GetAssemblies();
+        string @return = null;
         foreach (var assembly in assemblies)
         {
-            var files = assembly.GetManifestResourceNames();
-            if (!files.Contains(file))
-                continue;
-            using Stream stream = assembly.GetManifestResourceStream(file);
-            using StreamReader reader = new StreamReader(stream);
-            return reader.ReadToEnd();
+            try
+            {
+                var files = assembly.GetManifestResourceNames();
+                if (!files.Contains(file))
+                    continue;
+                using Stream stream = assembly.GetManifestResourceStream(file);
+                using StreamReader reader = new StreamReader(stream);
+                @return = reader.ReadToEnd();
+            }
+            catch(Exception exception)
+            {
+                Log.WriteError(exception.Message);
+            }
+
+            if (@return is not null)
+                break;
         }
 
-        return string.Empty;
+        return @return ?? string.Empty;
     }
 
     private static Color? _color;
