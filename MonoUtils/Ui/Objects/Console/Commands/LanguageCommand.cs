@@ -13,7 +13,7 @@ public class LanguageCommand : ICommand
         if (options[0].ToString().ToLower().Contains("de"))
             toUse = TextProvider.Language.de_DE;
         if (options[0].ToString().ToLower().Contains("en"))
-            toUse = TextProvider.Language.en_US;
+            toUse = TextProvider.Language.en_GB;
 
         if (toUse is null)
             return new[] { "Unknown language" };
