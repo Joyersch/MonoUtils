@@ -8,13 +8,13 @@ namespace MonoUtils.Settings;
 public class SettingsManager
 {
     private string _basePath;
-    private readonly int _saveNumber;
+    private int? _saveNumber;
     private readonly Dictionary<string, object> _settings;
     private readonly Dictionary<string, object> _saves;
     private readonly List<Type> _settingsImplementations;
     private readonly List<Type> _savesImplementations;
 
-    public SettingsManager(string basePath, int saveNumber)
+    public SettingsManager(string basePath, int? saveNumber = null)
     {
         _basePath = basePath;
         _saveNumber = saveNumber;
@@ -41,8 +41,9 @@ public class SettingsManager
 
                 var type = instance.GetType();
                 _settingsImplementations.Add(type);
-                _settings.Add(type.Namespace.Split('.')[^1] + "." +  type.Name, instance);
+                _settings.Add(type.Namespace.Split('.')[^1] + "." + type.Name, instance);
             }
+
             var saveImplementations = assembly.GetTypes()
                 .Where(type =>
                     saveType.IsAssignableFrom(type) && type is { IsInterface: false, IsAbstract: false });
@@ -55,30 +56,35 @@ public class SettingsManager
 
                 var type = instance.GetType();
                 _savesImplementations.Add(type);
-                _saves.Add(type.Namespace.Split('.')[^1] + "." +  type.Name, instance);
+                _saves.Add(type.Namespace.Split('.')[^1] + "." + type.Name, instance);
             }
         }
     }
 
+    public void SetSaveFile(int save)
+        => _saveNumber = save;
+
     public T GetSetting<T>() where T : ISettings
         => (T)_settings[typeof(T).Namespace.Split('.')[^1] + "." + typeof(T).Name];
-    
+
     public T GetSave<T>() where T : ISave
         => (T)_saves[typeof(T).Namespace.Split('.')[^1] + "." + typeof(T).Name];
 
     public void Save()
     {
         SaveSave();
-        SaveSetting();
+        SaveSettings();
     }
-    
+
     public void SaveSave()
     {
+        if (_saveNumber is null)
+            return;
         string filePath = $@"{_basePath}/save_{_saveNumber}.json";
         SaveFile(filePath, _saves);
     }
-    
-    public void SaveSetting()
+
+    public void SaveSettings()
     {
         string filePath = $@"{_basePath}/settings.json";
         SaveFile(filePath, _settings);
@@ -94,7 +100,7 @@ public class SettingsManager
         using StreamWriter writer = stream is null ? new StreamWriter(filePath) : new StreamWriter(stream);
         writer.Write(file);
     }
-    
+
     public bool Load()
     {
         bool successSetting, successSave;
@@ -105,6 +111,8 @@ public class SettingsManager
 
     public bool LoadSaves()
     {
+        if (_saveNumber is null)
+            return false;
         string filePath = $@"{_basePath}/save_{_saveNumber}.json";
 
         return LoadFile(filePath, _saves, _savesImplementations);
@@ -146,6 +154,6 @@ public class SettingsManager
             }
         }
 
-        return true;  
+        return true;
     }
 }

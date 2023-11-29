@@ -17,9 +17,19 @@ public static class TextProvider
 
     public static void Initialize()
     {
-        var assembly = Assembly.GetCallingAssembly();
-        var text = assembly.GetManifestResourceNames().Where(t => t.StartsWith("Text."));
-        Files.AddRange(text);
+        var assemblies = AppDomain.CurrentDomain.GetAssemblies();
+        foreach (var assembly in assemblies)
+        {
+            try
+            {
+                var text = assembly.GetManifestResourceNames().Where(t => t.StartsWith("Text."));
+                Files.AddRange(text);
+            }
+            catch (Exception exception)
+            {
+                Log.WriteError(exception.Message);
+            }
+        }
     }
 
     public static TextComponent GetText(string name)

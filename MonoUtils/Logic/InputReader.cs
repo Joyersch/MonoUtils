@@ -4,7 +4,7 @@ namespace MonoUtils.Logic;
 
 public static class InputReader
 {
-    public static bool CheckKeys(InputKey search, bool onlyOnces = false)
+    public static bool CheckKey(InputKey search, bool onlyOnces = false)
     {
         search.GetKey(out var keyboard, out var mouse);
 
