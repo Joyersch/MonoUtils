@@ -1,4 +1,5 @@
 using Microsoft.Xna.Framework;
+using MonoUtils.Logging;
 using MonoUtils.Logic.Hitboxes;
 using MonoUtils.Ui.Objects;
 
@@ -33,7 +34,10 @@ public class MouseActionsMat : IMouseActions, IInteractable, IHitbox
                 Enter?.Invoke(_sendSelfAsInvoker ? this : _toCover);
 
             if (InputReaderMouse.CheckKey(InputReaderMouse.MouseKeys.Left, true))
+            {
                 Click?.Invoke(_sendSelfAsInvoker ? this : _toCover);
+            }
+
         }
         else if (_hover)
             Leave?.Invoke(_sendSelfAsInvoker ? this : _toCover);

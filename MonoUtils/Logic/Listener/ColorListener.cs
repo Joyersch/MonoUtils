@@ -1,4 +1,6 @@
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using MonoUtils.Logic.Management;
 using MonoUtils.Ui.Color;
 
 namespace MonoUtils.Ui.Logic.Listener;

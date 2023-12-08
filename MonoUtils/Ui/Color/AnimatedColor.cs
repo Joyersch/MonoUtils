@@ -10,6 +10,7 @@ public class AnimatedColor : IManageable
     private int _index;
     private float _storedGameTime;
     public int Increment = 1;
+    public bool NoGradient;
     public float GameTimeStepInterval = 25;
     public int Offset;
 
@@ -39,9 +40,12 @@ public class AnimatedColor : IManageable
     public Microsoft.Xna.Framework.Color[] GetColor(int length)
     {
         var getColor = new Microsoft.Xna.Framework.Color[length];
-        for (int i = 0; i < length; i++)
+
+        for (int i = 0, a = 0; i < length; i++)
         {
-            getColor[i] = Color[(i * Increment + _index + Offset) % Color.Length];
+            if (!NoGradient)
+                a = i;
+            getColor[i] = Color[(a * Increment + _index + Offset) % Color.Length];
         }
 
         return getColor;

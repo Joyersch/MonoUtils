@@ -1,10 +1,11 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoUtils.Logic;
+using MonoUtils.Ui.Color;
 
 namespace MonoUtils.Ui.Objects.Buttons;
 
-public class TextButton : EmptyButton
+public class TextButton : EmptyButton, IColorable
 {
     public TextSystem.Text Text { get; }
     public string Name { get; }
@@ -93,5 +94,15 @@ public class TextButton : EmptyButton
     {
         base.Draw(spriteBatch);
         Text.Draw(spriteBatch);
+    }
+
+    public void ChangeColor(Microsoft.Xna.Framework.Color[] input)
+    {
+        Text.ChangeColor(input);
+    }
+
+    public int ColorLength()
+    {
+        return Text.ColorLength();
     }
 }

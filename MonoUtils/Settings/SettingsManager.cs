@@ -61,7 +61,7 @@ public class SettingsManager
         }
     }
 
-    public void SetSaveFile(int save)
+    public void SetSaveFile(int? save)
         => _saveNumber = save;
 
     public T GetSetting<T>() where T : ISettings
@@ -154,6 +154,31 @@ public class SettingsManager
             }
         }
 
+        return true;
+    }
+
+    public bool DeleteSave()
+    {
+        if (_saveNumber is null)
+            return false;
+        string filePath = $@"{_basePath}/save_{_saveNumber}.json";
+        return DeleteFile(filePath);
+    }
+
+    private static bool DeleteFile(string filePath)
+    {
+        if (!File.Exists(filePath))
+            return true;
+
+        try
+        {
+            File.Delete(filePath);
+        }
+        catch (Exception exception)
+        {
+            Log.WriteError(exception.Message);
+            return false;
+        }
         return true;
     }
 }

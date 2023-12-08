@@ -51,10 +51,12 @@ public class SimpleGame : Game
         Log.Out = new LogAdapter(Console);
 
         SettingsManager = new SettingsManager(SaveDirectory);
+        SettingsManager.SetSaveFile(SaveFile);
+
         if (!SettingsManager.LoadSettings())
             SettingsManager.SaveSettings();
 
-        if (SaveFile is not null && !SettingsManager.LoadSettings())
+        if (SaveFile is not null && !SettingsManager.LoadSaves())
             SettingsManager.SaveSave();
         
         TextProvider.Initialize();
