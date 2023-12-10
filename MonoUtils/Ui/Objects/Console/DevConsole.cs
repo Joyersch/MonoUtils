@@ -97,14 +97,23 @@ public class DevConsole : GameObject
 
         for (int line = 0; line < _lines.Length; line++)
         {
-            _lines[line].Move(Position + new Vector2(0, _currentInput.Size.Y) * line);
+            Text l = _lines[line];
+            l.Move(Position + new Vector2(0, _currentInput.Size.Y) * line);
             if (_toDisplay.Count > line)
             {
-                _lines[line].ChangeText(_toDisplay[line].Text);
-                _lines[line].ChangeColor(_toDisplay[line].ColorSet.Color);
+                var text = _toDisplay[line].Text;
+                int i = text.Length;
+                do
+                {
+                    // Quick fix to cut of overlapping lines.
+                    // There should be a better solution like a linebreak but that would invoke effort!
+                    l.ChangeText(text.Substring(0, i--));
+                } while (l.Rectangle.Width > Size.X);
+
+                l.ChangeColor(_toDisplay[line].ColorSet.Color);
             }
             else
-                _lines[line].ChangeText(string.Empty);
+                l.ChangeText(string.Empty);
         }
     }
 
@@ -127,9 +136,21 @@ public class DevConsole : GameObject
             && e.Character != '\b')
             c = string.Empty;
 
+
         if (e.Key != Keys.Enter)
         {
-            _currentInput.AppendText(c ?? string.Empty);
+            var oldText = _currentInput.Value;
+            // get the maximum string for comparisons
+            _currentInput.AppendText((c ?? string.Empty) + "_");
+            int newMaxWidth = _currentInput.Rectangle.Width;
+
+            // reset string after acquiring the length!
+            _currentInput.ChangeText(oldText);
+
+            // only add the new character if the size allows for one
+            if (newMaxWidth < Size.X)
+                _currentInput.AppendText(c ?? string.Empty);
+
             if (_isDrawingCursor)
                 _currentInput.AppendText("_");
             return;

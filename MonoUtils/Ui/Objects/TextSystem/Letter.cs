@@ -28,6 +28,10 @@ public class Letter : GameObject, IMoveable
         }
     };
 
+    public Letter(Character character) : this(Vector2.Zero, DefaultMapping.ImageSize, character)
+    {
+    }
+
     public Letter(Vector2 position, Vector2 size, Character character) : base(position, size,
         DefaultTexture, DefaultMapping)
     {

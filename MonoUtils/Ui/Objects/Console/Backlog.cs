@@ -1,20 +1,40 @@
 namespace MonoUtils.Ui.Objects.Console;
 
-public class Backlog : List<BacklogRow>
+public class Backlog
 {
-    private int pointer;
+    private List<BacklogRow> _backlog;
+    private int _pointer;
+
+    public int Count => _backlog.Count;
+
+    public BacklogRow this[int i] => _backlog[i];
+
+    public Backlog()
+    {
+        _backlog = new();
+    }
 
     public void MovePointerUp()
-        => pointer = pointer-- > 0 ? pointer : 0;
+        => _pointer = _pointer-- > 0 ? _pointer : 0;
 
     public void MovePointerDown()
-        => pointer = pointer++ < Count ? pointer : Count;
+        => _pointer = _pointer++ < _backlog.Count ? _pointer : _backlog.Count;
     
     public List<BacklogRow> GetRangeFromPointer(int size)
     {
-        int endIndex = Math.Min(pointer + size, Count);
-        int startIndex = Math.Min(pointer, endIndex);
-        return GetRange(startIndex, endIndex - startIndex);
+        int endIndex = Math.Min(_pointer + size, _backlog.Count);
+        int startIndex = Math.Min(_pointer, endIndex);
+        return _backlog.GetRange(startIndex, endIndex - startIndex);
     }
 
+    public void Add(BacklogRow row)
+    {
+        _backlog.Add(row);
+    }
+
+    public void AddRange(IEnumerable<BacklogRow> rowColletion)
+    {
+        foreach (BacklogRow row in rowColletion)
+            Add(row);
+    }
 }
