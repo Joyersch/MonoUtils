@@ -53,6 +53,18 @@ public class PositionCalculator
         _calculatedPosition = _areaPosition + _areaSize / 2;
         return this;
     }
+
+    public PositionCalculator OnPositionX(float x)
+    {
+        _calculatedPosition.X = x;
+        return this;
+    }
+
+    public PositionCalculator OnPositionY(float y)
+    {
+        _calculatedPosition.Y = y;
+        return this;
+    }
     
     public PositionCalculator Centered()
     {
