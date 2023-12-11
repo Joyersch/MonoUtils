@@ -24,7 +24,7 @@ public class OverTimeInvoker : IManageable
 
     public void Update(GameTime gameTime)
     {
-        if (!_hasStarted)
+        if (!_hasStarted || _invokeTime == 0F /*If this is 0F, it will cause an infinite loop*/)
             return;
         
         _currentTime += gameTime.ElapsedGameTime.TotalMilliseconds;

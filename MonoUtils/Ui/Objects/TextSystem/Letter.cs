@@ -54,7 +54,7 @@ public class Letter : GameObject, IMoveable
     {
         FrameSpacing = GetCharacterSpacing(character);
         var inImagePosition = new Rectangle(new Point((int)character % 5 * 8, (int)character / 5 * 8),
-            (FrameSize).ToPoint());
+            (TextureHitboxMapping.ImageSize).ToPoint());
         ImageLocation = new Rectangle(
             inImagePosition.X + FrameSpacing.X
             , inImagePosition.Y + FrameSpacing.Y

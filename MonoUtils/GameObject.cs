@@ -11,7 +11,7 @@ public class GameObject : IHitbox, IManageable, IMoveable
     protected readonly Texture2D Texture;
     public Vector2 Position { get; protected set; }
     public Vector2 Size { get; protected set; }
-    protected Vector2 FrameSize;
+    protected Rectangle FramePosition;
     protected Rectangle ImageLocation;
     public Microsoft.Xna.Framework.Color DrawColor;
     public Rectangle Rectangle { get; protected set; }
@@ -19,6 +19,9 @@ public class GameObject : IHitbox, IManageable, IMoveable
     protected TextureHitboxMapping TextureHitboxMapping;
     protected Rectangle[] Hitboxes;
     protected Vector2 ScaleToTexture;
+    protected OverTimeInvoker OverTimeInvoker;
+
+    private int _currentAnimationFrame = 0;
 
     public Rectangle[] Hitbox => Hitboxes;
 
@@ -37,16 +40,16 @@ public class GameObject : IHitbox, IManageable, IMoveable
     public GameObject() : this(Vector2.Zero)
     {
     }
-    
+
     public GameObject(Vector2 position) : this(position, 1)
     {
     }
 
-    public GameObject(Vector2 position, float scale) : this(position,DefaultSize * scale)
+    public GameObject(Vector2 position, float scale) : this(position, DefaultSize * scale)
     {
     }
-    
-    public GameObject(Vector2 position, Vector2 size) : this(position, size,  DefaultTexture, DefaultMapping)
+
+    public GameObject(Vector2 position, Vector2 size) : this(position, size, DefaultTexture, DefaultMapping)
     {
     }
 
@@ -58,14 +61,18 @@ public class GameObject : IHitbox, IManageable, IMoveable
         Texture = texture;
         TextureHitboxMapping = mapping;
         ImageLocation = new Rectangle(0, 0
-            , (int) TextureHitboxMapping.ImageSize.X, (int) TextureHitboxMapping.ImageSize.Y);
-        FrameSize = TextureHitboxMapping.ImageSize;
+            , (int)TextureHitboxMapping.ImageSize.X, (int)TextureHitboxMapping.ImageSize.Y);
+        FramePosition = new Rectangle(Vector2.Zero.ToPoint(), TextureHitboxMapping.ImageSize.ToPoint());
         Hitboxes = new Rectangle[TextureHitboxMapping.Hitboxes.Length];
         Rectangle = new Rectangle(Position.ToPoint(), Size.ToPoint());
+        OverTimeInvoker = new OverTimeInvoker(TextureHitboxMapping.AnimationSpeed);
+        if (TextureHitboxMapping.AnimationSpeed != 0F)
+            OverTimeInvoker.Trigger += CalculateImageLocation;
     }
 
     public virtual void Update(GameTime gameTime)
     {
+        OverTimeInvoker.Update(gameTime);
         CalculateHitboxes();
         UpdateRectangle();
     }
@@ -103,11 +110,29 @@ public class GameObject : IHitbox, IManageable, IMoveable
         }
     }
 
+    protected virtual void CalculateImageLocation()
+    {
+        if (TextureHitboxMapping.AnimationFromTop is null
+            || TextureHitboxMapping.AnimationFrames <= 1)
+            return;
+
+        _currentAnimationFrame++;
+        if (_currentAnimationFrame >= TextureHitboxMapping.AnimationFrames)
+            _currentAnimationFrame = 0;
+
+        var animationFromTop = TextureHitboxMapping.AnimationFromTop ?? false;
+        ImageLocation = new Rectangle(
+            !animationFromTop ? (int)(TextureHitboxMapping.ImageSize.X * _currentAnimationFrame + FramePosition.X) : 0,
+            animationFromTop ? (int)(TextureHitboxMapping.ImageSize.Y * _currentAnimationFrame + FramePosition.Y) : 0,
+            FramePosition.Width,
+            FramePosition.Height);
+    }
+
     private Rectangle CalculateInGameHitbox(Rectangle hitbox)
-        => new((int) (Position.X + hitbox.X * ScaleToTexture.X)
-            , (int) (Position.Y + hitbox.Y * ScaleToTexture.Y)
-            , (int) (hitbox.Width * ScaleToTexture.X)
-            , (int) (hitbox.Height * ScaleToTexture.Y));
+        => new((int)(Position.X + hitbox.X * ScaleToTexture.X)
+            , (int)(Position.Y + hitbox.Y * ScaleToTexture.Y)
+            , (int)(hitbox.Width * ScaleToTexture.X)
+            , (int)(hitbox.Height * ScaleToTexture.Y));
 
     public virtual Vector2 GetPosition()
         => Position;

@@ -61,7 +61,8 @@ public class EmptyButton : GameObject, IMouseActions, IInteractable
     {
         _mouseMat.UpdateInteraction(gameTime, toCheck);
 
-        ImageLocation = new Rectangle(_mouseMat.IsHover ? (int) FrameSize.X : 0, 0, (int) FrameSize.X, (int) FrameSize.Y);
+        ImageLocation = new Rectangle(_mouseMat.IsHover ? (int)TextureHitboxMapping.ImageSize.X : 0, 0,
+            (int)TextureHitboxMapping.ImageSize.X, (int)TextureHitboxMapping.ImageSize.Y);
     }
 
     protected void InvokeClickEventHandler()
@@ -74,7 +75,6 @@ public class EmptyButton : GameObject, IMouseActions, IInteractable
 
     protected void InvokeLeaveEventHandler()
         => Leave?.Invoke(this);
-
 
 
     public bool IsHover() => _mouseMat.IsHover;
