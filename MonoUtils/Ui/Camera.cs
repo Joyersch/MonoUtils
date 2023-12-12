@@ -1,28 +1,37 @@
 ﻿using Microsoft.Xna.Framework;
 using MonoUtils.Logic;
+using MonoUtils.Logic.Hitboxes;
 
 namespace MonoUtils.Ui;
 
-public class Camera : IMoveable
+public class Camera : IMoveable, IHitbox
 {
     public Matrix CameraMatrix { get; private set; }
     public Vector2 Position { get; private set; }
+    public Vector2 RealPosition { get; private set; }
     public Vector2 Size { get; private set; }
+    public Vector2 RealSize { get; private set; }
     public Rectangle Rectangle { get; private set; }
 
     public float Zoom = 2f;
+
+    public Rectangle[] Hitbox => new[] { Rectangle };
 
     public Camera(Vector2 position, Vector2 size)
     {
         Size = size;
         Position = position;
-        Rectangle = new Rectangle((Position - Size / Zoom / 2).ToPoint(), (Size / Zoom).ToPoint());
+        RealPosition = Position - Size / Zoom / 2;
+        RealSize = Size / Zoom;
+        Rectangle = new Rectangle(RealPosition.ToPoint(), RealSize.ToPoint());
     }
 
     public void Update()
     {
         UpdateMatrix();
-        Rectangle = new Rectangle((Position - Size / Zoom / 2).ToPoint(), (Size / Zoom).ToPoint());
+        RealPosition = Position - Size / Zoom / 2;
+        RealSize = Size / Zoom;
+        Rectangle = new Rectangle(RealPosition.ToPoint(), RealSize.ToPoint());
     }
     private void UpdateMatrix()
     {
@@ -41,6 +50,10 @@ public class Camera : IMoveable
     {
         Position = newPosition;
         UpdateMatrix();
-        Rectangle = new Rectangle((Position - Size / Zoom / 2).ToPoint(), (Size / Zoom).ToPoint());
+        RealPosition = Position - Size / Zoom / 2;
+        RealSize = Size / Zoom;
+        Rectangle = new Rectangle(RealPosition.ToPoint(), RealSize.ToPoint());
     }
+
+
 }
