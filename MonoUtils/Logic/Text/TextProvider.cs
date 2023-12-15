@@ -22,6 +22,9 @@ public static class TextProvider
         {
             try
             {
+                if (assembly.IsDynamic)
+                    continue;
+
                 var text = assembly.GetManifestResourceNames().Where(t => t.StartsWith("Text."));
                 Files.AddRange(text);
             }

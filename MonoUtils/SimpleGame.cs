@@ -16,7 +16,7 @@ public class SimpleGame : Game
     protected SpriteBatch SpriteBatch;
 
     protected Display Display;
-    protected SettingsManager SettingsManager;
+    protected SettingsAndSaveManager SettingsAndSaveManager;
 
     protected DevConsole Console;
     protected bool IsConsoleActive;
@@ -50,14 +50,14 @@ public class SimpleGame : Game
             Console);
         Log.Out = new LogAdapter(Console);
 
-        SettingsManager = new SettingsManager(SaveDirectory);
-        SettingsManager.SetSaveFile(SaveFile);
+        SettingsAndSaveManager = new SettingsAndSaveManager(SaveDirectory);
+        SettingsAndSaveManager.SetSaveFile(SaveFile);
 
-        if (!SettingsManager.LoadSettings())
-            SettingsManager.SaveSettings();
+        if (!SettingsAndSaveManager.LoadSettings())
+            SettingsAndSaveManager.SaveSettings();
 
-        if (SaveFile is not null && !SettingsManager.LoadSaves())
-            SettingsManager.SaveSave();
+        if (SaveFile is not null && !SettingsAndSaveManager.LoadSaves())
+            SettingsAndSaveManager.SaveSave();
         
         TextProvider.Initialize();
     }

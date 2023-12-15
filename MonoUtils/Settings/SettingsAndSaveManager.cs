@@ -5,7 +5,7 @@ using Newtonsoft.Json.Linq;
 
 namespace MonoUtils.Settings;
 
-public class SettingsManager
+public class SettingsAndSaveManager
 {
     private string _basePath;
     private int? _saveNumber;
@@ -14,7 +14,7 @@ public class SettingsManager
     private readonly List<Type> _settingsImplementations;
     private readonly List<Type> _savesImplementations;
 
-    public SettingsManager(string basePath, int? saveNumber = null)
+    public SettingsAndSaveManager(string basePath, int? saveNumber = null)
     {
         _basePath = basePath;
         _saveNumber = saveNumber;
