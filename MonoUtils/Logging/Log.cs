@@ -28,24 +28,24 @@ public static class Log
     public static void WriteError(string msg)
     {
         Out.SetLine(-1);
-        Out.WriteColor($"[Error] {msg}", Color.Red);
+        Out.WriteColor($"[SBO]Error[SBC] {msg}", Color.Red);
     }
 
     public static void WriteCritical(string msg)
     {
         Out.SetLine(-1);
-        Out.WriteColor($"[Critical] {msg}", Color.DarkRed);
+        Out.WriteColor($"[SBO]Critical[SBC] {msg}", Color.DarkRed);
     }
 
     public static void WriteWarning(string msg)
     {
         Out.SetLine(-1);
-        Out.WriteColor($"[Warning] {msg}", Color.Gold);
+        Out.WriteColor($"[SBO]Warning[SBC] {msg}", Color.Gold);
     }
 
     public static void WriteInformation(string msg)
     {
         Out.SetLine(-1);
-        Out.WriteColor($"[Info] {msg}", Color.DeepSkyBlue);
+        Out.WriteColor($"[SBO]Info[SBC] {msg}", Color.DeepSkyBlue);
     }
 }

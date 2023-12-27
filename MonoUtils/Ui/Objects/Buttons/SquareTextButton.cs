@@ -6,7 +6,7 @@ namespace MonoUtils.Ui.Objects.Buttons;
 public class SquareTextButton : TextButton
 {
     public new static Vector2 DefaultSize => DefaultMapping.ImageSize * 4;
-    public new static Vector2 DefaultTextSize => new Vector2(16, 16);
+    public new static float DefaultTextScale => 2F;
     
     public new static Texture2D DefaultTexture;
     public new static TextureHitboxMapping DefaultMapping => new TextureHitboxMapping()
@@ -22,12 +22,18 @@ public class SquareTextButton : TextButton
     public SquareTextButton(string text) : this(Vector2.Zero, text)
     {
     }
-    public SquareTextButton(string text, float scale) :this(Vector2.Zero,DefaultSize * scale, string.Empty, text, DefaultTextSize * scale)
+    public SquareTextButton(string text, float scale) :this(Vector2.Zero,DefaultSize * scale, string.Empty, text, scale)
     {
     }
+
+    public SquareTextButton(string text, float scale, float textScale) :this(Vector2.Zero,DefaultSize * scale, string.Empty, text, textScale)
+    {
+    }
+
     public SquareTextButton(Vector2 position, string text) : this(position, string.Empty, text)
     {
     }
+
     public SquareTextButton(Vector2 position, string name, string text) : this(position, 1, name, text)
     {
     }
@@ -38,22 +44,22 @@ public class SquareTextButton : TextButton
     }
 
     public SquareTextButton(Vector2 position, Vector2 size, string name, string text) : this(position, size, name, text,
-        DefaultTextSize)
+        DefaultTextScale)
     {
     }
 
-    public SquareTextButton(Vector2 position, Vector2 size, string name, string text, Vector2 textSize) : this(position,
-        size, name, text, textSize, 1)
+    public SquareTextButton(Vector2 position, Vector2 size, string name, string text, float textScale) : this(position,
+        size, name, text, textScale, 1)
     {
     }
 
-    public SquareTextButton(Vector2 position, Vector2 size, string name, string text, Vector2 textSize, int spacing) :
-        this(position, size, name, text, textSize, spacing, DefaultTexture, DefaultMapping)
+    public SquareTextButton(Vector2 position, Vector2 size, string name, string text, float textScale, int spacing) :
+        this(position, size, name, text, textScale, spacing, DefaultTexture, DefaultMapping)
     {
     }
 
-    public SquareTextButton(Vector2 position, Vector2 size, string name, string text, Vector2 textSize, int spacing,
-        Texture2D texture, TextureHitboxMapping mapping) : base(position, size, name, text, textSize, spacing, texture,
+    public SquareTextButton(Vector2 position, Vector2 size, string name, string text, float textScale, int spacing,
+        Texture2D texture, TextureHitboxMapping mapping) : base(position, size, name, text, textScale, spacing, texture,
         mapping)
     {
     }

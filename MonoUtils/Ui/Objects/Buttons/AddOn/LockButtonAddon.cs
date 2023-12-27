@@ -14,7 +14,7 @@ public class LockButtonAddon : ButtonAddonBase
 
     public LockButtonAddon(ButtonAddonAdapter button, float scale = 1F) : base(button, scale)
     {
-        _text = new Text(Letter.ReverseParse(Letter.Character.LockLocked).ToString(), Position, Scale);
+        _text = new Text("[locklocked]", Position, Scale);
         
         // Button is locked by default
         Button.SetDrawColor(Microsoft.Xna.Framework.Color.DarkGray);
@@ -70,8 +70,8 @@ public class LockButtonAddon : ButtonAddonBase
     private void UpdateText()
     {
         _text.ChangeText(IsLocked
-            ? Letter.ReverseParse(Letter.Character.LockLocked).ToString()
-            : Letter.ReverseParse(Letter.Character.LockUnlocked).ToString());
+            ? "[locklocked]"
+            : "[lockunlocked]");
         _text.ChangeColor(IsLocked ? Microsoft.Xna.Framework.Color.Gray : Microsoft.Xna.Framework.Color.DarkGray);
     }
 

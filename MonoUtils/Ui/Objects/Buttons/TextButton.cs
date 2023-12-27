@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using MonoUtils.Logging;
 using MonoUtils.Logic;
 using MonoUtils.Ui.Color;
 
@@ -10,7 +11,7 @@ public class TextButton : EmptyButton, IColorable
     public TextSystem.Text Text { get; }
     public string Name { get; }
     public new static Vector2 DefaultSize => new Vector2(128, 64);
-    public static Vector2 DefaultTextSize => new Vector2(16, 16);
+    public static float DefaultTextScale => 2F;
 
     public TextButton(string text) : this(Vector2.Zero, string.Empty, text)
     {
@@ -22,7 +23,7 @@ public class TextButton : EmptyButton, IColorable
     }
 
     public TextButton(string text, float scale, float textScale) :
-        this(Vector2.Zero, DefaultSize * scale, string.Empty, text, DefaultTextSize * textScale)
+        this(Vector2.Zero, DefaultSize * scale, string.Empty, text, textScale)
     {
     }
 
@@ -42,37 +43,32 @@ public class TextButton : EmptyButton, IColorable
     {
     }
 
-    public TextButton(Vector2 position, string name, string text) : this(position, 1, name, text)
+    public TextButton(Vector2 position, string name, string text) : this(position, 1F, name, text)
     {
     }
 
     public TextButton(Vector2 position, float scale, string name, string text) : this(position, DefaultSize * scale,
-        name, text, DefaultTextSize * scale)
+        name, text, DefaultTextScale)
     {
     }
 
-    public TextButton(Vector2 position, Vector2 size, string name, string text) : this(position, size, name, text,
-        DefaultTextSize)
-    {
-    }
-
-    public TextButton(Vector2 position, Vector2 size, string name, string text, Vector2 textSize) :
-        this(position, size, name, text, textSize, 1)
+    public TextButton(Vector2 position, Vector2 size, string name, string text,  float textScale) :
+        this(position, size, name, text, textScale, 1)
     {
     }
 
     public TextButton(Vector2 position, Vector2 size, string name, string text,
-        Vector2 textSize, int spacing) : this(position, size, name, text, textSize, spacing, DefaultTexture,
+        float textScale, int spacing) : this(position, size, name, text, textScale, spacing, DefaultTexture,
         DefaultMapping)
     {
     }
 
     public TextButton(Vector2 position, Vector2 size, string name, string text,
-        Vector2 textSize, int spacing, Texture2D texture, TextureHitboxMapping mapping) :
+        float textScale, int spacing, Texture2D texture, TextureHitboxMapping mapping) :
         base(position, size, texture, mapping)
     {
-        Text = new TextSystem.Text(text, Position, textSize, spacing);
-        Text.Move(Rectangle.Center.ToVector2() - Text.Rectangle.Size.ToVector2() / 2);
+        Text = new TextSystem.Text(text, Position, textScale, spacing);
+        Text.Move(Rectangle.Center.ToVector2() - Text.Size / 2);
         Name = name;
     }
 
@@ -80,14 +76,17 @@ public class TextButton : EmptyButton, IColorable
     {
         base.Move(newPosition);
         UpdateRectangle();
-        Text.Move(Rectangle.Center.ToVector2() - Text.Rectangle.Size.ToVector2() / 2);
+        Text.Move(Rectangle.Center.ToVector2() - Text.Size / 2);
     }
 
     public override void Update(GameTime gameTime)
     {
-        Text.Update(gameTime);
-        Text.GetCalculator(Rectangle).OnCenter().Centered().Move();
         base.Update(gameTime);
+        Text.Update(gameTime);
+        Text.GetCalculator(Rectangle).
+            OnCenter()
+            .Centered()
+            .Move();
     }
 
     public override void Draw(SpriteBatch spriteBatch)

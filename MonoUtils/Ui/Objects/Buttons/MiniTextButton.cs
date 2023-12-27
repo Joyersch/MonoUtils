@@ -6,7 +6,7 @@ namespace MonoUtils.Ui.Objects.Buttons;
 public class MiniTextButton : TextButton
 {
     public new static Vector2 DefaultSize => DefaultMapping.ImageSize * 4;
-    public new static Vector2 DefaultTextSize => new Vector2(16, 16);
+    public new static float DefaultTextScale => 2F;
 
     public new static Texture2D DefaultTexture;
 
@@ -37,22 +37,22 @@ public class MiniTextButton : TextButton
     }
 
     public MiniTextButton(Vector2 position, float scale, string name, string text) : this(position,
-        DefaultSize * scale, name, text, DefaultTextSize * scale)
+        DefaultSize * scale, name, text, DefaultTextScale)
     {
     }
 
-    public MiniTextButton(Vector2 position, Vector2 size, string name, string text, Vector2 textSize) : this(position,
-        size, name, text, textSize, 1)
+    public MiniTextButton(Vector2 position, Vector2 size, string name, string text, float textScale) : this(position,
+        size, name, text, textScale, 1)
     {
     }
 
-    public MiniTextButton(Vector2 position, Vector2 size, string name, string text, Vector2 textSize, int spacing) :
-        this(position, size, name, text, textSize, spacing, DefaultTexture, DefaultMapping)
+    public MiniTextButton(Vector2 position, Vector2 size, string name, string text, float textScale, int spacing) :
+        this(position, size, name, text, textScale, spacing, DefaultTexture, DefaultMapping)
     {
     }
 
-    public MiniTextButton(Vector2 position, Vector2 size, string name, string text, Vector2 textSize, int spacing,
-        Texture2D texture, TextureHitboxMapping mapping) : base(position, size, name, text, textSize, spacing, texture,
+    public MiniTextButton(Vector2 position, Vector2 size, string name, string text, float textScale, int spacing,
+        Texture2D texture, TextureHitboxMapping mapping) : base(position, size, name, text, textScale, spacing, texture,
         mapping)
     {
     }

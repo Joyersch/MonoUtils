@@ -14,7 +14,7 @@ public class CounterButtonAddon : ButtonAddonBase
     public CounterButtonAddon(ButtonAddonAdapter button, int startStates, float scale = 1F) : base(button, scale)
     {
         _states = startStates;
-        _text = new Text(Letter.ReverseParse(Letter.Character.LockLocked).ToString(),
+        _text = new Text("",
             Position, Scale);
         Size = _text.Rectangle.Size.ToVector2();
         Button.SetIndicatorOffset((int) Size.X);

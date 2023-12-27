@@ -11,6 +11,7 @@ public class DelayedText : Text
     private int _textPointer = int.MaxValue;
 
     private Vector2 _fullSize;
+    private float _scale;
 
     private float _savedGameTime;
     private float _waitedStartTime;
@@ -21,40 +22,32 @@ public class DelayedText : Text
     public bool HasPlayed { get; private set; }
     public int DisplayDelay { get; set; } = 125;
 
-    public new static Vector2 DefaultLetterSize => new Vector2(16, 16);
+    public new static float DefaultScale => 2F;
 
-    public DelayedText(string text) : this(text, true, Vector2.Zero, DefaultLetterSize,
+    public DelayedText(string text) : this(text, true, Vector2.Zero, DefaultScale,
         1)
     {
     }
 
-    public DelayedText(string text, bool automaticStart) : this(text, automaticStart, Vector2.Zero, DefaultLetterSize,
+    public DelayedText(string text, bool automaticStart) : this(text, automaticStart, Vector2.Zero, DefaultScale,
         1)
     {
     }
 
-    public DelayedText(string text, bool automaticStart, Vector2 position) : this(text, automaticStart, position,
-        DefaultLetterSize, 1)
+    public DelayedText(string text, bool automaticStart, Vector2 position) : this(text, automaticStart, position, DefaultScale, 1)
     {
     }
 
     public DelayedText(string text, bool automaticStart, Vector2 position, float scale) : this(text, automaticStart,
-        position,
-        DefaultLetterSize * scale, 1)
+        position, scale, 1)
     {
     }
 
-    public DelayedText(string text, bool automaticStart, Vector2 position, float scale, int spacing) : this(text,
-        automaticStart,
-        position,
-        DefaultLetterSize * scale, spacing)
-    {
-    }
-
-    public DelayedText(string text, bool automaticStart, Vector2 position, Vector2 letterSize, int spacing) : base(
-        string.Empty, position, letterSize, spacing)
+    public DelayedText(string text, bool automaticStart, Vector2 position, float scale, int spacing) : base(text,
+        position, scale, spacing)
     {
         _toDisplayText = text;
+        _scale = scale;
         _fullSize = GetFullBaseCopy().GetSize();
         if (automaticStart)
             Start();
@@ -62,7 +55,7 @@ public class DelayedText : Text
 
     public override void Update(GameTime gameTime)
     {
-        var passedGameTime = (float) gameTime.ElapsedGameTime.TotalMilliseconds;
+        var passedGameTime = (float)gameTime.ElapsedGameTime.TotalMilliseconds;
         bool canDisplay = true;
         if (_waitedStartTime > 0)
         {
@@ -81,7 +74,7 @@ public class DelayedText : Text
             _textPointer++;
         }
 
-        if (Value != _currentlyDisplayed)
+        if (ToString() != _currentlyDisplayed)
             ChangeText(_currentlyDisplayed);
 
         base.Update(gameTime);
@@ -106,5 +99,5 @@ public class DelayedText : Text
     }
 
     public Text GetFullBaseCopy()
-        => new Text(_toDisplayText, Position, Size, Spacing);
+        => new Text(_toDisplayText, Position, _scale, Spacing);
 }

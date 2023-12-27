@@ -1,6 +1,7 @@
 ﻿using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using MonoUtils.Logging;
 using MonoUtils.Logic;
 using MonoUtils.Logic.Management;
 using MonoUtils.Ui.Color;
@@ -11,107 +12,59 @@ public class Text : IColorable, IMoveable, IManageable
 {
     private List<Letter> _letters;
     protected readonly int Spacing;
-    private string _represent;
+    private readonly float _letterScale;
     public Vector2 Position;
     public Vector2 Size;
     public Rectangle Rectangle { get; private set; }
-    public string Value => _represent;
 
     public Letter this[int i] => _letters[i];
 
     public int Length => _letters.Count;
 
-    public static Vector2 DefaultLetterSize => new Vector2(16, 16);
+    public static float DefaultLetterScale => 2F;
 
-    public Text(string text) : this(text, Vector2.Zero, 1, 1)
+    public Text(string text) : this(text, Vector2.Zero, DefaultLetterScale, 1)
+    {
+
+    }
+
+    public Text(string text, float scale) : this(text, Vector2.Zero, scale * DefaultLetterScale, 1)
     {
     }
 
-    public Text(string text, float scale) : this(text, Vector2.Zero, DefaultLetterSize * scale, 1)
+    public Text(string text, Vector2 position) : this(text, position, DefaultLetterScale, 1)
     {
     }
 
-    public Text(string text, Vector2 position) : this(text, position, DefaultLetterSize, 1)
+    public Text(string text, Vector2 position, float scale) : this(text, position, scale * DefaultLetterScale, 1)
     {
     }
 
-    public Text(string text, Vector2 position, float scale) : this(text, position, DefaultLetterSize * scale, 1)
-    {
-    }
-
-    public Text(string text, Vector2 position, float scale, int spacing) : this(text, position,
-        DefaultLetterSize * scale, spacing)
-    {
-    }
-
-    public Text(string text, Vector2 position, Vector2 letterSize, int spacing)
+    public Text(string text, Vector2 position, float scale, int spacing)
     {
         Spacing = spacing;
-        Size = letterSize;
+        _letterScale = scale;
         Position = position;
-
         ChangeText(text);
-    }
-
-    private void ChangePosition(Vector2 newPosition)
-    {
-        foreach (Letter letter in _letters)
-            letter.Move(letter.Position + (newPosition - Position));
-        Position = newPosition;
-    }
-
-    public void ChangeColor(Microsoft.Xna.Framework.Color[] color)
-    {
-        for (int i = 0; i < color.Length; i++)
-        {
-            if (_letters.Count > i)
-                _letters[i].ChangeColor(color[i]);
-        }
-    }
-
-    public int ColorLength()
-        => Length;
-
-    public void ChangeColor(Microsoft.Xna.Framework.Color color)
-    {
-        for (int i = 0; i < _letters.Count; i++)
-        {
-            _letters[i].ChangeColor(color);
-        }
     }
 
     public void ChangeText(string text)
     {
-        string input = PrepareText(text);
-        _represent = input;
-        CreateLetters(ParseArray(input.ToCharArray()));
-    }
-
-    public void AppendText(string text)
-    {
-        ChangeText(_represent + text);
-    }
-
-    private void CreateLetters(Letter.Character[] characters)
-    {
-        var letters = new List<Letter>();
+        var letters = Letter.Parse(text, _letterScale);
 
         int length = 0;
-        float sizeScale = Size.X / 8;
-        foreach (Letter.Character character in characters)
+        foreach (var letter in letters)
         {
-            var letter = new Letter(new Vector2(length, 0) + Position, Size, character);
-            letter.Move(letter.Position + new Vector2(0, 8F * letter.InitialScale.Y) - new Vector2(0, letter.Rectangle.Height));
-            length += (int) ((letter.FrameSpacing.Width + Spacing) * sizeScale);
-            letters.Add(letter);
+            var position = Position;
+            position.X += length;
+            letter.Move(position + new Vector2(0, letter.FullSize.Y) - new Vector2(0, letter.Rectangle.Height));
+            length += (int)(letter.Size.X + Spacing * _letterScale);
         }
 
         _letters = letters;
         UpdateRectangle();
     }
 
-    private Letter.Character[] ParseArray(char[] text)
-        => text.Select(Letter.Parse).ToArray();
 
     public virtual void Update(GameTime gameTime)
     {
@@ -136,10 +89,8 @@ public class Text : IColorable, IMoveable, IManageable
         }
 
         Rectangle = combination;
+        Size = Rectangle.Size.ToVector2();
     }
-
-    public override string ToString()
-        => BuildString();
 
     public virtual void Draw(SpriteBatch spriteBatch)
     {
@@ -149,45 +100,48 @@ public class Text : IColorable, IMoveable, IManageable
         }
     }
 
-    private string BuildString()
+    public override string ToString()
     {
-        string build = string.Empty;
-
+        StringBuilder builder = new StringBuilder();
         foreach (var letter in _letters)
         {
-            build += Letter.ReverseParse(letter.RepresentingCharacter);
+            builder.Append(letter);
         }
-
-        return build;
+        return builder.ToString();
     }
 
     public virtual Vector2 GetPosition()
         => Position;
 
     public virtual Vector2 GetSize()
-        => Rectangle.Size.ToVector2();
+        => Size;
 
     public void Move(Vector2 newPosition)
     {
-        ChangePosition(newPosition);
+        Vector2 offset = newPosition - Position;
+        foreach (Letter letter in _letters)
+            letter.Move(letter.Position + offset);
+        Position = newPosition;
         UpdateRectangle();
     }
 
-    private string PrepareText(string input)
+    public void ChangeColor(Microsoft.Xna.Framework.Color[] color)
     {
-        StringBuilder result = new StringBuilder();
-
-        foreach (char c in input)
+        for (int i = 0; i < color.Length; i++)
         {
-            if (c == '\b')
-            {
-                if (result.Length > 0)
-                    result.Remove(result.Length - 1, 1);
-            }
-            else
-                result.Append(c);
+            if (_letters.Count > i)
+                _letters[i].DrawColor = color[i];
         }
+    }
 
-        return result.ToString();
+    public int ColorLength()
+        => Length;
+
+    public void ChangeColor(Microsoft.Xna.Framework.Color color)
+    {
+        for (int i = 0; i < _letters.Count; i++)
+        {
+            _letters[i].DrawColor = color;
+        }
     }
 }

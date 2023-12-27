@@ -24,7 +24,10 @@ public static class Global
     {
         GameObject.DefaultTexture = content.GetTexture("placeholder");
         Cursor.DefaultTexture = content.GetTexture("cursor");
-        Letter.DefaultTexture = content.GetTexture("font");
+        Letter.Initialize();
+        DefaultLetters.DefaultTexture = content.GetTexture("Font/DefaultLetters");
+        ActionSymbols.DefaultTexture = content.GetTexture("Font/ActionSymbols");
+        ButtonAddonIcons.DefaultTexture = content.GetTexture("Font/ButtonAddons");
         EmptyButton.DefaultTexture = content.GetTexture("emptybutton");
         MiniTextButton.DefaultTexture = content.GetTexture("minibutton");
         SquareTextButton.DefaultTexture = content.GetTexture("squarebutton");

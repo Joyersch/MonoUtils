@@ -13,8 +13,8 @@ public class ValueSelection : GameObject, IMoveable, IInteractable
     private readonly SquareTextButton _decreaseButton;
     private readonly SquareTextButton _increaseButton;
 
-    private readonly string _left = Letter.ReverseParse(Letter.Character.Left).ToString();
-    private readonly string _right = Letter.ReverseParse(Letter.Character.Right).ToString();
+    private readonly string _left = "[left]";
+    private readonly string _right = "[right]";
 
     public event Action<object> ValueChanged;
 

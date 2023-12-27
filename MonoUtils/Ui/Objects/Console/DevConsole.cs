@@ -1,6 +1,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using MonoUtils.Logging;
 using MonoUtils.Logic;
 using MonoUtils.Ui.Objects.TextSystem;
 
@@ -11,6 +12,8 @@ public class DevConsole : GameObject
     private readonly GameWindow _window;
 
     private Text _currentInput;
+    private Text _cursorDisplay;
+    private Text _maxText;
     public Backlog Backlog { get; private set; }
     private List<BacklogRow> _toDisplay;
     private int _maxLinesY;
@@ -51,25 +54,28 @@ public class DevConsole : GameObject
     {
         Processor = console is null ? processor : console.Processor;
 
+        _maxText = new Text("[block]", scale);
         _currentInput = new Text(string.Empty, scale);
-
 
         Backlog = console is null ? new Backlog() : console.Backlog;
 
-        _maxLinesY = (int)(Size / _currentInput.Size).Y - 1;
+        _maxLinesY = (int)(Size / _maxText.Size).Y - 1;
         _toDisplay = new List<BacklogRow>();
 
         _lines = new Text[_maxLinesY];
         for (int i = 0; i < _maxLinesY; i++)
         {
             _lines[i] = new Text(string.Empty, scale);
-            _lines[i].Move(position + new Vector2(0, _currentInput.Size.Y) * i);
+            _lines[i].Move(position + new Vector2(0, _maxText.Size.Y) * i);
         }
+
+        _currentInput.ChangeText(string.Empty);
+        _cursorDisplay = new Text("_", scale);
 
         _drawCursorInvoker = new OverTimeInvoker(500F);
         _drawCursorInvoker.Trigger += UpdateCursor;
 
-        _currentInput.Move(position + new Vector2(0, Size.Y - _currentInput.Size.Y));
+        _currentInput.Move(position + new Vector2(0, Size.Y - _maxText.Size.Y));
 
         Context = console is null ? new ContextProvider() : console.Context;
         DrawColor = console?.DrawColor ?? new Microsoft.Xna.Framework.Color(75, 75, 75);
@@ -78,7 +84,7 @@ public class DevConsole : GameObject
     private void UpdateCursor()
     {
         _isDrawingCursor = !_isDrawingCursor;
-        _currentInput.AppendText(_isDrawingCursor ? "_" : "\b");
+        _cursorDisplay.ChangeText(_isDrawingCursor ? "_" : "");
     }
 
     public override void Update(GameTime gameTime)
@@ -95,10 +101,12 @@ public class DevConsole : GameObject
 
         _toDisplay = Backlog.GetRangeFromPointer(_maxLinesY);
 
+
+
         for (int line = 0; line < _lines.Length; line++)
         {
             Text l = _lines[line];
-            l.Move(Position + new Vector2(0, _currentInput.Size.Y) * line);
+            l.Move(Position + new Vector2(0, _maxText.Size.Y) * line);
             if (_toDisplay.Count > line)
             {
                 var text = _toDisplay[line].Text;
@@ -115,6 +123,10 @@ public class DevConsole : GameObject
             else
                 l.ChangeText(string.Empty);
         }
+
+        _cursorDisplay.Move(_currentInput.Position + new Vector2(_currentInput.Size.X, 0));
+        _cursorDisplay.Update(gameTime);
+
     }
 
     public override void Draw(SpriteBatch spriteBatch)
@@ -123,25 +135,26 @@ public class DevConsole : GameObject
         foreach (Text text in _lines)
             text.Draw(spriteBatch);
         _currentInput.Draw(spriteBatch);
+        if (_isDrawingCursor)
+            _cursorDisplay.Draw(spriteBatch);
     }
 
     public void TextInput(object sender, TextInputEventArgs e)
     {
         string c = e.Character.ToString();
 
-        if (_isDrawingCursor)
-            _currentInput.AppendText("\b");
-
-        if (Letter.Parse(e.Character) == Letter.Character.Full
-            && e.Character != '\b')
-            c = string.Empty;
-
+        if (c == "\b")
+        {
+            if (_currentInput.Length > 0)
+                _currentInput.ChangeText(_currentInput.ToString()[..^1]);
+            return;
+        }
 
         if (e.Key != Keys.Enter)
         {
-            var oldText = _currentInput.Value;
+            var oldText = _currentInput.ToString();
             // get the maximum string for comparisons
-            _currentInput.AppendText((c ?? string.Empty) + "_");
+            _currentInput.ChangeText(_currentInput + (c ?? string.Empty) + "_");
             int newMaxWidth = _currentInput.Rectangle.Width;
 
             // reset string after acquiring the length!
@@ -149,15 +162,13 @@ public class DevConsole : GameObject
 
             // only add the new character if the size allows for one
             if (newMaxWidth < Size.X)
-                _currentInput.AppendText(c ?? string.Empty);
+                _currentInput.ChangeText(_currentInput + c ?? string.Empty);
 
-            if (_isDrawingCursor)
-                _currentInput.AppendText("_");
             return;
         }
 
-        var output = Processor.Process(this, _currentInput.Value, Context).Select(s => new BacklogRow(s));
-        Backlog.Add(new BacklogRow(_currentInput.Value));
+        var output = Processor.Process(this, _currentInput.ToString(), Context).Select(s => new BacklogRow(s));
+        Backlog.Add(new BacklogRow(_currentInput.ToString()));
         Backlog.AddRange(output);
         var length = output.Count();
 
