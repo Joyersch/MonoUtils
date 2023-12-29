@@ -8,6 +8,10 @@ using Newtonsoft.Json.Serialization;
 
 namespace MonoUtils;
 
+
+/// <summary>
+/// Please only use a small number of this, as resolving against many other ConnectedGameObjects has a huge performance impact
+/// </summary>
 public class ConnectedGameObject : GameObject
 {
     public enum OnTextureReference
