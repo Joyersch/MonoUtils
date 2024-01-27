@@ -13,7 +13,6 @@ public class CameraAnchorGrid : IManageable
     private readonly OverTimeMover _mover;
 
     private GameObject[] _anchors;
-    private int _closeAnchorId = 4; // 4 should always be the one on the camera position
 
     public CameraAnchorGrid(Camera camera, IMoveable indicator, float timeToMove, OverTimeMover.MoveMode moveMode)
     {
@@ -30,20 +29,29 @@ public class CameraAnchorGrid : IManageable
     {
         _mover.Update(gameTime);
 
-        //if (_mover.IsMoving)
-        //   return;
-
-        int index = GetAnchorCloseToIndicator();
-        if (index != _closeAnchorId)
+        for (int i = 0; i < 9; i++)
         {
-            _mover.ChangeDestination(_anchors[index].Position);
-            _mover.Start();
-            _closeAnchorId = index;
+            _anchors[i].Update(gameTime);
         }
+
+        if (_mover.IsMoving)
+           return;
+
+        if (!IsIndicatorCloserToOuterAnchor(-32F, out int index))
+            return;
+
+
+
+        _mover.ChangeDestination(_anchors[index].Rectangle.Center.ToVector2());
+        _mover.Start();
     }
 
     public void Draw(SpriteBatch spriteBatch)
     {
+        for (int i = 0; i < 9; i++)
+        {
+            _anchors[i].Draw(spriteBatch);
+        }
     }
 
     private void CalculateAnchors()
@@ -56,35 +64,45 @@ public class CameraAnchorGrid : IManageable
             for (int x = -1; x < 2; x++)
             {
                 // Get the object at given position i or a new object if null
-                GameObject anchor = _anchors[i] ?? new GameObject();
+                GameObject anchor = _anchors[i] ??= new GameObject(Vector2.Zero,Vector2.One * 16);
                 anchor.GetCalculator(_camera.Rectangle)
                     .OnCenter()
+                    .Centered()
                     .ByGrid(x, y)
                     .Move();
-                _anchors[i] = anchor;
                 i++;
             }
         }
     }
 
-    private int GetAnchorCloseToIndicator()
+    private bool IsIndicatorCloserToOuterAnchor(float tolerance, out int id)
     {
-        Vector2 cameraPosition = _indicator.GetPosition();
-        int closestAnchorIndex = -1;
+        id = 4;
+
+        Vector2 indicatorPosition = _indicator.GetPosition();
+        Vector2 centerPosition = _anchors[4].Position;
+
+        float distanceToCenter = Vector2.Distance(indicatorPosition, centerPosition);
+
         float closestDistance = float.MaxValue;
 
         for (int i = 0; i < _anchors.Length; i++)
         {
-            Vector2 anchorPosition = _anchors[i].Position;
-            float distance = Vector2.Distance(cameraPosition, anchorPosition);
-
-            if (distance >= closestDistance)
+            if (i == 4)
                 continue;
 
-            closestDistance = distance;
-            closestAnchorIndex = i;
+            Vector2 anchorPosition = _anchors[i].Position;
+            float distance = Vector2.Distance(indicatorPosition, anchorPosition);
+
+            if (distance < closestDistance)
+            {
+                closestDistance = distance;
+                id = i;
+            }
         }
 
-        return closestAnchorIndex;
+
+        return distanceToCenter - tolerance > closestDistance;
     }
+
 }

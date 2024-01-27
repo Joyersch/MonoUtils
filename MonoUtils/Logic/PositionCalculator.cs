@@ -92,7 +92,7 @@ public class PositionCalculator
 
     public PositionCalculator ByGrid(float x, float y)
     {
-        _calculatedPosition += new Vector2(_areaSize.Y * x, _areaSize.Y * y);
+        _calculatedPosition += new Vector2(_areaSize.X * x, _areaSize.Y * y);
         return this;
     }
     
