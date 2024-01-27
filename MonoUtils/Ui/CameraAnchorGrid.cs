@@ -14,6 +14,8 @@ public class CameraAnchorGrid : IManageable
 
     private GameObject[] _anchors;
 
+    public bool IsDraw = false;
+
     public CameraAnchorGrid(Camera camera, IMoveable indicator, float timeToMove, OverTimeMover.MoveMode moveMode)
     {
         _camera = camera;
@@ -40,14 +42,15 @@ public class CameraAnchorGrid : IManageable
         if (!IsIndicatorCloserToOuterAnchor(-32F, out int index))
             return;
 
-
-
         _mover.ChangeDestination(_anchors[index].Rectangle.Center.ToVector2());
         _mover.Start();
     }
 
     public void Draw(SpriteBatch spriteBatch)
     {
+        if (!IsDraw)
+            return;
+
         for (int i = 0; i < 9; i++)
         {
             _anchors[i].Draw(spriteBatch);
@@ -104,5 +107,4 @@ public class CameraAnchorGrid : IManageable
 
         return distanceToCenter - tolerance > closestDistance;
     }
-
 }
