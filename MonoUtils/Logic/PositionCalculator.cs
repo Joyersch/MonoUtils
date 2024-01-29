@@ -11,6 +11,12 @@ public class PositionCalculator
     private readonly Vector2 _areaSize;
     private Vector2 _calculatedPosition;
 
+
+    public PositionCalculator(Rectangle area) :
+        this(area.Location.ToVector2(), area.Size.ToVector2(), null)
+    {
+    }
+
     public PositionCalculator(Rectangle area, IMoveable gameObject) :
         this(area.Location.ToVector2(), area.Size.ToVector2(), gameObject)
     {
@@ -109,5 +115,13 @@ public class PositionCalculator
     }
 
     public void Move()
-        => _moveable.Move(_calculatedPosition);
+    {
+        if (_moveable is null)
+            return;
+        _moveable.Move(_calculatedPosition);
+    }
+
+
+    public Vector2 Calculate()
+        => _calculatedPosition;
 }

@@ -104,7 +104,6 @@ public class CameraAnchorGrid : IManageable
             }
         }
 
-
         return distanceToCenter - tolerance > closestDistance;
     }
 }

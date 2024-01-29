@@ -14,6 +14,8 @@ public class OverTimeInvoker : IManageable
 
     public bool InvokeOnce { get; set; } = false;
 
+    public bool HasStarted => _hasStarted;
+
     public double ExecutedTime => _currentTime;
 
     public OverTimeInvoker(double invokeTime, bool start = true)
