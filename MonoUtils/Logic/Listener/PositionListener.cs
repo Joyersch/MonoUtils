@@ -5,16 +5,19 @@ namespace MonoUtils.Logic.Listener;
 
 public class PositionListener
 {
-    private readonly List<(IMoveable main, IMoveable sub)> _mappings;
+    private readonly List<(IMoveable main, IMoveable sub, Vector2 offset)> _mappings;
 
     public PositionListener()
     {
-        _mappings = new List<(IMoveable main, IMoveable sub)>();
+        _mappings = new List<(IMoveable main, IMoveable sub, Vector2 offset)>();
     }
 
     public void Update(GameTime gameTime)
-        => _mappings.ForEach(m => m.sub.Move(m.main.GetPosition()));
+        => _mappings.ForEach(m => m.sub.Move(m.main.GetPosition() + m.offset));
+
+    public void Add(IMoveable main, IMoveable sub, Vector2 offset)
+        => _mappings.Add((main, sub, offset));
 
     public void Add(IMoveable main, IMoveable sub)
-        => _mappings.Add((main, sub));
+        => Add(main, sub, sub.GetPosition() - main.GetPosition());
 }

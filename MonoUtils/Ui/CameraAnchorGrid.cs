@@ -12,6 +12,8 @@ public class CameraAnchorGrid : IManageable
     private readonly IMoveable _indicator;
     private readonly OverTimeMover _mover;
 
+    public event Action StoppedMoving;
+
     private GameObject[] _anchors;
 
     public bool IsDraw = false;
@@ -22,6 +24,7 @@ public class CameraAnchorGrid : IManageable
         _indicator = indicator;
         _mover = new OverTimeMover(camera, Vector2.Zero, timeToMove, moveMode);
         _mover.ArrivedOnDestination += CalculateAnchors;
+        _mover.ArrivedOnDestination += delegate { StoppedMoving?.Invoke(); };
         CalculateAnchors();
     }
 
@@ -37,7 +40,7 @@ public class CameraAnchorGrid : IManageable
         }
 
         if (_mover.IsMoving)
-           return;
+            return;
 
         if (!IsIndicatorCloserToOuterAnchor(-32F, out int index))
             return;
@@ -67,7 +70,7 @@ public class CameraAnchorGrid : IManageable
             for (int x = -1; x < 2; x++)
             {
                 // Get the object at given position i or a new object if null
-                GameObject anchor = _anchors[i] ??= new GameObject(Vector2.Zero,Vector2.One * 16);
+                GameObject anchor = _anchors[i] ??= new GameObject(Vector2.Zero, Vector2.One * 16);
                 anchor.GetCalculator(_camera.Rectangle)
                     .OnCenter()
                     .Centered()

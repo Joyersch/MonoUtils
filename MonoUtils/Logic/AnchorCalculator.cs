@@ -65,6 +65,9 @@ public class AnchorCalculator
         => SetDistance(new Vector2(distance, distance));
 
     public void Move()
+        => _sub.Move(Calculate());
+
+    public Vector2 Calculate()
     {
         var mainPoint = GetPoint(_main, _mainAnchor);
         var subOffset = _sub.GetPosition() - GetPoint(_sub, _subAnchor);
@@ -80,9 +83,8 @@ public class AnchorCalculator
             Anchor.BottomRight => new Vector2(1, 1),
         };
 
-        subOffset = subOffset + _distance * direction;
-
-        _sub.Move(mainPoint + subOffset);
+        subOffset += _distance * direction;
+        return mainPoint + subOffset;
     }
 
     private static Vector2 GetPoint(IMoveable sender, Anchor anchor)
