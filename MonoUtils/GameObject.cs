@@ -69,6 +69,7 @@ public class GameObject : IHitbox, IManageable, IMoveable
         TextureHitboxMapping = mapping;
         _scale = Size / mapping.ImageSize;
         ImageLocation = null;
+        CalculateImageLocation();
         FramePosition = new Rectangle(Vector2.Zero.ToPoint(), TextureHitboxMapping.ImageSize.ToPoint());
         Hitboxes = new Rectangle[TextureHitboxMapping.Hitboxes.Length];
         Rectangle = new Rectangle(Position.ToPoint(), Size.ToPoint());
@@ -123,7 +124,7 @@ public class GameObject : IHitbox, IManageable, IMoveable
         }
     }
 
-    protected virtual void CalculateImageLocation()
+    protected void CalculateImageLocation()
     {
         if (TextureHitboxMapping.AnimationFromTop is null
             || TextureHitboxMapping.AnimationFrames <= 1)
