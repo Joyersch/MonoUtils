@@ -36,6 +36,10 @@ public class Cursor : GameObject
 
     public Cursor(Vector2 position, Vector2 size) : base(position, size, DefaultTexture, DefaultMapping)
     {
-        ImageLocation = Rectangle.Empty;
+    }
+
+    public override void Draw(SpriteBatch spriteBatch)
+    {
+        spriteBatch.Draw(Texture, Rectangle, DrawColor);
     }
 }

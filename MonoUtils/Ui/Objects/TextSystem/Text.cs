@@ -19,6 +19,8 @@ public class Text : IColorable, IMoveable, IManageable
 
     public Letter this[int i] => _letters[i];
 
+    public List<Letter> Letters => _letters;
+
     public int Length => _letters.Count;
 
     public static float DefaultLetterScale => 2F;

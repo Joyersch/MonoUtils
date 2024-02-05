@@ -9,4 +9,5 @@ public struct TextureHitboxMapping
     public int AnimationFrames;
     public bool? AnimationFromTop;
     public float AnimationSpeed;
+    public Vector2 Origin;
 }

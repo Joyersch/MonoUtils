@@ -1,89 +1,109 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using MonoUtils.Logging;
 using MonoUtils.Logic;
+using MonoUtils.Logic.Management;
 
 namespace MonoUtils.Ui.Objects;
 
-public class MousePointer : GameObject
+public class MousePointer : IManageable, IMoveable
 {
-    private readonly bool _draw;
+    public Vector2 Position { get; private set; }
+    public Vector2 Size { get; private set; } = new Vector2(4, 4);
+    public static bool CanDraw;
+    private readonly Texture2D _texture;
     private readonly Camera _camera;
 
-    private Vector2 _cursorPosition;
-    private Vector2 _drawPosition;
+    private Vector2 _canvasPosition;
+    private Vector2 _realPosition;
+    private Vector2 _canvasCenter;
     private Vector2 _window;
-    private Point _windowCenter;
+    private Vector2 _screenScale;
+    private Vector2 _windowCenter;
 
     public bool UseRelative { get; set; } = false;
     public float Speed { get; set; } = 1F;
 
-    public new static Texture2D DefaultTexture;
+    public static Texture2D DefaultTexture;
 
-    public new static TextureHitboxMapping DefaultMapping => new TextureHitboxMapping()
-    {
-        ImageSize = new Vector2(6, 6),
-        Hitboxes = new[]
-        {
-            new Rectangle(0, 0, 6, 6)
-        }
-    };
-
-    public MousePointer(Vector2 window, Camera camera, bool draw) : this(window, camera, draw, Vector2.Zero,
-        DefaultSize)
+    public MousePointer(Vector2 window, Camera camera) : this(window, camera, Vector2.Zero,
+        Vector2.Zero, DefaultTexture)
     {
     }
 
-    public MousePointer(Vector2 window, Camera camera, bool draw, Vector2 position, Vector2 size) : base(position, size,
-        DefaultTexture,
-        DefaultMapping)
+    public MousePointer(Vector2 window, Camera camera, Vector2 position, Vector2 size, Texture2D texture)
     {
         UpdateWindow(window);
         _camera = camera;
-        _draw = draw;
+        _texture = texture;
     }
 
-    public override void Update(GameTime gameTime)
+    public Rectangle Rectangle => Rectangle.Empty;
+
+    public void Update(GameTime gameTime)
     {
-        _drawPosition = Microsoft.Xna.Framework.Input.Mouse.GetState().Position.ToVector2();
-        var screenScale = new Vector2(_window.X / Display.CustomWidth,
-            _window.Y / Display.CustomHeight);
-        var offset = Display.Size / _camera.Zoom / 2;
-        _cursorPosition = _drawPosition / screenScale / _camera.Zoom + _camera.Position - offset;
-        var _centerPosition = _windowCenter.ToVector2() / screenScale / _camera.Zoom + _camera.Position - offset;
-        if (!UseRelative)
-            Position = _cursorPosition;
-        else
+        // Mouse position on the actual screen
+        _realPosition = Microsoft.Xna.Framework.Input.Mouse.GetState().Position.ToVector2();
+        var realCenter = _windowCenter;
+
+        var cameraOffset = Display.Size / _camera.Zoom / 2;
+        var appliedOffset = _camera.Position - cameraOffset;
+        var scale = _screenScale * _camera.Zoom;
+
+        _canvasPosition = _realPosition / scale + appliedOffset;
+        _canvasCenter = realCenter / scale + appliedOffset;
+
+        if (UseRelative)
         {
             SetMousePositionToCenter();
-            Position -= (_centerPosition - _cursorPosition) * Speed;
         }
+        else
+            _canvasCenter = Position;
 
-        base.Update(gameTime);
+        Position -= (_canvasCenter - _canvasPosition) * Speed;
     }
 
-    public override void Draw(SpriteBatch spriteBatch)
+    public void Draw(SpriteBatch spriteBatch)
     {
-        if (!_draw)
+        if (!CanDraw)
             return;
 
-        spriteBatch.Draw(Texture, new Rectangle((int) _drawPosition.X - 3, (int) _drawPosition.Y - 3, 6, 6),
-            DrawColor);
-        base.Draw(spriteBatch);
+        spriteBatch.Draw(_texture, new Rectangle((int)_realPosition.X - 6, (int)_realPosition.Y - 6, 12, 12),
+            Microsoft.Xna.Framework.Color.Red);
+    }
+
+    public void DrawIndicator(SpriteBatch spriteBatch)
+    {
+        if (!CanDraw)
+            return;
+
+        spriteBatch.Draw(_texture, _canvasCenter, Global.Color);
     }
 
     public void UpdateWindow(Vector2 window)
     {
         _window = window;
-        _windowCenter = new Point((int) _window.X / 2, (int) _window.Y / 2);
+        _windowCenter = new Vector2(_window.X / 2, _window.Y / 2);
+        _screenScale = new Vector2(_window.X / Display.CustomWidth, _window.Y / Display.CustomHeight);
     }
 
     private void SetMousePositionToCenter()
-        => Microsoft.Xna.Framework.Input.Mouse.SetPosition(_windowCenter.X, _windowCenter.Y);
+        => Microsoft.Xna.Framework.Input.Mouse.SetPosition((int)_windowCenter.X, (int)_windowCenter.Y);
 
     public void SetMousePointerPositionToCenter()
     {
         SetMousePositionToCenter();
-        if (UseRelative)
-            Position = _cursorPosition;
+        Position = _canvasCenter;
+    }
+
+    public Vector2 GetPosition()
+        => Position;
+
+    public Vector2 GetSize()
+        => Size;
+
+    public void Move(Vector2 newPosition)
+    {
+        Position = newPosition;
     }
 }

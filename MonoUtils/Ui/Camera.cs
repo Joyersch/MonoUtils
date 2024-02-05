@@ -33,6 +33,7 @@ public class Camera : IMoveable, IHitbox
         RealSize = Size / Zoom;
         Rectangle = new Rectangle(RealPosition.ToPoint(), RealSize.ToPoint());
     }
+
     private void UpdateMatrix()
     {
         var position = Matrix.CreateTranslation(-Position.X, -Position.Y, 0);
@@ -49,10 +50,7 @@ public class Camera : IMoveable, IHitbox
     public void Move(Vector2 newPosition)
     {
         Position = newPosition;
-        UpdateMatrix();
-        RealPosition = Position - Size / Zoom / 2;
-        RealSize = Size / Zoom;
-        Rectangle = new Rectangle(RealPosition.ToPoint(), RealSize.ToPoint());
+        Update();
     }
 
 

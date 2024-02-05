@@ -82,7 +82,7 @@ public class ConnectedGameObject : GameObject
     {
         foreach (var imageLocation in _imageLocations)
         {
-            MoveImageLocation(imageLocation * ImageLocation.Size.ToVector2());
+            MoveImageLocation(imageLocation * ImageLocation!.Value.Size.ToVector2());
             base.Draw(spriteBatch);
         }
     }

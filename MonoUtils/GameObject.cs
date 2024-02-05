@@ -11,10 +11,17 @@ public class GameObject : IHitbox, IManageable, IMoveable
     protected readonly Texture2D Texture;
     public Vector2 Position { get; protected set; }
     public Vector2 Size { get; protected set; }
+    private readonly Vector2 _scale;
+
     protected Rectangle FramePosition;
-    protected Rectangle ImageLocation;
+    protected Rectangle? ImageLocation;
     public Microsoft.Xna.Framework.Color DrawColor;
     public Rectangle Rectangle { get; protected set; }
+    public float Layer { get; set; }
+
+    public float Rotation { get; set; }
+
+    private float _rotation => (float)Math.PI * Rotation / 360F;
 
     protected TextureHitboxMapping TextureHitboxMapping;
     protected Rectangle[] Hitboxes;
@@ -60,8 +67,8 @@ public class GameObject : IHitbox, IManageable, IMoveable
         DrawColor = Microsoft.Xna.Framework.Color.White;
         Texture = texture;
         TextureHitboxMapping = mapping;
-        ImageLocation = new Rectangle(0, 0
-            , (int)TextureHitboxMapping.ImageSize.X, (int)TextureHitboxMapping.ImageSize.Y);
+        _scale = Size / mapping.ImageSize;
+        ImageLocation = null;
         FramePosition = new Rectangle(Vector2.Zero.ToPoint(), TextureHitboxMapping.ImageSize.ToPoint());
         Hitboxes = new Rectangle[TextureHitboxMapping.Hitboxes.Length];
         Rectangle = new Rectangle(Position.ToPoint(), Size.ToPoint());
@@ -79,10 +86,16 @@ public class GameObject : IHitbox, IManageable, IMoveable
 
     public virtual void Draw(SpriteBatch spriteBatch)
     {
-        if (ImageLocation == Rectangle.Empty)
-            spriteBatch.Draw(Texture, Rectangle, DrawColor);
-        else
-            spriteBatch.Draw(Texture, Rectangle, ImageLocation, DrawColor);
+        spriteBatch.Draw(
+            Texture,
+            Position,
+            ImageLocation,
+            DrawColor,
+            _rotation,
+            TextureHitboxMapping.Origin,
+            _scale,
+            SpriteEffects.None,
+            Layer);
     }
 
     protected virtual void UpdateRectangle()
@@ -145,6 +158,9 @@ public class GameObject : IHitbox, IManageable, IMoveable
 
     protected void MoveImageLocation(Vector2 imageLocation)
     {
-        ImageLocation.Location = imageLocation.ToPoint();
+        if (ImageLocation is null)
+            return;
+
+        ImageLocation = new Rectangle(imageLocation.ToPoint(), ImageLocation.Value.Size);
     }
 }

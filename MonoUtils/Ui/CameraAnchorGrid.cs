@@ -18,6 +18,8 @@ public class CameraAnchorGrid : IManageable
 
     public bool IsDraw = false;
 
+    private bool _enabled = true;
+
     public CameraAnchorGrid(Camera camera, IMoveable indicator, float timeToMove, OverTimeMover.MoveMode moveMode)
     {
         _camera = camera;
@@ -32,6 +34,9 @@ public class CameraAnchorGrid : IManageable
 
     public void Update(GameTime gameTime)
     {
+        if (!_enabled)
+            return;
+
         _mover.Update(gameTime);
 
         for (int i = 0; i < 9; i++)
@@ -51,6 +56,9 @@ public class CameraAnchorGrid : IManageable
 
     public void Draw(SpriteBatch spriteBatch)
     {
+        if (!_enabled)
+            return;
+
         if (!IsDraw)
             return;
 
@@ -109,4 +117,10 @@ public class CameraAnchorGrid : IManageable
 
         return distanceToCenter - tolerance > closestDistance;
     }
+
+    public void Enable()
+        => _enabled = true;
+
+    public void Disable()
+        => _enabled = false;
 }

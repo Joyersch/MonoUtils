@@ -25,6 +25,10 @@ public class SimpleGame : Game
     protected string SaveDirectory = "saves";
     protected int? SaveFile = null;
 
+    protected bool Debug;
+
+    protected string[] Args;
+
     protected InputKey ConsoleKey = new(Keys.F10);
 
     public SimpleGame()
@@ -37,6 +41,11 @@ public class SimpleGame : Game
     {
         // This will also call LoadContent()
         base.Initialize();
+
+        Args = Environment.GetCommandLineArgs();
+
+        if (Args.Contains("--debug"))
+            Debug = true;
 
         Display = new Display(GraphicsDevice);
         Window.TextInput += OnTextInput;

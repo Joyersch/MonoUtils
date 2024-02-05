@@ -23,6 +23,8 @@ public class Letter : IMoveable, IManageable
     private Texture2D _resolvedTexture;
     private Rectangle _resolvedLocation;
 
+    public float Tilt = 0F;
+
     public Vector2 FullSize { get; private set; }
 
     public Letter(float scale, string identifier)
@@ -75,7 +77,16 @@ public class Letter : IMoveable, IManageable
 
     public void Draw(SpriteBatch spriteBatch)
     {
-        spriteBatch.Draw(_resolvedTexture, _rectangle, _resolvedLocation, DrawColor);
+        spriteBatch.Draw(
+            _resolvedTexture,
+            Position,
+            _resolvedLocation,
+            DrawColor,
+            0F,
+            Vector2.Zero,
+            _scale,
+            SpriteEffects.None,
+            0F);
     }
 
     public static void Initialize()
