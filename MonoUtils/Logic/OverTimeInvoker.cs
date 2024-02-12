@@ -57,6 +57,12 @@ public class OverTimeInvoker : IManageable
         _hasStarted = false;
         _currentTime = 0D;
     }
+
+    public void Reset()
+    {
+        Stop();
+        Start();
+    }
     
     public bool ChangeTime(float time)
     {
