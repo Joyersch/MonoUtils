@@ -21,8 +21,6 @@ public class GameObject : IHitbox, IManageable, IMoveable
 
     public float Rotation { get; set; }
 
-    private float _rotation => (float)Math.PI * Rotation / 360F;
-
     protected TextureHitboxMapping TextureHitboxMapping;
     protected Rectangle[] Hitboxes;
     protected Vector2 ScaleToTexture;
@@ -92,7 +90,7 @@ public class GameObject : IHitbox, IManageable, IMoveable
             Position,
             ImageLocation,
             DrawColor,
-            _rotation,
+            Rotation,
             TextureHitboxMapping.Origin,
             _scale,
             SpriteEffects.None,

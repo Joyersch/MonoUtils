@@ -23,7 +23,9 @@ public class Letter : IMoveable, IManageable
     private Texture2D _resolvedTexture;
     private Rectangle _resolvedLocation;
 
-    public float Tilt = 0F;
+    public float Rotation { get; set; }
+    public Vector2 Origin;
+    public int Layer;
 
     public Vector2 FullSize { get; private set; }
 
@@ -82,11 +84,11 @@ public class Letter : IMoveable, IManageable
             Position,
             _resolvedLocation,
             DrawColor,
-            0F,
-            Vector2.Zero,
+            Rotation,
+            Origin,
             _scale,
             SpriteEffects.None,
-            0F);
+            Layer);
     }
 
     public static void Initialize()

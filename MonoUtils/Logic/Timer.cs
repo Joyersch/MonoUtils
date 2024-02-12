@@ -11,6 +11,7 @@ public class Timer : IManageable, IMoveable, IColorable
     private readonly Ui.Objects.TextSystem.Text _display;
 
     private readonly double _time;
+    private bool _invoked;
 
     public event Action Trigger;
 
@@ -29,17 +30,29 @@ public class Timer : IManageable, IMoveable, IColorable
         {
             InvokeOnce = true
         };
-        _invoker.Trigger += delegate { Trigger?.Invoke(); };
+        _invoker.Trigger += delegate
+        {
+            _invoked = true;
+            Trigger?.Invoke();
+        };
 
-        _display = new Ui.Objects.TextSystem.Text(string.Empty, position, scale);
+        _display = new Ui.Objects.TextSystem.Text($"{time/1000:n2}", position, scale);
     }
 
     public Rectangle Rectangle => _invoker.Rectangle;
 
     public void Update(GameTime gameTime)
     {
-        var difference = (_time - _invoker.ExecutedTime) / 1000;
-        _display.ChangeText($"{difference:n2}");
+        if (_invoked)
+        {
+            _display.ChangeText("0.00");
+        }
+        else
+        {
+            var difference = (_time - _invoker.ExecutedTime) / 1000;
+            _display.ChangeText($"{difference:n2}");
+        }
+
         _invoker.Update(gameTime);
     }
 
@@ -65,4 +78,16 @@ public class Timer : IManageable, IMoveable, IColorable
 
     public int ColorLength()
         => _display.ColorLength();
+
+    public void Stop()
+    {
+        _invoked = false;
+        _invoker.Stop();
+    }
+
+    public void Reset()
+    {
+        _invoked = false;
+        _invoker.Reset();
+    }
 }
