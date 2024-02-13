@@ -34,7 +34,8 @@ public class DelayedText : Text
     {
     }
 
-    public DelayedText(string text, bool automaticStart, Vector2 position) : this(text, automaticStart, position, DefaultScale, 1)
+    public DelayedText(string text, bool automaticStart, Vector2 position) : this(text, automaticStart, position,
+        DefaultScale, 1)
     {
     }
 
@@ -51,6 +52,8 @@ public class DelayedText : Text
         _fullSize = GetFullBaseCopy().GetSize();
         if (automaticStart)
             Start();
+        else
+            ChangeText(_currentlyDisplayed);
     }
 
     public override void Update(GameTime gameTime)
