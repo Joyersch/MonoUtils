@@ -6,7 +6,7 @@ using MonoUtils.Logic.Management;
 
 namespace MonoUtils.Ui.Objects.TextSystem;
 
-public class Letter : IMoveable, IManageable
+public class Letter : IMoveable, IManageable, IRotateable
 {
     private readonly float _scale;
     public Vector2 Position { get; private set; }

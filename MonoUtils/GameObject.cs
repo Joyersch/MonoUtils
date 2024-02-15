@@ -6,7 +6,7 @@ using MonoUtils.Logic.Management;
 
 namespace MonoUtils;
 
-public class GameObject : IHitbox, IManageable, IMoveable
+public class GameObject : IHitbox, IManageable, IMoveable, IRotateable
 {
     protected readonly Texture2D Texture;
     public Vector2 Position { get; protected set; }

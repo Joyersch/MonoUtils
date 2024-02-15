@@ -15,17 +15,30 @@ public class Timer : IManageable, IMoveable, IColorable
 
     public event Action Trigger;
 
-    public Timer(double time, bool start = false) : this(3F, time, start)
+    private string _prefix;
+
+    public Timer(double time, bool start = false) : this(3F, time, string.Empty, start)
+    {
+    }
+    public Timer(double time, string prefix, bool start = false) : this(3F, time, prefix, start)
     {
     }
 
-    public Timer(float scale, double time, bool start = false) : this(Vector2.Zero, scale, time, start)
+    public Timer(float scale, double time, bool start = false) : this(Vector2.Zero, scale, time, string.Empty, start)
+    {
+    }
+    public Timer(float scale, double time, string prefix, bool start = false) : this(Vector2.Zero, scale, time, prefix, start)
     {
     }
 
-    public Timer(Vector2 position, float scale, double time, bool start = false)
+    public Timer(Vector2 position, float scale, double time, bool start = false): this(Vector2.Zero, scale, time, string.Empty, start)
+    {
+
+    }
+    public Timer(Vector2 position, float scale, double time, string prefix, bool start = false)
     {
         _time = time;
+        _prefix = prefix;
         _invoker = new OverTimeInvoker(time, start)
         {
             InvokeOnce = true
@@ -45,12 +58,12 @@ public class Timer : IManageable, IMoveable, IColorable
     {
         if (_invoked)
         {
-            _display.ChangeText("0.00");
+            _display.ChangeText(_prefix + "0.00");
         }
         else
         {
             var difference = (_time - _invoker.ExecutedTime) / 1000;
-            _display.ChangeText($"{difference:n2}");
+            _display.ChangeText($"{_prefix}{difference:n2}");
         }
 
         _invoker.Update(gameTime);
