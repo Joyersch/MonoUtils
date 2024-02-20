@@ -5,7 +5,7 @@ namespace MonoUtils.Ui.Objects.TextSystem;
 
 public class DefaultLetters : ILetter
 {
-    public static Texture2D DefaultTexture;
+    public static Texture2D Texture;
 
     public static Vector2 ImageSize => new Vector2(8, 8);
 
@@ -21,7 +21,7 @@ public class DefaultLetters : ILetter
     }
 
     public Texture2D GetTexture()
-        => DefaultTexture;
+        => Texture;
 
     public Vector2 GetFullSize()
         => ImageSize;

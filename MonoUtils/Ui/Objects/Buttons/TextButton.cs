@@ -2,106 +2,90 @@
 using Microsoft.Xna.Framework.Graphics;
 using MonoUtils.Logging;
 using MonoUtils.Logic;
+using MonoUtils.Logic.Hitboxes;
 using MonoUtils.Ui.Color;
+using MonoUtils.Ui.Objects.TextSystem;
 
 namespace MonoUtils.Ui.Objects.Buttons;
 
-public class TextButton : EmptyButton, IColorable
+public class TextButton<T> : IButton where T : IButton
 {
-    public TextSystem.Text Text { get; }
-    public string Name { get; }
-    public new static Vector2 DefaultSize => new Vector2(128, 64);
-    public static float DefaultTextScale => 2F;
+    public Text Text { get; }
 
-    public TextButton(string text) : this(Vector2.Zero, string.Empty, text)
+    private T _button;
+    public Rectangle[] Hitbox => _button.Hitbox;
+    public Rectangle Rectangle => _button.Rectangle;
+    public event Action<object>? Leave;
+    public event Action<object>? Enter;
+    public event Action<object>? Click;
+
+    public TextButton(string text, T button) : this(text, 1F, button)
     {
     }
 
-
-    public TextButton(string text, float scale) : this(text, string.Empty, scale)
+    public TextButton(string text, float scale, T button)
     {
-    }
-
-    public TextButton(string text, float scale, float textScale) :
-        this(Vector2.Zero, DefaultSize * scale, string.Empty, text, textScale)
-    {
-    }
-
-    public TextButton(string text, string name) : this(Vector2.Zero, name, text)
-    {
-    }
-
-    public TextButton(string text, string name, float scale) : this(Vector2.Zero, scale, name, text)
-    {
-    }
-
-    public TextButton(Vector2 position, string text) : this(position, string.Empty, text)
-    {
-    }
-
-    public TextButton(Vector2 position, float scale, string text) : this(position, scale, string.Empty, text)
-    {
-    }
-
-    public TextButton(Vector2 position, string name, string text) : this(position, 1F, name, text)
-    {
-    }
-
-    public TextButton(Vector2 position, float scale, string name, string text) : this(position, DefaultSize * scale,
-        name, text, DefaultTextScale)
-    {
-    }
-
-    public TextButton(Vector2 position, Vector2 size, string name, string text,  float textScale) :
-        this(position, size, name, text, textScale, 1)
-    {
-    }
-
-    public TextButton(Vector2 position, Vector2 size, string name, string text,
-        float textScale, int spacing) : this(position, size, name, text, textScale, spacing, DefaultTexture,
-        DefaultMapping)
-    {
-    }
-
-    public TextButton(Vector2 position, Vector2 size, string name, string text,
-        float textScale, int spacing, Texture2D texture, TextureHitboxMapping mapping) :
-        base(position, size, texture, mapping)
-    {
-        Text = new TextSystem.Text(text, Position, textScale, spacing);
-        Text.Move(Rectangle.Center.ToVector2() - Text.Size / 2);
-        Name = name;
-    }
-
-    public override void Move(Vector2 newPosition)
-    {
-        base.Move(newPosition);
-        UpdateRectangle();
-        Text.Move(Rectangle.Center.ToVector2() - Text.Size / 2);
-    }
-
-    public override void Update(GameTime gameTime)
-    {
-        base.Update(gameTime);
-        Text.Update(gameTime);
-        Text.GetCalculator(Rectangle).
-            OnCenter()
+        _button = button;
+        _button.Leave += _ => Leave?.Invoke(this);
+        _button.Enter += _ => Enter?.Invoke(this);
+        _button.Click +=_ => Click?.Invoke(this);
+        Text = new Text(text, scale);
+        Text.GetCalculator(_button.Rectangle)
+            .OnCenter()
             .Centered()
             .Move();
     }
 
-    public override void Draw(SpriteBatch spriteBatch)
+    public float Layer
     {
-        base.Draw(spriteBatch);
+        get => _button.Layer;
+        set => _button.Layer = value;
+    }
+
+    public bool IsHover => _button.IsHover;
+
+    public void Update(GameTime gameTime)
+    {
+        _button.Update(gameTime);
+        Text.Update(gameTime);
+        Text.GetCalculator(_button.Rectangle)
+            .OnCenter()
+            .Centered()
+            .Move();
+    }
+
+    public void UpdateInteraction(GameTime gameTime, IHitbox toCheck)
+    {
+        _button.UpdateInteraction(gameTime, toCheck);
+    }
+
+    public void Draw(SpriteBatch spriteBatch)
+    {
+        _button.Draw(spriteBatch);
         Text.Draw(spriteBatch);
     }
 
-    public void ChangeColor(Microsoft.Xna.Framework.Color[] input)
+    public Vector2 GetPosition()
+        => _button.GetPosition();
+
+    public Vector2 GetSize()
+        => _button.GetSize();
+
+    public void Move(Vector2 newPosition)
     {
-        Text.ChangeColor(input);
+        _button.Move(newPosition);
+        Text.GetCalculator(_button.Rectangle)
+            .OnCenter()
+            .Centered()
+            .Move();
     }
 
+    public void ChangeColor(Microsoft.Xna.Framework.Color[] input)
+        => Text.ChangeColor(input);
+
     public int ColorLength()
-    {
-        return Text.ColorLength();
-    }
+        => Text.ColorLength();
+
+    public Microsoft.Xna.Framework.Color[] GetColor()
+        => Text.GetColor();
 }

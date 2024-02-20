@@ -4,7 +4,7 @@ using MonoUtils.Logic.Hitboxes;
 
 namespace MonoUtils.Logic.Management;
 
-public class ManagmentCollection : List<IManageable>, IManageable, IInteractable
+public class ManagementCollection : List<IManageable>, IManageable, IInteractable
 {
     public Rectangle Rectangle => Rectangle.Empty;
 

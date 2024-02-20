@@ -6,43 +6,37 @@ using Rectangle = Microsoft.Xna.Framework.Rectangle;
 
 namespace MonoUtils.Ui.Objects.Buttons.AddOn;
 
-public class CounterButtonAddon : ButtonAddonBase
+public class CounterButtonAddon : ButtonAddon
 {
     private int _states;
     private readonly Text _text;
 
-    public CounterButtonAddon(ButtonAddonAdapter button, int startStates, float scale = 1F) : base(button, scale)
+    public CounterButtonAddon(IButton button, int startStates, float scale = 1F) : base(button)
     {
         _states = startStates;
-        _text = new Text("",
-            Position, Scale);
-        Size = _text.Rectangle.Size.ToVector2();
-        Button.SetIndicatorOffset((int) Size.X);
+        _text = new Text("", GetPosition(), scale);
         UpdateText();
-    }
+        Button.Click += delegate
+        {
+            if (_states != 0)
+                _states--;
 
-    public override Rectangle GetRectangle()
-        => Button.GetRectangle();
+            UpdateText();
 
-    public override void SetDrawColor(Microsoft.Xna.Framework.Color color)
-        => Button.SetDrawColor(color);
-
-
-    public override void UpdateInteraction(GameTime gameTime, IHitbox toCheck)
-    {
-        Button.UpdateInteraction(gameTime, toCheck);
+            if (_states == 0)
+                InvokeClick();
+        };
     }
 
     public override void Update(GameTime gameTime)
     {
         base.Update(gameTime);
         _text.Update(gameTime);
-        Button.Update(gameTime);
     }
 
     public override void Draw(SpriteBatch spriteBatch)
     {
-        Button.Draw(spriteBatch);
+        base.Draw(spriteBatch);
         _text.Draw(spriteBatch);
     }
 
@@ -51,36 +45,9 @@ public class CounterButtonAddon : ButtonAddonBase
         _text.ChangeText(_states.ToString());
     }
 
-    protected override void ButtonCallback(object obj, IButtonAddon.CallState state)
-    {
-        if (state == IButtonAddon.CallState.Click && _states > 0)
-            _states--;
-
-        if (_states == 0)
-        {
-            base.ButtonCallback(obj, state);
-            _text.ChangeText(string.Empty);
-        }
-
-        UpdateText();
-    }
-
-    public override Vector2 GetPosition()
-        => Button.GetPosition();
-
-    public override Vector2 GetSize()
-        => Button.GetSize();
-
     public override void Move(Vector2 newPosition)
     {
-        Button.Move(newPosition);
+        base.Move(newPosition);
         _text.Move(newPosition);
-        Position = newPosition;
-    }
-    
-    public override void MoveIndicatorBy(Vector2 newPosition)
-    {
-        _text.Move(_text.Position + newPosition);
-        Position += newPosition;
     }
 }

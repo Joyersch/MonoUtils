@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using MonoUtils.Logic;
 using MonoUtils.Logic.Management;
 using MonoUtils.Ui.Logic;
+using MonoUtils.Ui.Objects;
 
 namespace MonoUtils.Ui;
 
@@ -14,7 +15,7 @@ public class CameraAnchorGrid : IManageable
 
     public event Action StoppedMoving;
 
-    private GameObject[] _anchors;
+    private Invisible[] _anchors;
 
     public bool IsDraw = false;
 
@@ -70,7 +71,7 @@ public class CameraAnchorGrid : IManageable
 
     private void CalculateAnchors()
     {
-        _anchors ??= new GameObject[9];
+        _anchors ??= new Invisible[9];
 
         int i = 0;
         for (int y = -1; y < 2; y++)
@@ -78,7 +79,7 @@ public class CameraAnchorGrid : IManageable
             for (int x = -1; x < 2; x++)
             {
                 // Get the object at given position i or a new object if null
-                GameObject anchor = _anchors[i] ??= new GameObject(Vector2.Zero, Vector2.One * 16);
+                Invisible anchor = _anchors[i] ??= new Invisible(Vector2.Zero, Vector2.One * 16);
                 anchor.GetCalculator(_camera.Rectangle)
                     .OnCenter()
                     .Centered()
@@ -94,7 +95,7 @@ public class CameraAnchorGrid : IManageable
         id = 4;
 
         Vector2 indicatorPosition = _indicator.GetPosition();
-        Vector2 centerPosition = _anchors[4].Position;
+        Vector2 centerPosition = _anchors[4].GetPosition();
 
         float distanceToCenter = Vector2.Distance(indicatorPosition, centerPosition);
 
@@ -105,7 +106,7 @@ public class CameraAnchorGrid : IManageable
             if (i == 4)
                 continue;
 
-            Vector2 anchorPosition = _anchors[i].Position;
+            Vector2 anchorPosition = _anchors[i].GetPosition();
             float distance = Vector2.Distance(indicatorPosition, anchorPosition);
 
             if (distance < closestDistance)

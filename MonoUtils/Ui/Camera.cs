@@ -52,6 +52,4 @@ public class Camera : IMoveable, IHitbox
         Position = newPosition;
         Update();
     }
-
-
 }

@@ -14,11 +14,13 @@ public class OpacityCommand : ICommand
         if (value > 1F)
             value = 1F;
 
-        _color ??= console.DrawColor;
-        console.DrawColor.R = (byte)(value * _color.Value.R);
-        console.DrawColor.G = (byte)(value * _color.Value.G);
-        console.DrawColor.B = (byte)(value * _color.Value.B);
-        console.DrawColor.A = (byte)(value * _color.Value.A);
+        _color ??= console.GetColor()[0];
+        Microsoft.Xna.Framework.Color color = console.GetColor()[0];
+        color.R = (byte)(value * _color.Value.R);
+        color.G = (byte)(value * _color.Value.G);
+        color.B = (byte)(value * _color.Value.B);
+        color.A = (byte)(value * _color.Value.A);
+        console.ChangeColor(new[] { color });
         return new[] { "Changed opacity for console" };
     }
 

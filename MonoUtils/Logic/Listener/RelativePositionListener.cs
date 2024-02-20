@@ -1,8 +1,10 @@
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using MonoUtils.Logic.Management;
 
 namespace MonoUtils.Logic.Listener;
 
-public class RelativePositionListener
+public class RelativePositionListener : IManageable
 {
     private readonly List<PositionData> _mappings;
 
@@ -12,6 +14,8 @@ public class RelativePositionListener
     {
         _mappings = new List<PositionData>();
     }
+
+    public Rectangle Rectangle => Rectangle.Empty;
 
     public void Update(GameTime gameTime)
     {
@@ -27,6 +31,10 @@ public class RelativePositionListener
 
             valueTuple.OldPosition = position;
         }
+    }
+
+    public void Draw(SpriteBatch spriteBatch)
+    {
     }
 
     public void Add(IMoveable main, IMoveable sub)

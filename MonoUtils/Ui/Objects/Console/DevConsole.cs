@@ -1,14 +1,21 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using MonoUtils.Logging;
+using MonoUtils.Helper;
 using MonoUtils.Logic;
+using MonoUtils.Logic.Management;
+using MonoUtils.Ui.Color;
 using MonoUtils.Ui.Objects.TextSystem;
 
 namespace MonoUtils.Ui.Objects.Console;
 
-public class DevConsole : GameObject
+public class DevConsole : IManageable, ILayerable, IColorable, IMoveable
 {
+    private Vector2 _position;
+    private Vector2 _size;
+    private Vector2 _scale;
+    private Microsoft.Xna.Framework.Color _color;
+
     private readonly GameWindow _window;
 
     private Text _currentInput;
@@ -26,20 +33,17 @@ public class DevConsole : GameObject
 
     private Text[] _lines;
 
-    public new static Vector2 DefaultSize = new Vector2(1280, 720) / 2;
-    public new static Texture2D DefaultTexture;
+    private Rectangle _rectangle;
+    public Rectangle Rectangle => _rectangle;
 
-    public new static TextureHitboxMapping DefaultMapping => new TextureHitboxMapping()
-    {
-        ImageSize = new Vector2(128, 72),
-        Hitboxes = new[]
-        {
-            new Rectangle(0, 0, 128, 72)
-        }
-    };
+    public float Layer { get; set; }
+
+    public Vector2 ImageSize = new Vector2(128, 72);
+
+    public new static Texture2D Texture;
 
     public DevConsole(CommandProcessor processor, Vector2 position) : this(processor,
-        position, 1F, null)
+        position, 10F, null)
     {
     }
 
@@ -48,18 +52,19 @@ public class DevConsole : GameObject
     {
     }
 
-    public DevConsole(CommandProcessor processor, Vector2 position, float scale, DevConsole? console) : base(position,
-        DefaultSize * scale,
-        DefaultTexture, DefaultMapping)
+    public DevConsole(CommandProcessor processor, Vector2 position, float scale, DevConsole? console)
     {
         Processor = console is null ? processor : console.Processor;
 
+        _size = ImageSize * scale * 5;
+        _position = position;
+        _scale = Vector2.One * scale * 5;
         _maxText = new Text("[block]", scale);
         _currentInput = new Text(string.Empty, scale);
 
         Backlog = console is null ? new Backlog() : console.Backlog;
 
-        _maxLinesY = (int)(Size / _maxText.Size).Y - 1;
+        _maxLinesY = (int)(_size / _maxText.Size).Y - 1;
         _toDisplay = new List<BacklogRow>();
 
         _lines = new Text[_maxLinesY];
@@ -75,10 +80,10 @@ public class DevConsole : GameObject
         _drawCursorInvoker = new OverTimeInvoker(500F);
         _drawCursorInvoker.Trigger += UpdateCursor;
 
-        _currentInput.Move(position + new Vector2(0, Size.Y - _maxText.Size.Y));
+        _currentInput.Move(position + new Vector2(0, _size.Y - _maxText.Size.Y));
 
         Context = console is null ? new ContextProvider() : console.Context;
-        DrawColor = console?.DrawColor ?? new Microsoft.Xna.Framework.Color(75, 75, 75);
+        ChangeColor(console?.GetColor() ?? new[] { new Microsoft.Xna.Framework.Color(75, 75, 75) });
     }
 
     private void UpdateCursor()
@@ -87,10 +92,9 @@ public class DevConsole : GameObject
         _cursorDisplay.ChangeText(_isDrawingCursor ? "_" : "");
     }
 
-    public override void Update(GameTime gameTime)
+    public void Update(GameTime gameTime)
     {
-        base.Update(gameTime);
-
+        _rectangle = this.GetRectangle();
         _drawCursorInvoker.Update(gameTime);
 
         if (InputReaderKeyboard.CheckKey(Keys.Up, true))
@@ -102,11 +106,10 @@ public class DevConsole : GameObject
         _toDisplay = Backlog.GetRangeFromPointer(_maxLinesY);
 
 
-
         for (int line = 0; line < _lines.Length; line++)
         {
             Text l = _lines[line];
-            l.Move(Position + new Vector2(0, _maxText.Size.Y) * line);
+            l.Move(GetPosition() + new Vector2(0, _maxText.Size.Y) * line);
             if (_toDisplay.Count > line)
             {
                 var text = _toDisplay[line].Text;
@@ -116,7 +119,7 @@ public class DevConsole : GameObject
                     // Quick fix to cut of overlapping lines.
                     // There should be a better solution like a linebreak but that would invoke effort!
                     l.ChangeText(text.Substring(0, i--));
-                } while (l.Rectangle.Width > Size.X);
+                } while (l.Rectangle.Width > GetSize().X);
 
                 l.ChangeColor(_toDisplay[line].ColorSet.Color);
             }
@@ -126,12 +129,20 @@ public class DevConsole : GameObject
 
         _cursorDisplay.Move(_currentInput.Position + new Vector2(_currentInput.Size.X, 0));
         _cursorDisplay.Update(gameTime);
-
     }
 
-    public override void Draw(SpriteBatch spriteBatch)
+    public void Draw(SpriteBatch spriteBatch)
     {
-        base.Draw(spriteBatch);
+        spriteBatch.Draw(
+            Texture,
+            _position,
+            null,
+            _color,
+            0F,
+            Vector2.Zero,
+            _scale,
+            SpriteEffects.None,
+            Layer);
         foreach (Text text in _lines)
             text.Draw(spriteBatch);
         _currentInput.Draw(spriteBatch);
@@ -161,7 +172,7 @@ public class DevConsole : GameObject
             _currentInput.ChangeText(oldText);
 
             // only add the new character if the size allows for one
-            if (newMaxWidth < Size.X)
+            if (newMaxWidth < _size.X)
                 _currentInput.ChangeText(_currentInput + c ?? string.Empty);
 
             return;
@@ -206,14 +217,29 @@ public class DevConsole : GameObject
         }
     }
 
-    public override void Move(Vector2 newPosition)
+    public void Move(Vector2 newPosition)
     {
-        var offset = newPosition - Position;
+        var offset = newPosition - _position;
 
         foreach (var line in _lines)
             line.Move(line.Position + offset);
 
         _currentInput.Move(_currentInput.Position + offset);
-        Position = newPosition;
+        _position = newPosition;
     }
+
+    public void ChangeColor(Microsoft.Xna.Framework.Color[] input)
+        => _color = input[0];
+
+    public int ColorLength()
+        => 1;
+
+    public Microsoft.Xna.Framework.Color[] GetColor()
+        => new[] { _color };
+
+    public Vector2 GetPosition()
+        => _position;
+
+    public Vector2 GetSize()
+        => _size;
 }

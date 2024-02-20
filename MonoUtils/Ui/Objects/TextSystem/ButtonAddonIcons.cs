@@ -7,7 +7,7 @@ public class ButtonAddonIcons : ILetter
 {
     public static Vector2 ImageSize => new Vector2(8, 8);
 
-    public new static Texture2D DefaultTexture;
+    public new static Texture2D Texture;
 
     // How many letter till line wrap on texture
     public static int TextureWidth => 8;
@@ -21,7 +21,7 @@ public class ButtonAddonIcons : ILetter
     }
 
     public Texture2D GetTexture()
-        => DefaultTexture;
+        => Texture;
 
     public Vector2 GetFullSize()
         => ImageSize;

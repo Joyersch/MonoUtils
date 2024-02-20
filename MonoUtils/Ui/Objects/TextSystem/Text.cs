@@ -139,6 +139,9 @@ public class Text : IColorable, IMoveable, IManageable
     public int ColorLength()
         => Length;
 
+    public Microsoft.Xna.Framework.Color[] GetColor()
+    =>  (Microsoft.Xna.Framework.Color[])_letters.Select(l => l.DrawColor);
+
     public void ChangeColor(Microsoft.Xna.Framework.Color color)
     {
         for (int i = 0; i < _letters.Count; i++)

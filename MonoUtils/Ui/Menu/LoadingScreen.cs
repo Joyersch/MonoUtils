@@ -2,12 +2,13 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoUtils.Logic;
+using MonoUtils.Logic.Management;
 using MonoUtils.Ui.Color;
 using MonoUtils.Ui.Objects.TextSystem;
 
 namespace MonoUtils.Ui.Menu;
 
-public class LoadingScreen : GameObject
+public class LoadingScreen : IManageable
 {
     private long _max;
     private string _goal;
@@ -15,6 +16,7 @@ public class LoadingScreen : GameObject
 
     private int _dots;
 
+    public Rectangle Rectangle => _area;
     private Rectangle _area;
 
     private readonly Text _loading;
@@ -28,7 +30,7 @@ public class LoadingScreen : GameObject
     public bool ProgressEnabled = true;
 
 
-    public LoadingScreen(Vector2 position, Vector2 size, long max, float scale, string goal) : base(position, size)
+    public LoadingScreen(Vector2 position, Vector2 size, long max, float scale, string goal)
     {
         _max = max;
         _goal = goal;
@@ -92,9 +94,8 @@ public class LoadingScreen : GameObject
         _goal = goal;
     }
 
-    public override void Update(GameTime gameTime)
+    public void Update(GameTime gameTime)
     {
-        base.Update(gameTime);
 
         _lazyDots.Update(gameTime);
 
@@ -137,7 +138,7 @@ public class LoadingScreen : GameObject
             .Move();
     }
 
-    public override void Draw(SpriteBatch spriteBatch)
+    public void Draw(SpriteBatch spriteBatch)
     {
         _bar.Draw(spriteBatch);
         if (ProgressEnabled)

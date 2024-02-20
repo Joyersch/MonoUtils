@@ -24,10 +24,10 @@ public class MousePointer : IManageable, IMoveable
     public bool UseRelative { get; set; } = false;
     public float Speed { get; set; } = 1F;
 
-    public static Texture2D DefaultTexture;
+    public static Texture2D Texture;
 
     public MousePointer(Vector2 window, Camera camera) : this(window, camera, Vector2.Zero,
-        Vector2.Zero, DefaultTexture)
+        Vector2.Zero, Texture)
     {
     }
 

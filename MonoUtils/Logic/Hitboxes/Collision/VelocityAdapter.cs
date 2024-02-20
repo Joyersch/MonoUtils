@@ -4,12 +4,12 @@ using MonoUtils.Logic.Management;
 
 namespace MonoUtils.Logic.Hitboxes.Collision;
 
-public class VelocityAdapter : IManageable, IInteractable, IHitbox
+public class VelocityAdapter<T> : IManageable, IInteractable where T : IMoveable, IManageable, IHitbox
 {
     public Vector2 Velocity { get; private set; }
-    public readonly GameObject Object;
+    public readonly T Object;
 
-    public VelocityAdapter(GameObject @object)
+    public VelocityAdapter(T @object)
     {
         Object = @object;
     }
@@ -31,7 +31,7 @@ public class VelocityAdapter : IManageable, IInteractable, IHitbox
         var time = (float) gameTime.ElapsedGameTime.TotalMinutes;
         var hitboxes = toCheck.Hitbox.ToList();
         var velocityRange = Rectangle.Union(Object.Rectangle
-            , new Rectangle((Object.Position + Velocity).ToPoint(), Object.Rectangle.Size));
+            , new Rectangle((Object.GetPosition() + Velocity).ToPoint(), Object.Rectangle.Size));
         
         var inRange = hitboxes.Where(h => h.Intersects(velocityRange)).ToList();
         
@@ -52,7 +52,7 @@ public class VelocityAdapter : IManageable, IInteractable, IHitbox
             }
         }
 
-        Object.Move(Object.Position + Velocity * time);
+        Object.Move(Object.GetPosition() + Velocity * time);
     }
 
     public Rectangle[] Hitbox => Object.Hitbox;

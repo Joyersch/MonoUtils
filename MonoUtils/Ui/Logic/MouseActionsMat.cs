@@ -37,7 +37,6 @@ public class MouseActionsMat : IMouseActions, IInteractable, IHitbox
             {
                 Click?.Invoke(_sendSelfAsInvoker ? this : _toCover);
             }
-
         }
         else if (_hover)
             Leave?.Invoke(_sendSelfAsInvoker ? this : _toCover);

@@ -2,11 +2,7 @@
 
 namespace MonoUtils.Logic;
 
-public interface IRotateable
+public interface IRotateable: ISpatial
 {
     public float Rotation { get; set; }
-
-    public Vector2 GetPosition();
-
-    public Vector2 GetSize();
 }

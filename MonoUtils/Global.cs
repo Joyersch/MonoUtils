@@ -22,17 +22,15 @@ public static class Global
 
     public static void Initialize(ContentManager content)
     {
-        GameObject.DefaultTexture = content.GetTexture("placeholder");
-        Cursor.DefaultTexture = content.GetTexture("cursor");
+        SampleObject.Texture = content.GetTexture("placeholder");
+        Cursor.Texture = content.GetTexture("cursor");
         Letter.Initialize();
-        DefaultLetters.DefaultTexture = content.GetTexture("Font/DefaultLetters");
-        ActionSymbols.DefaultTexture = content.GetTexture("Font/ActionSymbols");
-        ButtonAddonIcons.DefaultTexture = content.GetTexture("Font/ButtonAddons");
-        EmptyButton.DefaultTexture = content.GetTexture("emptybutton");
-        MiniTextButton.DefaultTexture = content.GetTexture("minibutton");
-        SquareTextButton.DefaultTexture = content.GetTexture("squarebutton");
-        DevConsole.DefaultTexture = content.GetTexture("console");
-        ConnectedGameObject.DefaultTexture = content.GetTexture("connectedsample");
+        DefaultLetters.Texture = content.GetTexture("Font/DefaultLetters");
+        ActionSymbols.Texture = content.GetTexture("Font/ActionSymbols");
+        ButtonAddonIcons.Texture = content.GetTexture("Font/ButtonAddons");
+        SampleButton.Texture = content.GetTexture("emptybutton");
+        SquareButton.Texture = content.GetTexture("squarebutton");
+        DevConsole.Texture = content.GetTexture("console");
     }
 
     public static string ReadFromResources(string file)

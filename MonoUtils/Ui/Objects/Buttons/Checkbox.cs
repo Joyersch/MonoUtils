@@ -4,7 +4,7 @@ using MonoUtils.Ui.Objects.TextSystem;
 
 namespace MonoUtils.Ui.Objects.Buttons;
 
-public class Checkbox : SquareTextButton
+public class Checkbox : TextButton<SquareButton>
 {
     private bool _checked;
 
@@ -14,31 +14,15 @@ public class Checkbox : SquareTextButton
     {
     }
 
-    public Checkbox(float scale) : this(string.Empty, scale, false)
+    public Checkbox(float scale) : this(scale, false)
     {
     }
 
-    public Checkbox(bool state) : this(string.Empty, state)
+    public Checkbox(bool state) : this(4F, state)
     {
     }
 
-    public Checkbox(string text) : this(text, false)
-    {
-    }
-
-    public Checkbox(float scale, bool state) : this(string.Empty, scale, state)
-    {
-    }
-
-    public Checkbox(string text, float scale) : this(text, scale, false)
-    {
-    }
-
-    public Checkbox(string text, bool state) : this(text, 1F, state)
-    {
-    }
-
-    public Checkbox(string text, float scale, bool state) : base(text, scale, 2F)
+    public Checkbox(float scale, bool state) : base(string.Empty, new SquareButton(Vector2.Zero, scale))
     {
         _checked = state;
         Text.ChangeText(_checked ? "[checkmark]" : "[crossout]");
@@ -51,6 +35,8 @@ public class Checkbox : SquareTextButton
                 { _checked ? Microsoft.Xna.Framework.Color.Green : Microsoft.Xna.Framework.Color.Red });
             ValueChanged?.Invoke(_checked);
         };
+        // Update Text
+        Move(GetPosition());
     }
 
     public bool Checked()

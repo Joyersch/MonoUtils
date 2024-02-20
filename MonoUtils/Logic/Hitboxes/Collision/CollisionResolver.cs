@@ -5,11 +5,11 @@ using MonoUtils.Ui;
 
 namespace MonoUtils.Logic.Hitboxes.Collision;
 
-public class CollisionResolver : IManageable
+public class CollisionResolver<T> : IManageable where T : IMoveable, IManageable, IHitbox
 {
     private readonly Camera _camera;
-    private List<VelocityAdapter> _dynamics;
-    private List<GameObject> _stationaries;
+    private List<VelocityAdapter<T>> _dynamics;
+    private List<T> _stationaries;
     private HitboxCollection _hitboxCollection;
 
     public bool ManageStationaryUpdate { get; set; } = true;
@@ -64,12 +64,12 @@ public class CollisionResolver : IManageable
         }
     }
 
-    public void AddDynamic(VelocityAdapter dynamic)
+    public void AddDynamic(VelocityAdapter<T> dynamic)
     {
         _dynamics.Add(dynamic);
     }
 
-    public void AddStationary(GameObject stationary)
+    public void AddStationary(T stationary)
     {
         _stationaries.Add(stationary);
         _hitboxCollection.Add(stationary);

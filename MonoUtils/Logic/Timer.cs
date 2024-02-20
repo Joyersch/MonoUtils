@@ -92,6 +92,9 @@ public class Timer : IManageable, IMoveable, IColorable
     public int ColorLength()
         => _display.ColorLength();
 
+    public Color[] GetColor()
+    => _display.GetColor();
+
     public void Stop()
     {
         _invoked = false;

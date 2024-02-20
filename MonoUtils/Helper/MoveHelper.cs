@@ -3,7 +3,7 @@ using MonoUtils.Logic;
 
 namespace MonoUtils.Helper;
 
-public class MoveHelper
+public static class MoveHelper
 {
     public static void MoveTowards(IMoveable move, IMoveable to, float distance)
     {
@@ -36,6 +36,11 @@ public class MoveHelper
 
         var direction = towardsCenter - rotateCenter;
         rotate.Rotation = (float)(Math.Atan2(direction.Y, direction.X));
-
     }
+
+    public static Vector2 GetRelative(Vector2 from, Vector2 to)
+        => to - from;
+
+    public static Rectangle GetRectangle(this IMoveable moveable)
+        => new Rectangle(moveable.GetPosition().ToPoint(), moveable.GetSize().ToPoint());
 }
