@@ -15,7 +15,7 @@ public class CameraAnchorGrid : IManageable
 
     public event Action StoppedMoving;
 
-    private Invisible[] _anchors;
+    private SampleObject[] _anchors;
 
     public bool IsDraw = false;
 
@@ -71,7 +71,7 @@ public class CameraAnchorGrid : IManageable
 
     private void CalculateAnchors()
     {
-        _anchors ??= new Invisible[9];
+        _anchors ??= new SampleObject[9];
 
         int i = 0;
         for (int y = -1; y < 2; y++)
@@ -79,7 +79,7 @@ public class CameraAnchorGrid : IManageable
             for (int x = -1; x < 2; x++)
             {
                 // Get the object at given position i or a new object if null
-                Invisible anchor = _anchors[i] ??= new Invisible(Vector2.Zero, Vector2.One * 16);
+                SampleObject anchor = _anchors[i] ??= new SampleObject(Vector2.Zero, Vector2.One * 16);
                 anchor.GetCalculator(_camera.Rectangle)
                     .OnCenter()
                     .Centered()

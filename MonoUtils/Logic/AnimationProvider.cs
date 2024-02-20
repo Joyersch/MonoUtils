@@ -17,6 +17,12 @@ public class AnimationProvider : IUpdateable
     private readonly OverTimeInvoker _animationInvoker;
 
     public AnimationProvider(Vector2 imageSize, double animationSpeed, int animationFrames,
+        bool animatedFromTop = true) : this(imageSize, animationSpeed, animationFrames,
+        new Rectangle(Vector2.Zero.ToPoint(), imageSize.ToPoint()), animatedFromTop)
+    {
+    }
+
+    public AnimationProvider(Vector2 imageSize, double animationSpeed, int animationFrames, Rectangle framePosition,
         bool animatedFromTop = true)
     {
         _imageSize = imageSize;
@@ -24,7 +30,7 @@ public class AnimationProvider : IUpdateable
         _animatedFromTop = animatedFromTop;
         _animationInvoker = new OverTimeInvoker(animationSpeed);
         CalculateImageLocation();
-        _framePosition = new Rectangle(Vector2.Zero.ToPoint(), imageSize.ToPoint());
+        _framePosition = framePosition;
         if (animationSpeed != 0F)
             _animationInvoker.Trigger += CalculateImageLocation;
     }
