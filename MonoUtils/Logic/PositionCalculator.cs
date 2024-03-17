@@ -114,6 +114,24 @@ public class PositionCalculator
         return this;
     }
 
+    public PositionCalculator WithX(float x)
+    {
+        _calculatedPosition += new Vector2(x, 0);
+        return this;
+    }
+
+    public PositionCalculator WithY(float y)
+    {
+        _calculatedPosition += new Vector2(0, y);
+        return this;
+    }
+
+    public PositionCalculator With(float x, float y)
+    {
+        _calculatedPosition += new Vector2(x, y);
+        return this;
+    }
+
     public void Move()
     {
         if (_moveable is null)
