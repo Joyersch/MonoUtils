@@ -27,7 +27,6 @@ public class Text : IColorable, IMoveable, IManageable
 
     public Text(string text) : this(text, Vector2.Zero, DefaultLetterScale, 1)
     {
-
     }
 
     public Text(string text, float scale) : this(text, Vector2.Zero, scale * DefaultLetterScale, 1)
@@ -55,11 +54,14 @@ public class Text : IColorable, IMoveable, IManageable
         var letters = Letter.Parse(text, _letterScale);
 
         int length = 0;
+        int index = 0;
         foreach (var letter in letters)
         {
             var position = Position;
             position.X += length;
             letter.Move(position + new Vector2(0, letter.FullSize.Y) - new Vector2(0, letter.Rectangle.Height));
+            if (_letters is not null && _letters.Count > index)
+                letter.DrawColor = _letters[index++].DrawColor;
             length += (int)(letter.Size.X + Spacing * _letterScale);
         }
 
@@ -109,6 +111,7 @@ public class Text : IColorable, IMoveable, IManageable
         {
             builder.Append(letter);
         }
+
         return builder.ToString();
     }
 
@@ -118,7 +121,7 @@ public class Text : IColorable, IMoveable, IManageable
     public virtual Vector2 GetSize()
         => Size;
 
-    public void Move(Vector2 newPosition)
+    public virtual void Move(Vector2 newPosition)
     {
         Vector2 offset = newPosition - Position;
         foreach (Letter letter in _letters)
@@ -127,7 +130,7 @@ public class Text : IColorable, IMoveable, IManageable
         UpdateRectangle();
     }
 
-    public void ChangeColor(Microsoft.Xna.Framework.Color[] color)
+    public virtual void ChangeColor(Microsoft.Xna.Framework.Color[] color)
     {
         for (int i = 0; i < color.Length; i++)
         {
@@ -140,9 +143,9 @@ public class Text : IColorable, IMoveable, IManageable
         => Length;
 
     public Microsoft.Xna.Framework.Color[] GetColor()
-    =>  (Microsoft.Xna.Framework.Color[])_letters.Select(l => l.DrawColor);
+        => (Microsoft.Xna.Framework.Color[])_letters.Select(l => l.DrawColor);
 
-    public void ChangeColor(Microsoft.Xna.Framework.Color color)
+    public virtual void ChangeColor(Microsoft.Xna.Framework.Color color)
     {
         for (int i = 0; i < _letters.Count; i++)
         {

@@ -17,7 +17,7 @@ public class Letter : IMoveable, IManageable, IRotateable
     private Rectangle _rectangle;
     public Rectangle Rectangle => _rectangle;
 
-    private static List<ILetter> LetterOptions = null;
+    private static List<ILetter> LetterOptions;
 
     private string _identifier;
     private Texture2D _resolvedTexture;
