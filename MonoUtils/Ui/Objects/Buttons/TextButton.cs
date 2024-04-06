@@ -44,7 +44,7 @@ public class TextButton<T> : IButton where T : IButton
 
     public bool IsHover => _button.IsHover;
 
-    public void Update(GameTime gameTime)
+    public virtual void Update(GameTime gameTime)
     {
         _button.Update(gameTime);
         Text.Update(gameTime);
@@ -59,7 +59,7 @@ public class TextButton<T> : IButton where T : IButton
         _button.UpdateInteraction(gameTime, toCheck);
     }
 
-    public void Draw(SpriteBatch spriteBatch)
+    public virtual void Draw(SpriteBatch spriteBatch)
     {
         _button.Draw(spriteBatch);
         Text.Draw(spriteBatch);
