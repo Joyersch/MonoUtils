@@ -19,6 +19,8 @@ public class ClickableText : Text, IInteractable, IHitbox
 
     public static Microsoft.Xna.Framework.Color LinkColor = new(114, 158, 252);
 
+    private bool _drawUnderscore;
+
     public ClickableText(string text) : this(text, 1F)
     {
     }
@@ -39,8 +41,16 @@ public class ClickableText : Text, IInteractable, IHitbox
     {
         _scale = scale;
         _mouseActions = new MouseActionsMat(this);
-        _mouseActions.Enter += delegate { Enter?.Invoke(this); };
-        _mouseActions.Leave += delegate { Leave?.Invoke(this); };
+        _mouseActions.Enter += delegate
+        {
+            _drawUnderscore = true;
+            Enter?.Invoke(this);
+        };
+        _mouseActions.Leave += delegate
+        {
+            _drawUnderscore = false;
+            Leave?.Invoke(this);
+        };
         _mouseActions.Click += o => Click?.Invoke(o);
         _highlight = new Text(string.Empty, position, scale, 0);
         _highlight.ChangeText(string.Concat(Enumerable.Repeat(".", (int)(Rectangle.Width / _scale))));
@@ -62,7 +72,8 @@ public class ClickableText : Text, IInteractable, IHitbox
     public override void Draw(SpriteBatch spriteBatch)
     {
         base.Draw(spriteBatch);
-        _highlight.Draw(spriteBatch);
+        if (_drawUnderscore)
+            _highlight.Draw(spriteBatch);
     }
 
     public override void Move(Vector2 newPosition)
