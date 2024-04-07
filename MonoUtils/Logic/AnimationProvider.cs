@@ -29,8 +29,8 @@ public class AnimationProvider : IUpdateable
         _animationFrames = animationFrames;
         _animatedFromTop = animatedFromTop;
         _animationInvoker = new OverTimeInvoker(animationSpeed);
-        CalculateImageLocation();
         _framePosition = framePosition;
+        CalculateImageLocation();
         if (animationSpeed != 0F)
             _animationInvoker.Trigger += CalculateImageLocation;
     }
