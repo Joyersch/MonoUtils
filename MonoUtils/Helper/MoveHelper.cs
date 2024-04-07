@@ -1,5 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
+using MonoUtils.Logging;
 using MonoUtils.Logic;
+using MonoUtils.Logic.Hitboxes.Collision;
 
 namespace MonoUtils.Helper;
 
@@ -24,20 +26,30 @@ public static class MoveHelper
 
     public static void RotateTowards(IRotateable rotate, IMoveable towards)
     {
-        var rotatePosition = rotate.GetPosition();
-        var rotateSize = rotate.GetSize();
+        rotate.Rotation = GetAngle(rotate, towards);
+    }
+
+    public static float GetAngle(IRotateable origin, IMoveable destination)
+    {
+        var rotatePosition = origin.GetPosition();
+        var rotateSize = origin.GetSize();
 
         var rotateCenter = rotatePosition + rotateSize / 2;
 
-        var towardsPosition = towards.GetPosition();
-        var towardsSize = towards.GetSize();
+        var towardsPosition = destination.GetPosition();
+        var towardsSize = destination.GetSize();
 
         var towardsCenter = towardsPosition + towardsSize / 2;
-
         var direction = towardsCenter - rotateCenter;
-        rotate.Rotation = (float)(Math.Atan2(direction.Y, direction.X));
+        return (float)Math.Atan2(direction.Y, direction.X);
     }
 
+    /// <summary>
+    /// to - from
+    /// </summary>
+    /// <param name="from"></param>
+    /// <param name="to"></param>
+    /// <returns></returns>
     public static Vector2 GetRelative(Vector2 from, Vector2 to)
         => to - from;
 
