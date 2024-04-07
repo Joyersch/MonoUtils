@@ -27,7 +27,7 @@ public class HitboxProvider : IHitbox, IUpdateable
         Calcutate();
     }
 
-    private void Calcutate()
+    public void Calcutate()
     {
         for (int i = 0; i < _baseHitbox.Length; i++)
         {
