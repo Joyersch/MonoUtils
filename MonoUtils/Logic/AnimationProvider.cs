@@ -23,7 +23,7 @@ public class AnimationProvider : IUpdateable
     }
 
     public AnimationProvider(Vector2 imageSize, double animationSpeed, int animationFrames, Rectangle framePosition,
-        bool animatedFromTop = true)
+        bool animatedFromTop = true, int startingFrame = 0)
     {
         _imageSize = imageSize;
         _animationFrames = animationFrames;
@@ -33,6 +33,7 @@ public class AnimationProvider : IUpdateable
         CalculateImageLocation();
         if (animationSpeed != 0F)
             _animationInvoker.Trigger += CalculateImageLocation;
+        _currentAnimationFrame = startingFrame;
     }
 
     public void Update(GameTime gameTime)
