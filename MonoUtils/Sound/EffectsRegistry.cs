@@ -7,36 +7,41 @@ namespace MonoUtils.Sound;
 public class EffectsRegistry : IUpdateable
 {
     private Dictionary<string, SoundEffect> _effects = new();
-    private Dictionary<string, SoundEffectInstance> _instances = new();
+    private List<SoundEffectInstance> _instances = new();
+    private float _masterVolume;
 
     public void Register(SoundEffect effect, string key)
     {
         _effects.Add(key, effect);
     }
 
+    public float GetMasterVolume()
+        => _masterVolume;
+
+    public void SetMasterVolume(float volume)
+        => _masterVolume = volume;
+
     public SoundEffectInstance? GetInstance(string key)
     {
         if (!_effects.ContainsKey(key))
             return null;
+
         var instance = _effects[key].CreateInstance();
-        _instances.Add(key, instance);
+        instance.Volume = _masterVolume;
+        _instances.Add(instance);
         return instance;
     }
 
     public void Update(GameTime gameTime)
     {
-        List<string> toNuke = new();
-        foreach (var instance in _instances)
+        for (var index = _instances.Count - 1; index >= 0; index--)
         {
-            if (instance.Value.State == SoundState.Stopped)
-                toNuke.Add(instance.Key);
-        }
-
-        foreach (var instance in toNuke)
-        {
-            var sound = _instances[instance];
-            _instances.Remove(instance);
-            sound.Dispose();
+            var instance = _instances[index];
+            if (instance.State == SoundState.Stopped)
+            {
+                _instances.Remove(instance);
+                instance.Dispose();
+            }
         }
     }
 }
