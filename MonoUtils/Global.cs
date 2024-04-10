@@ -4,7 +4,6 @@ using Microsoft.Xna.Framework.Content;
 using MonoUtils.Logging;
 using MonoUtils.Logic;
 using MonoUtils.Logic.Listener;
-using MonoUtils.Sound;
 using MonoUtils.Ui.Objects;
 using MonoUtils.Ui.Objects.Buttons;
 using MonoUtils.Ui.Objects.Console;
@@ -14,8 +13,6 @@ namespace MonoUtils;
 
 public static class Global
 {
-    public static readonly SoundEffectsCache SoundEffects = new();
-
     public static readonly CommandProcessor CommandProcessor = new();
 
     public static SoundSettingsListener SoundSettingsListener;

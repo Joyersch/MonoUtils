@@ -21,6 +21,7 @@ public class MouseActionsMat : IMouseActions, IInteractable, IHitbox
         _toCover = toCover;
         _sendSelfAsInvoker = sendSelfAsInvoker;
     }
+
     public void UpdateInteraction(GameTime gameTime, IHitbox toCheck)
     {
         bool isMouseHovering = false;
