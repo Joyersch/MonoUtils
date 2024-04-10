@@ -54,4 +54,12 @@ public class LoopStation : IUpdateable, IDisposable
                 instance.Value.Dispose();
         }
     }
+
+    public void ResetVolume()
+    {
+        foreach (var instance in _instances)
+        {
+            instance.Value.Volume = 0F;
+        }
+    }
 }
