@@ -74,6 +74,12 @@ public class OverTimeMover : IManageable
     public void ChangeDestination(Vector2 newDestination)
         => _destination = newDestination;
 
+    public void ChangeTime(float newTime)
+        => _moveIn = newTime;
+
+    public void ChangeMode(MoveMode mode)
+        => _mode = mode;
+
     public void Draw(SpriteBatch spriteBatch)
     {
     }
