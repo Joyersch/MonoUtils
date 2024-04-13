@@ -58,4 +58,7 @@ public class AnimationProvider : IUpdateable
             _framePosition.Width,
             _framePosition.Height);
     }
+
+    public int GetCurrentFrame()
+        => _currentAnimationFrame;
 }
