@@ -81,11 +81,11 @@ public class TextButton<T> : IButton where T : IButton
     }
 
     public void ChangeColor(Microsoft.Xna.Framework.Color[] input)
-        => Text.ChangeColor(input);
+        => _button.ChangeColor(input);
 
     public int ColorLength()
-        => Text.ColorLength();
+        => _button.ColorLength();
 
     public Microsoft.Xna.Framework.Color[] GetColor()
-        => Text.GetColor();
+        => _button.GetColor();
 }

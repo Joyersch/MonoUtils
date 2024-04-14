@@ -55,7 +55,7 @@ public class ButtonAddon : IButton
     public virtual void Move(Vector2 newPosition)
         => Button.Move(newPosition);
 
-    public void ChangeColor(Microsoft.Xna.Framework.Color[] input)
+    public virtual void ChangeColor(Microsoft.Xna.Framework.Color[] input)
         => Button.ChangeColor(input);
 
     public int ColorLength()

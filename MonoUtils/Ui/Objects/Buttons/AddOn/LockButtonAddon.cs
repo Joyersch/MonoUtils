@@ -1,7 +1,9 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoUtils.GameObjects;
+using MonoUtils.Helper;
 using MonoUtils.Logic.Hitboxes;
+using MonoUtils.Ui.Color;
 using MonoUtils.Ui.Objects.TextSystem;
 
 namespace MonoUtils.Ui.Objects.Buttons.AddOn;
@@ -11,6 +13,7 @@ public class LockButtonAddon : ButtonAddon
     public bool IsLocked { get; private set; } = true;
 
     private readonly Text _text;
+    private Microsoft.Xna.Framework.Color _savedButtonColor;
 
     public LockButtonAddon(IButton button, float scale = 1F) : base(button)
     {
@@ -23,7 +26,9 @@ public class LockButtonAddon : ButtonAddon
                 InvokeClick();
         };
         button.Leave += _ => InvokeLeave();
+        _savedButtonColor = button.GetColor()[0];
         UpdateText();
+        Lock();
     }
 
     public override void UpdateInteraction(GameTime gameTime, IHitbox toCheck)
@@ -48,12 +53,15 @@ public class LockButtonAddon : ButtonAddon
     {
         IsLocked = false;
         UpdateText();
+        Button.ChangeColor(new[] { _savedButtonColor });
     }
 
     public void Lock()
     {
         IsLocked = true;
         UpdateText();
+        var color = ColorHelper.DarkenColor(_savedButtonColor, 0.87F);
+        Button.ChangeColor(new[] { color });
     }
 
     private void UpdateText()
@@ -68,5 +76,11 @@ public class LockButtonAddon : ButtonAddon
     {
         base.Move(newPosition);
         _text.Move(newPosition);
+    }
+
+    public override void ChangeColor(Microsoft.Xna.Framework.Color[] input)
+    {
+        base.ChangeColor(input);
+        _savedButtonColor = input[0];
     }
 }
