@@ -77,7 +77,7 @@ public class SimpleGame : Game
 
         Display.Update();
 
-        if (InputReader.CheckKey(ConsoleKey, true))
+        if (InputReader.CheckKey(ConsoleKey, true) && IsConsoleEnabled)
             IsConsoleActive = !IsConsoleActive;
 
         if (IsConsoleActive && IsConsoleEnabled)
@@ -110,6 +110,9 @@ public class SimpleGame : Game
 
     private void OnTextInput(object sender, TextInputEventArgs e)
     {
+        if (!IsConsoleEnabled)
+            return;
+
         if (Console is null)
             return;
 
