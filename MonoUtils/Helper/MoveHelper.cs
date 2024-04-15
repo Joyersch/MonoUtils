@@ -10,6 +10,12 @@ public static class MoveHelper
     public static void MoveTowards(IMoveable move, IMoveable to, float distance)
     {
         var movePosition = move.GetPosition();
+        move.Move(movePosition + GetDirection(move, to) * distance);
+    }
+
+    public static Vector2 GetDirection(IMoveable move, IMoveable to)
+    {
+        var movePosition = move.GetPosition();
         var moveSize = move.GetSize();
 
         var moveFrom = movePosition + moveSize / 2;
@@ -19,9 +25,7 @@ public static class MoveHelper
 
         var moveTo = toPosition + toSize / 2;
 
-        var position = Vector2.Normalize(moveTo - moveFrom);
-
-        move.Move(movePosition + position * distance);
+        return Vector2.Normalize(moveTo - moveFrom);
     }
 
     public static void RotateTowards(IRotateable rotate, IMoveable towards)
