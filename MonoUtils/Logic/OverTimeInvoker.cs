@@ -71,4 +71,9 @@ public class OverTimeInvoker : IManageable
         _invokeTime = time;
         return true;
     }
+
+    public void ForceChangeTime(float time)
+    {
+        _invokeTime = time;
+    }
 }
