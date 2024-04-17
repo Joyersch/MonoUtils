@@ -10,14 +10,16 @@ public class LoopStation : IUpdateable, IDisposable
     private Dictionary<string, SoundEffectInstance> _instances = new();
     private Dictionary<string, float> _volumes = new();
     private float _masterVolume = 1F;
+    private float _fadeTime;
 
     public void Register(SoundEffect effect, string name)
     {
         _effects.Add(name, effect);
     }
 
-    public void Initialize()
+    public void Initialize(float fadeTime = 1F)
     {
+        _fadeTime = fadeTime;
         foreach (var effect in _effects)
         {
             var instance = effect.Value.CreateInstance();
@@ -36,7 +38,18 @@ public class LoopStation : IUpdateable, IDisposable
     {
         foreach (var instance in _instances)
         {
-            instance.Value.Volume = _volumes[instance.Key] * _masterVolume;
+            var estimate = _volumes[instance.Key] * _masterVolume;
+            if (estimate == instance.Value.Volume)
+                continue;
+
+            var offset = estimate - instance.Value.Volume;
+            var apply = offset * (gameTime.ElapsedGameTime.TotalMilliseconds / _fadeTime);
+            if (apply > estimate)
+                apply = estimate;
+            if (apply + instance.Value.Volume < 0D)
+                apply = 0D;
+
+            instance.Value.Volume += (float)apply;
         }
     }
 
@@ -57,9 +70,9 @@ public class LoopStation : IUpdateable, IDisposable
 
     public void ResetVolume()
     {
-        foreach (var instance in _instances)
+        foreach (var key in _volumes.Keys)
         {
-            instance.Value.Volume = 0F;
+            _volumes[key] = 0;
         }
     }
 }
