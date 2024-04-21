@@ -90,6 +90,10 @@ public class SimpleGame : Game
     protected override void Draw(GameTime gameTime)
     {
         base.Draw(gameTime);
+    }
+
+    protected void DrawConsole()
+    {
         SpriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointClamp);
         if (IsConsoleActive && IsConsoleEnabled)
             Console.Draw(SpriteBatch);
