@@ -8,7 +8,7 @@ public class MoveCommand : ICommand
     public IEnumerable<string> Execute(DevConsole caller, object[] options, ContextProvider context)
     {
         if (options.Length < 2)
-            return new[] {"Usage:", "move [x] [y]"};
+            return new[] {"Usage:", "move (x) (y)"};
 
         if (!int.TryParse(options[0].ToString(), out int x))
             return new[] {"Bad value for x"};

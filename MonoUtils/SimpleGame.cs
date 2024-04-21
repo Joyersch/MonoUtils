@@ -87,6 +87,15 @@ public class SimpleGame : Game
         InputReaderMouse.StoreButtonStates();
     }
 
+    protected override void Draw(GameTime gameTime)
+    {
+        base.Draw(gameTime);
+        SpriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointClamp);
+        if (IsConsoleActive && IsConsoleEnabled)
+            Console.Draw(SpriteBatch);
+        SpriteBatch.End();
+    }
+
     protected override void LoadContent()
     {
         SpriteBatch = new SpriteBatch(GraphicsDevice);

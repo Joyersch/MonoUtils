@@ -6,7 +6,7 @@ public class OpacityCommand : ICommand
     public IEnumerable<string> Execute(DevConsole console, object[] options, ContextProvider context)
     {
         if (options.Length < 1)
-            return new[] { "Usage:", "opacity [0..1]" };
+            return new[] { "Usage:", "opacity (0..1)" };
 
         if (!float.TryParse(options[0].ToString().Replace('.', ','), out float value))
             return new[] { @$"Invalid value ""{value}""" };

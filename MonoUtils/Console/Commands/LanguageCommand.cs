@@ -8,7 +8,7 @@ public class LanguageCommand : ICommand
     public IEnumerable<string> Execute(DevConsole console, object[] options, ContextProvider context)
     {
         if (options.Length < 1)
-            return new[] { "Usage:", "lang [lang]", "Current:", TextProvider.Localization.ToString()};
+            return new[] { "Usage:", "lang (lang)", "Current:", TextProvider.Localization.ToString()};
         TextProvider.Language? toUse = null;
         if (options[0].ToString().ToLower().Contains("de"))
             toUse = TextProvider.Language.de_DE;
