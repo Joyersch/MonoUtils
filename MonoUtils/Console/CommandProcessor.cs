@@ -1,7 +1,6 @@
-using System.Collections;
 using System.Reflection;
 
-namespace MonoUtils.Ui.Objects.Console;
+namespace MonoUtils.Console;
 
 public class CommandProcessor : IProcessor
 {

@@ -1,6 +1,6 @@
 
 
-namespace MonoUtils.Ui.Objects.Console;
+namespace MonoUtils.Console;
 
 public class BacklogColorSet
 {

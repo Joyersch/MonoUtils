@@ -1,7 +1,7 @@
 using System.Text;
 using Microsoft.Xna.Framework.Input;
 
-namespace MonoUtils.Ui.Objects.Console;
+namespace MonoUtils.Console;
 
 public static class InputProcessorKeyboard
 {

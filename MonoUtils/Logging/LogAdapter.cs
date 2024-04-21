@@ -1,5 +1,5 @@
 using Microsoft.Xna.Framework;
-using MonoUtils.Ui.Objects.Console;
+using MonoUtils.Console;
 
 namespace MonoUtils.Logging;
 

@@ -7,7 +7,7 @@ using MonoUtils.Logic.Management;
 using MonoUtils.Ui.Color;
 using MonoUtils.Ui.Objects.TextSystem;
 
-namespace MonoUtils.Ui.Objects.Console;
+namespace MonoUtils.Console;
 
 public class DevConsole : IManageable, ILayerable, IColorable, IMoveable
 {

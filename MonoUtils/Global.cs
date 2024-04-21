@@ -1,12 +1,11 @@
-﻿using System.Reflection;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
+using MonoUtils.Console;
 using MonoUtils.Logging;
 using MonoUtils.Logic;
 using MonoUtils.Logic.Listener;
 using MonoUtils.Ui.Objects;
 using MonoUtils.Ui.Objects.Buttons;
-using MonoUtils.Ui.Objects.Console;
 using MonoUtils.Ui.Objects.TextSystem;
 
 namespace MonoUtils;

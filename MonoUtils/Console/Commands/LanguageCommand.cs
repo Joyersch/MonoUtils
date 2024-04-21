@@ -1,10 +1,10 @@
 using MonoUtils.Logic.Text;
 
-namespace MonoUtils.Ui.Objects.Console.Commands;
+namespace MonoUtils.Console.Commands;
 
 public class LanguageCommand : ICommand
 {
-    [CommandAttribute(Description = "Change the used language", Name = "lang")]
+    [Command(Description = "Change the used language", Name = "lang")]
     public IEnumerable<string> Execute(DevConsole console, object[] options, ContextProvider context)
     {
         if (options.Length < 1)

@@ -1,4 +1,4 @@
-namespace MonoUtils.Ui.Objects.Console;
+namespace MonoUtils.Console;
 
 [AttributeUsage(AttributeTargets.Method)]
 public class CommandAttribute : Attribute

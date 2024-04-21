@@ -1,12 +1,12 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using MonoUtils.Console;
 using MonoUtils.Logging;
 using MonoUtils.Logic;
 using MonoUtils.Logic.Text;
 using MonoUtils.Settings;
 using MonoUtils.Ui;
-using MonoUtils.Ui.Objects.Console;
 
 namespace MonoUtils;
 

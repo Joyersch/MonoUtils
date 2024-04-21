@@ -1,10 +1,10 @@
 using Microsoft.Xna.Framework;
 
-namespace MonoUtils.Ui.Objects.Console.Commands;
+namespace MonoUtils.Console.Commands;
 
 public class MoveCommand : ICommand
 {
-    [CommandAttribute(Description = "move console to location", Name = "move")]
+    [Command(Description = "move console to location", Name = "move")]
     public IEnumerable<string> Execute(DevConsole caller, object[] options, ContextProvider context)
     {
         if (options.Length < 2)

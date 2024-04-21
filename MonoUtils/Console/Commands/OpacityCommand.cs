@@ -1,4 +1,4 @@
-namespace MonoUtils.Ui.Objects.Console.Commands;
+namespace MonoUtils.Console.Commands;
 
 public class OpacityCommand : ICommand
 {
