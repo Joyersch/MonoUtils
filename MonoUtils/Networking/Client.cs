@@ -1,6 +1,7 @@
 ﻿using System.Net.Sockets;
 using System.Text;
 using MonoUtils.Logging;
+using MonoUtils.Networking.Pakets;
 
 namespace MonoUtils.Networking;
 
@@ -14,7 +15,7 @@ public class Client : IDisposable
 
     public bool IsConnected { get; private set; }
 
-    public event Action<string> RecievedMessage;
+    public event Action<IPacket> RecievedMessage;
     public event Action Disconnected;
     public event Action Connected;
 
@@ -60,13 +61,13 @@ public class Client : IDisposable
         Disconnected?.Invoke();
     }
 
-    public void Send(string message)
+    public void Send(IPacket message)
     {
         if (!IsConnected)
             return;
-        var stream = _tcpClient.GetStream();
-        byte[] dataToSend = Encoding.UTF8.GetBytes(message);
-        stream.Write(dataToSend, 0, dataToSend.Length);
+        var packet = new Packet(message);
+        BinaryWriter writer = new(_stream);
+        packet.Write(writer);
     }
 
     private void ReadFromConnection(object? obj)
@@ -75,7 +76,7 @@ public class Client : IDisposable
             return;
 
         NetworkStream stream = (NetworkStream)_stream;
-        byte[] receivedBuffer = new byte[1024];
+        byte[] receivedBuffer = new byte[10240];
         while (true)
         {
             try
@@ -88,8 +89,9 @@ public class Client : IDisposable
                     return;
                 }
 
-                string receivedMessage = Encoding.UTF8.GetString(receivedBuffer, 0, numberOfBytesRead);
-                RecievedMessage?.Invoke(receivedMessage);
+                BinaryReader reader = new BinaryReader(stream);
+                var paket = Packet.Parse(reader);
+                RecievedMessage?.Invoke(paket);
             }
             catch (Exception exception)
             {
