@@ -6,6 +6,8 @@ namespace MonoUtils.Networking;
 
 public class Client : IDisposable
 {
+    private readonly string _url;
+    private readonly int _port;
     private TcpClient _tcpClient;
     private Thread _connection;
     private Stream _stream;
@@ -20,6 +22,14 @@ public class Client : IDisposable
     public Client(TcpClient client)
     {
         _tcpClient = client;
+        Connect();
+    }
+
+    public Client(string url, int port)
+    {
+        _url = url;
+        _port = port;
+        Connect();
     }
 
     public void Connect()
@@ -27,6 +37,7 @@ public class Client : IDisposable
         if (IsConnected)
             return;
 
+        _tcpClient ??= new TcpClient(_url, _port);
         _stream = _tcpClient.GetStream();
         _connection = new Thread(ReadFromConnection);
         _connection.Start(_stream);
