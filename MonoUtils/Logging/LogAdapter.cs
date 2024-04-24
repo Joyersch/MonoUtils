@@ -31,7 +31,7 @@ public class LogAdapter
     public void Write(string text)
     {
         if (_writer is not null)
-            _writer.Write(text);
+            _writer.Write(text + Environment.NewLine);
 
         if (_console is not null)
             _console.Write(text, _line);
@@ -42,7 +42,7 @@ public class LogAdapter
         if (_console is not null)
             _console.WriteColor(text, new BacklogColorSet(color));
         if (_writer is not null)
-            _writer.Write(text);
+            _writer.Write(text + Environment.NewLine);
     }
 
     public void WriteColor(string text, Color color)
@@ -50,7 +50,7 @@ public class LogAdapter
         if (_console is not null)
             _console.WriteColor(text, new BacklogColorSet(color, text.Length));
         if (_writer is not null)
-            _writer.Write(text);
+            _writer.Write(text + Environment.NewLine);
     }
 
     public void UpdateReference(DevConsole console)

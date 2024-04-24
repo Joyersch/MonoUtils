@@ -8,6 +8,8 @@ public class ContextProvider
     {
         if (Context.All(d => d.Key != index))
             Context.Add(index, context);
+        else
+            Context[index] = context;
     }
 
     public T GetValue<T> (string index)
