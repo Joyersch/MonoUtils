@@ -65,7 +65,7 @@ public class ValueSelection<T> : IManageable, IMoveable, IInteractable
         _size = rectangle.Size.ToVector2();
 
         _display = new Text(validValues[_pointer].ToString(), Vector2.Zero, scale);
-        _display.GetCalculator(Rectangle)
+        _display.InRectangle(Rectangle)
             .OnCenter()
             .Centered()
             .Move();
@@ -111,7 +111,7 @@ public class ValueSelection<T> : IManageable, IMoveable, IInteractable
         var longestHalfText = _longestValidValue / 2;
         var distance = longestHalfText - halfText;
 
-        _display.GetCalculator(Rectangle)
+        _display.InRectangle(Rectangle)
             .OnCenter()
             .Centered()
             .Move();

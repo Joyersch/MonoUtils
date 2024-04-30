@@ -80,7 +80,7 @@ public class CameraAnchorGrid : IManageable
             {
                 // Get the object at given position i or a new object if null
                 SampleObject anchor = _anchors[i] ??= new SampleObject(Vector2.Zero, Vector2.One * 16);
-                anchor.GetCalculator(_camera.Rectangle)
+                anchor.InRectangle(_camera.Rectangle)
                     .OnCenter()
                     .Centered()
                     .ByGrid(x, y)
