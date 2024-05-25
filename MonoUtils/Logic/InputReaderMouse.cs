@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using Microsoft.Xna.Framework.Input;
-using MonoUtils.Logging;
+﻿using Microsoft.Xna.Framework.Input;
 
 namespace MonoUtils;
 
