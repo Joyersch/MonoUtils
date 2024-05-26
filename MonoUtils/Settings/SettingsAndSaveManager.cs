@@ -149,8 +149,8 @@ public class SettingsAndSaveManager
             }
             catch (Exception exception)
             {
-                Log.WriteError($"Error while loading file with pair: {pair.Key} into: {nameof(collection)}");
-                Log.WriteError(exception.Message);
+                Log.Error($"Error while loading file with pair: {pair.Key} into: {nameof(collection)}");
+                Log.Error(exception.Message);
             }
         }
 
@@ -176,7 +176,7 @@ public class SettingsAndSaveManager
         }
         catch (Exception exception)
         {
-            Log.WriteError(exception.Message);
+            Log.Error(exception.Message);
             return false;
         }
         return true;

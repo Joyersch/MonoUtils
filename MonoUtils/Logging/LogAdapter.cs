@@ -10,6 +10,9 @@ public class LogAdapter
 
     private int _line;
 
+    public bool IsConsole => _console is not null;
+    public bool IsWriter => _writer is not null;
+
     public LogAdapter(TextWriter writer)
     {
         _writer = writer;

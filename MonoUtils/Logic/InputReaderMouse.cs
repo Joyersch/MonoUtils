@@ -23,6 +23,8 @@ public static class InputReaderMouse
         { MouseKeys.MouseDown, ButtonState.Released },
     };
 
+    public static Dictionary<MouseKeys, ButtonState> StoredStates => _storedMouseStates;
+
     public static int ScrollWheelValue => _scrollWheelValue;
 
     private static int _scrollWheelValue;

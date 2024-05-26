@@ -6,6 +6,8 @@ namespace MonoUtils.Logging;
 public static class Log
 {
     public static LogAdapter Out { get; set; }
+    private static string leftBracket => Out.IsConsole ? "[SBO]" : "[";
+    private static string rightBracket => Out.IsConsole ? "[SBC]" : "]";
 
     public static void Write(string msg)
     {
@@ -25,27 +27,28 @@ public static class Log
         Out.WriteColor(msg, colors);
     }
 
-    public static void WriteError(string msg)
+    public static void Error(string msg)
     {
         Out.SetLine(-1);
-        Out.WriteColor($"[SBO]Error[SBC] {msg}", Color.Red);
+
+        Out.WriteColor($"{leftBracket}Error{rightBracket} {msg}", Color.Red);
     }
 
-    public static void WriteCritical(string msg)
+    public static void Critical(string msg)
     {
         Out.SetLine(-1);
-        Out.WriteColor($"[SBO]Critical[SBC] {msg}", Color.DarkRed);
+        Out.WriteColor($"{leftBracket}Critical{rightBracket} {msg}", Color.DarkRed);
     }
 
-    public static void WriteWarning(string msg)
+    public static void Warning(string msg)
     {
         Out.SetLine(-1);
-        Out.WriteColor($"[SBO]Warning[SBC] {msg}", Color.Gold);
+        Out.WriteColor($"{leftBracket}Warning{rightBracket} {msg}", Color.Gold);
     }
 
-    public static void WriteInformation(string msg)
+    public static void Information(string msg)
     {
         Out.SetLine(-1);
-        Out.WriteColor($"[SBO]Info[SBC] {msg}", Color.DeepSkyBlue);
+        Out.WriteColor($"{leftBracket}Info{rightBracket} {msg}", Color.DeepSkyBlue);
     }
 }

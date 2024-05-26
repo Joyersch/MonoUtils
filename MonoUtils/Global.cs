@@ -46,7 +46,7 @@ public static class Global
             }
             catch(Exception exception)
             {
-                Log.WriteError(exception.Message);
+                Log.Error(exception.Message);
             }
 
             if (@return is not null)
