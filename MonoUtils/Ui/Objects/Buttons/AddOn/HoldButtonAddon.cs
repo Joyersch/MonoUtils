@@ -1,6 +1,6 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using MonoUtils.Logic.Hitboxes;
+using Microsoft.Xna.Framework.Input;
 using MonoUtils.Ui.Objects.TextSystem;
 
 namespace MonoUtils.Ui.Objects.Buttons.AddOn;
@@ -45,7 +45,7 @@ public class HoldButtonAddon : ButtonAddon
         if (_finished)
             return;
 
-        _countDown = _countDown && InputReaderMouse.CheckKey(InputReaderMouse.MouseKeys.Left, false);
+        _countDown = _countDown && Mouse.GetState().LeftButton == ButtonState.Pressed;
 
         if (_countDown)
             _time -= (float)gameTime.ElapsedGameTime.TotalMilliseconds;

@@ -96,15 +96,7 @@ public class DevConsole : IManageable, ILayerable, IColorable, IMoveable
     {
         _rectangle = this.GetRectangle();
         _drawCursorInvoker.Update(gameTime);
-
-        if (InputReaderKeyboard.CheckKey(Keys.Up, true))
-            Backlog.MovePointerUp();
-
-        if (InputReaderKeyboard.CheckKey(Keys.Down, true))
-            Backlog.MovePointerDown();
-
         _toDisplay = Backlog.GetRangeFromPointer(_maxLinesY);
-
 
         for (int line = 0; line < _lines.Length; line++)
         {
@@ -242,4 +234,14 @@ public class DevConsole : IManageable, ILayerable, IColorable, IMoveable
 
     public Vector2 GetSize()
         => _size;
+
+    public void ScrollUp()
+    {
+            Backlog.MovePointerUp();
+    }
+
+    public void ScrollDown()
+    {
+        Backlog.MovePointerDown();
+    }
 }

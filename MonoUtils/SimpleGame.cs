@@ -1,9 +1,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 using MonoUtils.Console;
 using MonoUtils.Logging;
-using MonoUtils.Logic;
 using MonoUtils.Logic.Text;
 using MonoUtils.Settings;
 using MonoUtils.Ui;
@@ -28,8 +26,6 @@ public class SimpleGame : Game
     protected bool Debug;
 
     protected string[] Args;
-
-    protected InputKey ConsoleKey = new(Keys.F10);
 
     public SimpleGame()
     {
@@ -77,14 +73,8 @@ public class SimpleGame : Game
 
         Display.Update();
 
-        if (InputReader.CheckKey(ConsoleKey, true) && IsConsoleEnabled)
-            IsConsoleActive = !IsConsoleActive;
-
         if (IsConsoleActive && IsConsoleEnabled)
             Console.Update(gameTime);
-
-        // This will store the last key states
-        InputReaderMouse.StoreButtonStates();
     }
 
     protected override void Draw(GameTime gameTime)
@@ -105,6 +95,12 @@ public class SimpleGame : Game
         SpriteBatch = new SpriteBatch(GraphicsDevice);
         // Initialize the Textures of objects from MonoUtils
         Global.Initialize(Content);
+    }
+
+    protected void ToggleConsole()
+    {
+        if (IsConsoleEnabled)
+            IsConsoleActive = !IsConsoleActive;
     }
 
     public void ApplyFullscreen(bool fullscreen)

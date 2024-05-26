@@ -1,4 +1,5 @@
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 using MonoUtils.Logging;
 using MonoUtils.Logic.Hitboxes;
 using MonoUtils.Ui.Objects;
@@ -15,6 +16,7 @@ public class MouseActionsMat : IMouseActions, IInteractable, IHitbox
     public event Action<object> Leave;
     public event Action<object> Enter;
     public event Action<object> Click;
+    private bool _wasPressed;
 
     public MouseActionsMat(IHitbox toCover, bool sendSelfAsInvoker = false)
     {
@@ -29,19 +31,19 @@ public class MouseActionsMat : IMouseActions, IInteractable, IHitbox
             if (_toCover.Hitbox.Any(h => h.Intersects(rectangle)))
                 isMouseHovering = true;
 
+        bool isPressed = Mouse.GetState().LeftButton == ButtonState.Pressed;
         if (isMouseHovering)
         {
             if (!_hover)
                 Enter?.Invoke(_sendSelfAsInvoker ? this : _toCover);
 
-            if (InputReaderMouse.CheckKey(InputReaderMouse.MouseKeys.Left, true))
-            {
+            if (!_wasPressed && isPressed)
                 Click?.Invoke(_sendSelfAsInvoker ? this : _toCover);
-            }
         }
         else if (_hover)
             Leave?.Invoke(_sendSelfAsInvoker ? this : _toCover);
         _hover = isMouseHovering;
+        _wasPressed = isPressed;
     }
 
     public Rectangle[] Hitbox => _toCover.Hitbox;
