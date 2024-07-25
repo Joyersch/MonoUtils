@@ -6,7 +6,7 @@ namespace MonoUtils.Logic.Text;
 
 public static class TextNotationProcessor
 {
-    public static Ui.Objects.TextSystem.Text Parse(string input)
+    public static Ui.TextSystem.Text Parse(string input)
     {
         string newText = input;
         float scale = 1F;
@@ -46,7 +46,7 @@ public static class TextNotationProcessor
         builder.AddColor(color, newText.Length - colorIndex);
         cleanText += newText[colorIndex..newText.Length];
 
-        var text = new  Ui.Objects.TextSystem.Text(cleanText, scale);
+        var text = new  Ui.TextSystem.Text(cleanText, scale);
         text.ChangeColor(builder.GetColor());
         return text;
     }

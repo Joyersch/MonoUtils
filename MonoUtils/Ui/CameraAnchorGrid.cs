@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using MonoUtils.Logic;
 using MonoUtils.Logic.Management;
 using MonoUtils.Ui.Logic;
-using MonoUtils.Ui.Objects;
+using MonoUtils.Ui;
 
 namespace MonoUtils.Ui;
 

@@ -1,9 +1,9 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using MonoUtils.Ui.Objects.TextSystem;
+using MonoUtils.Ui.TextSystem;
 
-namespace MonoUtils.Ui.Objects.Buttons.AddOn;
+namespace MonoUtils.Ui.Buttons.AddOn;
 
 public class HoldButtonAddon : ButtonAddon
 {

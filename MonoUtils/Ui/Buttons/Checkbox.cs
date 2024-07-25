@@ -1,8 +1,8 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using MonoUtils.Ui.Objects.TextSystem;
+using MonoUtils.Ui.TextSystem;
 
-namespace MonoUtils.Ui.Objects.Buttons;
+namespace MonoUtils.Ui.Buttons;
 
 public class Checkbox : TextButton<SquareButton>
 {

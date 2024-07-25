@@ -1,4 +1,4 @@
-﻿namespace MonoUtils.Ui.Objects;
+﻿namespace MonoUtils.Ui;
 
 public interface IMouseActions
 {

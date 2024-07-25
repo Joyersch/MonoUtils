@@ -1,6 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 
-namespace MonoUtils.Ui.Objects.Buttons;
+namespace MonoUtils.Ui.Buttons;
 
 public class SquareTextButton : TextButton<SquareButton>
 {

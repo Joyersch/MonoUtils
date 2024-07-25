@@ -4,7 +4,7 @@ using MonoUtils.Helper;
 using MonoUtils.Logic;
 using MonoUtils.Logic.Hitboxes;
 
-namespace MonoUtils.Ui.Objects.Buttons.AddOn;
+namespace MonoUtils.Ui.Buttons.AddOn;
 
 public class ButtonAddon : IButton
 {

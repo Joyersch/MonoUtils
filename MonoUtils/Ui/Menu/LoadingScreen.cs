@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using MonoUtils.Logic;
 using MonoUtils.Logic.Management;
 using MonoUtils.Ui.Color;
-using MonoUtils.Ui.Objects.TextSystem;
+using MonoUtils.Ui.TextSystem;
 
 namespace MonoUtils.Ui.Menu;
 

@@ -5,9 +5,9 @@ using MonoUtils.Logging;
 using MonoUtils.Logic;
 using MonoUtils.Logic.Hitboxes;
 using MonoUtils.Logic.Management;
-using MonoUtils.Ui.Objects.TextSystem;
+using MonoUtils.Ui.TextSystem;
 
-namespace MonoUtils.Ui.Objects.Buttons;
+namespace MonoUtils.Ui.Buttons;
 
 public class ValueSelection<T> : IManageable, IMoveable, IInteractable
 {

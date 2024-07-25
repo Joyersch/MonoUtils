@@ -5,7 +5,7 @@ using MonoUtils.Logic.Hitboxes;
 using MonoUtils.Logic.Management;
 using MonoUtils.Ui.Logic;
 
-namespace MonoUtils.Ui.Objects;
+namespace MonoUtils.Ui;
 
 public class Invisible : IManageable, IInteractable, IMouseActions, IHitbox, IMoveable
 {

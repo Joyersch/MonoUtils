@@ -4,7 +4,7 @@ using MonoUtils.Logging;
 using MonoUtils.Logic;
 using MonoUtils.Logic.Management;
 
-namespace MonoUtils.Ui.Objects;
+namespace MonoUtils.Ui;
 
 public class MousePointer : IManageable, IMoveable
 {

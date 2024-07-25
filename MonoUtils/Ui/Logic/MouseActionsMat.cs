@@ -2,7 +2,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using MonoUtils.Logging;
 using MonoUtils.Logic.Hitboxes;
-using MonoUtils.Ui.Objects;
+using MonoUtils.Ui;
 
 namespace MonoUtils.Ui.Logic;
 

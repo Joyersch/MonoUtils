@@ -6,7 +6,7 @@ using MonoUtils.Logic;
 using MonoUtils.Logic.Management;
 using MonoUtils.Ui.Color;
 
-namespace MonoUtils.Ui.Objects.TextSystem;
+namespace MonoUtils.Ui.TextSystem;
 
 public class Text : IColorable, IMoveable, IManageable
 {

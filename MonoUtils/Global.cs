@@ -4,9 +4,9 @@ using MonoUtils.Console;
 using MonoUtils.Logging;
 using MonoUtils.Logic;
 using MonoUtils.Logic.Listener;
-using MonoUtils.Ui.Objects;
-using MonoUtils.Ui.Objects.Buttons;
-using MonoUtils.Ui.Objects.TextSystem;
+using MonoUtils.Ui;
+using MonoUtils.Ui.Buttons;
+using MonoUtils.Ui.TextSystem;
 
 namespace MonoUtils;
 
@@ -24,8 +24,9 @@ public static class Global
         DefaultLetters.Texture = content.GetTexture("Font/DefaultLetters");
         ActionSymbols.Texture = content.GetTexture("Font/ActionSymbols");
         ButtonAddonIcons.Texture = content.GetTexture("Font/ButtonAddons");
-        SampleButton.Texture = content.GetTexture("emptybutton");
-        SquareButton.Texture = content.GetTexture("squarebutton");
+        SampleButton.Texture = content.GetTexture("Button/empty");
+        SquareButton.Texture = content.GetTexture("Button/square");
+        RatioBox.Texture = content.GetTexture("Button/ratio");
         DevConsole.Texture = content.GetTexture("console");
     }
 

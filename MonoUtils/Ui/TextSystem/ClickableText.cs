@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using MonoUtils.Logic.Hitboxes;
 using MonoUtils.Ui.Logic;
 
-namespace MonoUtils.Ui.Objects.TextSystem;
+namespace MonoUtils.Ui.TextSystem;
 
 public class ClickableText : Text, IInteractable, IHitbox
 {

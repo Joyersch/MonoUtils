@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using MonoUtils.Logic;
 using MonoUtils.Logic.Management;
 
-namespace MonoUtils.Ui.Objects.TextSystem;
+namespace MonoUtils.Ui.TextSystem;
 
 public class Letter : IMoveable, IManageable, IRotateable
 {

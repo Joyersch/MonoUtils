@@ -3,7 +3,7 @@ using MonoUtils.Logic.Hitboxes;
 using MonoUtils.Logic.Management;
 using MonoUtils.Ui.Color;
 
-namespace MonoUtils.Ui.Objects.Buttons;
+namespace MonoUtils.Ui.Buttons;
 
 public interface IButton : IHitbox, IManageable, IMoveable, IColorable, IMouseActions, IInteractable, ILayerable
 {

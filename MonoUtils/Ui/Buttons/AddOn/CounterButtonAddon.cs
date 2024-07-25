@@ -1,10 +1,10 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoUtils.Logic.Hitboxes;
-using MonoUtils.Ui.Objects.TextSystem;
+using MonoUtils.Ui.TextSystem;
 using Rectangle = Microsoft.Xna.Framework.Rectangle;
 
-namespace MonoUtils.Ui.Objects.Buttons.AddOn;
+namespace MonoUtils.Ui.Buttons.AddOn;
 
 public class CounterButtonAddon : ButtonAddon
 {

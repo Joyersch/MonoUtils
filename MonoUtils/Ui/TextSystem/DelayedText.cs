@@ -1,6 +1,6 @@
 using Microsoft.Xna.Framework;
 
-namespace MonoUtils.Ui.Objects.TextSystem;
+namespace MonoUtils.Ui.TextSystem;
 
 public class DelayedText : Text
 {

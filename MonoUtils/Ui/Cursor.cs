@@ -7,7 +7,7 @@ using MonoUtils.Logic.Management;
 using MonoUtils.Ui.Color;
 using IUpdateable = MonoUtils.Logic.IUpdateable;
 
-namespace MonoUtils.Ui.Objects;
+namespace MonoUtils.Ui;
 
 public class Cursor : IMoveable, IHitbox, ILayerable, IManageable
 {

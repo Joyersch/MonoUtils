@@ -8,7 +8,7 @@ namespace MonoUtils.Logic;
 public class Timer : IManageable, IMoveable, IColorable
 {
     private readonly OverTimeInvoker _invoker;
-    private readonly Ui.Objects.TextSystem.Text _display;
+    private readonly Ui.TextSystem.Text _display;
 
     private readonly double _time;
     private bool _invoked;
@@ -49,7 +49,7 @@ public class Timer : IManageable, IMoveable, IColorable
             Trigger?.Invoke();
         };
 
-        _display = new Ui.Objects.TextSystem.Text($"{time/1000:n2}", position, scale);
+        _display = new Ui.TextSystem.Text($"{time/1000:n2}", position, scale);
     }
 
     public Rectangle Rectangle => _invoker.Rectangle;

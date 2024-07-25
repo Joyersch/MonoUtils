@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace MonoUtils.Ui.Objects.TextSystem;
+namespace MonoUtils.Ui.TextSystem;
 
 public interface ILetter
 {

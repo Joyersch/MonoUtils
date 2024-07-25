@@ -1,12 +1,12 @@
-﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoUtils.Helper;
 using MonoUtils.Logic.Hitboxes;
 using MonoUtils.Ui.Logic;
 
-namespace MonoUtils.Ui.Objects.Buttons;
+namespace MonoUtils.Ui.Buttons;
 
-public class SampleButton : IButton
+public class SquareButton : IButton
 {
     private Vector2 _position;
     private readonly Vector2 _size;
@@ -29,18 +29,17 @@ public class SampleButton : IButton
     public event Action<object> Click;
 
     public static Texture2D Texture;
-    private static readonly Vector2 ImageSize = new Vector2(32, 16);
+    private static readonly Vector2 ImageSize = new Vector2(8, 8);
 
-
-    public SampleButton() : this(Vector2.Zero)
+    public SquareButton() : this(Vector2.Zero)
     {
     }
 
-    public SampleButton(Vector2 position) : this(position, 4F)
+    public SquareButton(Vector2 position) : this(position, 4F)
     {
     }
 
-    public SampleButton(Vector2 position, float scale)
+    public SquareButton(Vector2 position, float scale)
     {
         _position = position;
         _size = ImageSize * scale;
@@ -49,8 +48,8 @@ public class SampleButton : IButton
 
         var hitbox = new[]
         {
-            new Rectangle(2, 1, 28, 14),
-            new Rectangle(1, 2, 30, 12)
+            new Rectangle(0, 1, 8, 6),
+            new Rectangle(1, 0, 6, 8)
         };
         _hitbox = new HitboxProvider(this, hitbox, _scale);
         _rectangle = this.GetRectangle();
@@ -72,7 +71,6 @@ public class SampleButton : IButton
     public void Update(GameTime gameTime)
     {
         _hitbox.Update(gameTime);
-        _rectangle = this.GetRectangle();
     }
 
     public void Draw(SpriteBatch spriteBatch)

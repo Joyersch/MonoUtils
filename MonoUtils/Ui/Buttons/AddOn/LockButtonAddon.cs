@@ -4,9 +4,9 @@ using MonoUtils.GameObjects;
 using MonoUtils.Helper;
 using MonoUtils.Logic.Hitboxes;
 using MonoUtils.Ui.Color;
-using MonoUtils.Ui.Objects.TextSystem;
+using MonoUtils.Ui.TextSystem;
 
-namespace MonoUtils.Ui.Objects.Buttons.AddOn;
+namespace MonoUtils.Ui.Buttons.AddOn;
 
 public class LockButtonAddon : ButtonAddon
 {
