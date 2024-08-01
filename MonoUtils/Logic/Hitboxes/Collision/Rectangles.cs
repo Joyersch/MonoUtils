@@ -47,7 +47,7 @@ using Microsoft.Xna.Framework;
 
 namespace MonoUtils.Logic.Hitboxes.Collision;
 
-public class Rectangles
+public sealed class Rectangles
 {
     public static bool RayVsRectangle(Vector2 rayOrigin, Vector2 rayDirection, Rectangle target, out Vector2 contactPoint,
         out Vector2 contactNormal, out float timeHitNear)

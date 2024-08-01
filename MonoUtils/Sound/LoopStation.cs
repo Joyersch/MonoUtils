@@ -4,7 +4,7 @@ using IUpdateable = MonoUtils.Logic.IUpdateable;
 
 namespace MonoUtils.Sound;
 
-public class LoopStation : IUpdateable, IDisposable
+public sealed class LoopStation : IUpdateable, IDisposable
 {
     private Dictionary<string, SoundEffect> _effects = new();
     private Dictionary<string, SoundEffectInstance> _instances = new();

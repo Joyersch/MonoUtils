@@ -2,7 +2,7 @@
 
 namespace MonoUtils.Console;
 
-public class BacklogColorSet
+public sealed class BacklogColorSet
 {
     public Microsoft.Xna.Framework.Color[] Color { get; private set; }
 
@@ -21,6 +21,4 @@ public class BacklogColorSet
         for (int i = 0; i < length; i++)
             Color[i] = color;
     }
-
-
 }

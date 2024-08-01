@@ -7,7 +7,7 @@ using MonoUtils.Ui;
 
 namespace MonoUtils.Ui;
 
-public class CameraAnchorGrid : IManageable
+public sealed class CameraAnchorGrid : IManageable
 {
     private readonly Camera _camera;
     private readonly IMoveable _indicator;

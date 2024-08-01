@@ -9,14 +9,12 @@ using MonoUtils.Ui.TextSystem;
 
 namespace MonoUtils.Console;
 
-public class DevConsole : IManageable, ILayerable, IColorable, IMoveable
+public sealed class DevConsole : IManageable, ILayerable, IColorable, IMoveable
 {
     private Vector2 _position;
     private Vector2 _size;
     private Vector2 _scale;
-    private Microsoft.Xna.Framework.Color _color;
-
-    private readonly GameWindow _window;
+    private Color _color;
 
     private Text _currentInput;
     private Text _cursorDisplay;

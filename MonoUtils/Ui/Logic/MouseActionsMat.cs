@@ -6,7 +6,7 @@ using MonoUtils.Ui;
 
 namespace MonoUtils.Ui.Logic;
 
-public class MouseActionsMat : IMouseActions, IInteractable, IHitbox
+public sealed class MouseActionsMat : IMouseActions, IInteractable, IHitbox
 {
     private readonly IHitbox _toCover;
     private readonly bool _sendSelfAsInvoker;

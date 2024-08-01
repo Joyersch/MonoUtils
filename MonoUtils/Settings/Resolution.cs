@@ -2,7 +2,7 @@ using Microsoft.Xna.Framework;
 
 namespace MonoUtils.Settings;
 
-public class Resolution
+public sealed class Resolution
 {
     public int Width { get; set; }
     public int Height { get; set; }

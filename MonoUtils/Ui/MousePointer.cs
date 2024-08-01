@@ -6,7 +6,7 @@ using MonoUtils.Logic.Management;
 
 namespace MonoUtils.Ui;
 
-public class MousePointer : IManageable, IMoveable
+public sealed class MousePointer : IManageable, IMoveable
 {
     public Vector2 Position { get; private set; }
     public Vector2 Size { get; private set; } = new Vector2(4, 4);

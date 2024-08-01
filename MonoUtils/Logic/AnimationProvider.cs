@@ -1,10 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using MonoUtils.Logic.Management;
 
 namespace MonoUtils.Logic;
 
-public class AnimationProvider : IUpdateable
+public sealed class AnimationProvider : IUpdateable
 {
     private readonly Vector2 _imageSize;
     private readonly Rectangle _framePosition;

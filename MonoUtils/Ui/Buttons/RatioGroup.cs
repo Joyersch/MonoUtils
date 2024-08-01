@@ -1,6 +1,6 @@
 namespace MonoUtils.Ui.Buttons;
 
-public class RatioGroup
+public sealed class RatioGroup
 {
     public event Action<int> UpdateStatus;
 

@@ -1,6 +1,6 @@
 namespace MonoUtils.Console.Commands;
 
-public class HelpCommand : ICommand
+public sealed class HelpCommand : ICommand
 {
     [Command(Description = "Shows all command and there description.", Name = "help")]
     public IEnumerable<string> Execute(DevConsole console, object[] options, ContextProvider context)

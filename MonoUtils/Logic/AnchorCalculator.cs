@@ -2,7 +2,7 @@ using Microsoft.Xna.Framework;
 
 namespace MonoUtils.Logic;
 
-public class AnchorCalculator
+public sealed class AnchorCalculator
 {
     private readonly IMoveable _main;
     private readonly IMoveable _sub;

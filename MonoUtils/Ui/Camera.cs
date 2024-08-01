@@ -4,7 +4,7 @@ using MonoUtils.Logic.Hitboxes;
 
 namespace MonoUtils.Ui;
 
-public class Camera : IMoveable, IHitbox
+public sealed class Camera : IMoveable, IHitbox
 {
     public Matrix CameraMatrix { get; private set; }
     public Vector2 Position { get; private set; }

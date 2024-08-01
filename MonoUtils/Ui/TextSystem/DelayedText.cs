@@ -2,7 +2,7 @@ using Microsoft.Xna.Framework;
 
 namespace MonoUtils.Ui.TextSystem;
 
-public class DelayedText : Text
+public sealed class DelayedText : Text
 {
     public event Action FinishedPlaying;
 

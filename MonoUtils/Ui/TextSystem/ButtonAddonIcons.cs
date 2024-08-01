@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace MonoUtils.Ui.TextSystem;
 
-public class ButtonAddonIcons : ILetter
+public sealed class ButtonAddonIcons : ILetter
 {
     public static Vector2 ImageSize => new Vector2(8, 8);
 

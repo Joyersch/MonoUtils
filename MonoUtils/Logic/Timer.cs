@@ -5,7 +5,7 @@ using MonoUtils.Ui.Color;
 
 namespace MonoUtils.Logic;
 
-public class Timer : IManageable, IMoveable, IColorable
+public sealed class Timer : IManageable, IMoveable, IColorable
 {
     private readonly OverTimeInvoker _invoker;
     private readonly Ui.TextSystem.Text _display;

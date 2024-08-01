@@ -1,6 +1,6 @@
 namespace MonoUtils.Ui.Color;
 
-public class ColorBuilder
+public sealed class ColorBuilder
 {
     private List<Microsoft.Xna.Framework.Color> _colors = new();
 

@@ -3,12 +3,11 @@ using Microsoft.Xna.Framework.Graphics;
 using MonoUtils.GameObjects;
 using MonoUtils.Helper;
 using MonoUtils.Logic.Hitboxes;
-using MonoUtils.Ui.Color;
 using MonoUtils.Ui.TextSystem;
 
 namespace MonoUtils.Ui.Buttons.AddOn;
 
-public class LockButtonAddon : ButtonAddon
+public sealed class LockButtonAddon : ButtonAddon
 {
     public bool IsLocked { get; private set; } = true;
 

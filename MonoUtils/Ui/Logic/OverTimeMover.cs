@@ -5,7 +5,7 @@ using MonoUtils.Logic.Management;
 
 namespace MonoUtils.Ui.Logic;
 
-public class OverTimeMover : IManageable
+public sealed class OverTimeMover : IManageable
 {
     private IMoveable _moveable;
     private MoveMode _mode;

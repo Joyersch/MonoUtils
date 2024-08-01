@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework;
 
 namespace MonoUtils.Ui;
 
-public class Display
+public sealed class Display
 {
     public readonly RenderTarget2D Target;
     public static readonly float Width = 1280F;

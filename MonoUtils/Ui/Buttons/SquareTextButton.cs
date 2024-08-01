@@ -2,7 +2,7 @@
 
 namespace MonoUtils.Ui.Buttons;
 
-public class SquareTextButton : TextButton<SquareButton>
+public sealed class SquareTextButton : TextButton<SquareButton>
 {
     public SquareTextButton(string text) : this(text, Vector2.Zero)
     {

@@ -3,7 +3,7 @@ using Rectangle = Microsoft.Xna.Framework.Rectangle;
 
 namespace MonoUtils.Logic;
 
-public class PositionCalculator
+public sealed class PositionCalculator
 {
 
     private IMoveable _moveable;

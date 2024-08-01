@@ -1,9 +1,8 @@
-using MonoUtils.Logging;
 using Newtonsoft.Json.Linq;
 
 namespace MonoUtils.Logic.Text;
 
-public class TextComponent
+public sealed class TextComponent
 {
     private readonly JArray _text;
 

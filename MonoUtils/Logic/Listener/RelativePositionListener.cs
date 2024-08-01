@@ -8,8 +8,6 @@ public class RelativePositionListener : IManageable
 {
     private readonly List<PositionData> _mappings;
 
-
-
     public RelativePositionListener()
     {
         _mappings = new List<PositionData>();

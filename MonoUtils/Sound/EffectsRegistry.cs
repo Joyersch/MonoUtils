@@ -4,7 +4,7 @@ using IUpdateable = MonoUtils.Logic.IUpdateable;
 
 namespace MonoUtils.Sound;
 
-public class EffectsRegistry : IUpdateable
+public sealed class EffectsRegistry : IUpdateable
 {
     private Dictionary<string, SoundEffect> _effects = new();
     private List<SoundEffectInstance> _instances = new();

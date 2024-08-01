@@ -2,7 +2,7 @@ using System.Reflection;
 
 namespace MonoUtils.Console;
 
-public class CommandProcessor : IProcessor
+public sealed class CommandProcessor : IProcessor
 {
     public List<(string Name, string Description, ICommand Command)> Commands = new();
 
@@ -21,7 +21,7 @@ public class CommandProcessor : IProcessor
 
         foreach (var command in commands)
         {
-            var commandInstance = (ICommand)Activator.CreateInstance(command);
+            var commandInstance = (ICommand)Activator.CreateInstance(command)!;
             var methods = command.GetMethods();
 
             foreach (var method in methods)
@@ -40,7 +40,7 @@ public class CommandProcessor : IProcessor
         var commandSplit = fullCommand.Split(" ");
 
         if (Commands.All(c => c.Name != commandSplit[0]))
-            return new string[] { "This command does not exist!" };
+            return new[] { "This command does not exist!" };
 
         var command = Commands.FirstOrDefault(c => c.Name == commandSplit[0]);
 

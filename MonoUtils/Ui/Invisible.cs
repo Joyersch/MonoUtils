@@ -7,7 +7,7 @@ using MonoUtils.Ui.Logic;
 
 namespace MonoUtils.Ui;
 
-public class Invisible : IManageable, IInteractable, IMouseActions, IHitbox, IMoveable
+public sealed class Invisible : IManageable, IInteractable, IMouseActions, IHitbox, IMoveable
 {
     private Vector2 _position;
     private readonly Vector2 _size;

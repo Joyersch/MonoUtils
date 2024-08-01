@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace MonoUtils.Ui.TextSystem;
 
-public class DefaultLetters : ILetter
+public sealed class DefaultLetters : ILetter
 {
     public static Texture2D Texture;
 

@@ -3,7 +3,7 @@ using MonoUtils.Logic.Hitboxes;
 
 namespace MonoUtils.GameObjects;
 
-public class EmptyHitbox : IHitbox
+public sealed class EmptyHitbox : IHitbox
 {
     public Rectangle[] Hitbox { get; } =  new Rectangle[0];
 }

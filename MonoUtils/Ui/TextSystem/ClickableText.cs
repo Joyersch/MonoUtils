@@ -5,7 +5,7 @@ using MonoUtils.Ui.Logic;
 
 namespace MonoUtils.Ui.TextSystem;
 
-public class ClickableText : Text, IInteractable, IHitbox
+public sealed class ClickableText : Text, IInteractable, IHitbox
 {
     private readonly float _scale;
     public event Action<object>? Leave;

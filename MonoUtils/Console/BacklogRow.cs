@@ -1,6 +1,6 @@
 namespace MonoUtils.Console;
 
-public class BacklogRow
+public sealed class BacklogRow
 {
     public string Text { get; private set; }
     public BacklogColorSet ColorSet { get; private set; }

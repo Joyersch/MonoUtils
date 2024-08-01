@@ -1,9 +1,8 @@
-using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 
 namespace MonoUtils.Logic.Listener;
 
-public class PositionListener
+public sealed class PositionListener
 {
     private readonly List<(IMoveable main, IMoveable sub, Vector2 offset)> _mappings;
 

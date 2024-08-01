@@ -5,7 +5,7 @@ using MonoUtils.Ui.TextSystem;
 
 namespace MonoUtils.Ui.Buttons.AddOn;
 
-public class HoldButtonAddon : ButtonAddon
+public sealed class HoldButtonAddon : ButtonAddon
 {
     private readonly TextSystem.Text _timer;
     private readonly float _startTime;

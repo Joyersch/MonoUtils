@@ -1,9 +1,9 @@
 
 namespace MonoUtils.Console;
 
-public class Backlog
+public sealed class Backlog
 {
-    private List<BacklogRow> _backlog;
+    private readonly List<BacklogRow> _backlog;
     private int _pointer;
 
     public int Count => _backlog.Count;
@@ -33,9 +33,9 @@ public class Backlog
         _backlog.Add(row);
     }
 
-    public void AddRange(IEnumerable<BacklogRow> rowColletion)
+    public void AddRange(IEnumerable<BacklogRow> rowCollection)
     {
-        foreach (BacklogRow row in rowColletion)
+        foreach (BacklogRow row in rowCollection)
             Add(row);
     }
 }

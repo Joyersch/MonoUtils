@@ -8,7 +8,7 @@ using MonoUtils.Ui.TextSystem;
 
 namespace MonoUtils.Ui.Menu;
 
-public class LoadingScreen : IManageable
+public sealed class LoadingScreen : IManageable
 {
     private long _max;
     private string _goal;

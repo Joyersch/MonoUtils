@@ -1,6 +1,6 @@
 ﻿namespace MonoUtils.Ui.Color;
 
-public class Rainbow : AnimatedColor
+public sealed class Rainbow : AnimatedColor
 {
     public Rainbow()
     {

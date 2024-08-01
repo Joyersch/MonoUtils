@@ -1,4 +1,3 @@
-using System.Reflection;
 using MonoUtils.Logging;
 
 namespace MonoUtils.Logic.Text;

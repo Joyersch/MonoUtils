@@ -2,7 +2,7 @@ using Microsoft.Xna.Framework;
 
 namespace MonoUtils.Console.Commands;
 
-public class MoveCommand : ICommand
+public sealed class MoveCommand : ICommand
 {
     [Command(Description = "move console to location", Name = "move")]
     public IEnumerable<string> Execute(DevConsole caller, object[] options, ContextProvider context)

@@ -2,7 +2,7 @@ using Microsoft.Xna.Framework;
 
 namespace MonoUtils.Logic.Listener;
 
-public class PositionData
+public sealed class PositionData
 {
     public PositionData(IMoveable Main, Vector2 OldPosition, IMoveable Sub)
     {

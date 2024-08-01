@@ -3,10 +3,10 @@ using MonoUtils.Console;
 
 namespace MonoUtils.Logging;
 
-public class LogAdapter
+public sealed class LogAdapter
 {
-    private TextWriter _writer;
-    private DevConsole _console;
+    private TextWriter? _writer;
+    private DevConsole? _console;
 
     private int _line;
 

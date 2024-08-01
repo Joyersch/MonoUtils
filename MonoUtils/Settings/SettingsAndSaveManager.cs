@@ -1,11 +1,10 @@
-using System.Reflection;
 using MonoUtils.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace MonoUtils.Settings;
 
-public class SettingsAndSaveManager
+public sealed class SettingsAndSaveManager
 {
     private string _basePath;
     private int? _saveNumber;

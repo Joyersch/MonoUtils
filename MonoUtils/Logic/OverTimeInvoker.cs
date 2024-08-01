@@ -4,7 +4,7 @@ using MonoUtils.Logic.Management;
 
 namespace MonoUtils.Logic;
 
-public class OverTimeInvoker : IManageable
+public sealed class OverTimeInvoker : IManageable
 {
     private double _invokeTime;
     private double _currentTime;

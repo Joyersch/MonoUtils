@@ -5,15 +5,16 @@ namespace MonoUtils.Logic.Threading;
 
 /// <summary>
 /// NOTE: Experimental! Use at your own risk!
-/// Executes a given Func<bool> repeated for as long as FrameLimit (ms) per Frame or Func<bool return true
+/// Executes a given Func(bool) repeated for as long as FrameLimit (ms) per frame or Func(bool) returns true
 /// </summary>
-public class LazyUpdater
+public sealed class LazyUpdater
 {
     private Func<bool> _loadingTasks;
 
     public float FrameLimit { get; set; } = 6F;
     private Stopwatch _stopwatch = new Stopwatch();
     private bool _success;
+
     public void Update(GameTime gameTime)
     {
         _stopwatch.Restart();

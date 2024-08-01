@@ -1,9 +1,8 @@
 using Microsoft.Xna.Framework.Audio;
-using MonoUtils.Settings;
 
 namespace MonoUtils.Logic.Listener;
 
-public class SoundSettingsListener
+public sealed class SoundSettingsListener
 {
     private readonly List<(SoundEffectInstance effect, bool music)> _instances;
 

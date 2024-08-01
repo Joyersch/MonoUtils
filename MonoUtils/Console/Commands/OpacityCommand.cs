@@ -1,14 +1,19 @@
 namespace MonoUtils.Console.Commands;
 
-public class OpacityCommand : ICommand
+public sealed class OpacityCommand : ICommand
 {
+    private Microsoft.Xna.Framework.Color? _color;
+
     [Command(Description = "Change opacity of the console", Name = "opacity")]
     public IEnumerable<string> Execute(DevConsole console, object[] options, ContextProvider context)
     {
         if (options.Length < 1)
             return new[] { "Usage:", "opacity (0..1)" };
 
-        if (!float.TryParse(options[0].ToString().Replace('.', ','), out float value))
+        if (options[0].ToString() is null)
+            return new[] { "Invalid input supplied!" };
+
+        if (!float.TryParse(options[0].ToString()!.Replace('.', ','), out float value))
             return new[] { @$"Invalid value ""{value}""" };
 
         if (value > 1F)
@@ -23,6 +28,4 @@ public class OpacityCommand : ICommand
         console.ChangeColor(new[] { color });
         return new[] { "Changed opacity for console" };
     }
-
-    private Microsoft.Xna.Framework.Color? _color = null;
 }

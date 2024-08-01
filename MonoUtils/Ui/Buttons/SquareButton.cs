@@ -6,7 +6,7 @@ using MonoUtils.Ui.Logic;
 
 namespace MonoUtils.Ui.Buttons;
 
-public class SquareButton : IButton
+public sealed class SquareButton : IButton
 {
     private Vector2 _position;
     private readonly Vector2 _size;

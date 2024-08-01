@@ -9,7 +9,7 @@ using IUpdateable = MonoUtils.Logic.IUpdateable;
 
 namespace MonoUtils.Ui;
 
-public class Cursor : IMoveable, IHitbox, ILayerable, IManageable
+public sealed class Cursor : IMoveable, IHitbox, ILayerable, IManageable
 {
     private Vector2 _position;
     private readonly Vector2 _size;

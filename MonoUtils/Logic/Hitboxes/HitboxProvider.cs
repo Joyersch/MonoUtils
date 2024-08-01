@@ -5,7 +5,7 @@ using MonoUtils.Logic.Management;
 
 namespace MonoUtils.Logic.Hitboxes;
 
-public class HitboxProvider : IHitbox, IUpdateable
+public sealed class HitboxProvider : IHitbox, IUpdateable
 {
     private readonly ISpatial _object;
     private Rectangle[] _hitbox;

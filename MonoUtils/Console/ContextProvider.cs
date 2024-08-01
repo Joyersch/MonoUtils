@@ -1,6 +1,6 @@
 namespace MonoUtils.Console;
 
-public class ContextProvider
+public sealed class ContextProvider
 {
     private Dictionary<string, object> Context { get; set; } = new();
 
@@ -12,8 +12,8 @@ public class ContextProvider
             Context[index] = context;
     }
 
-    public T GetValue<T> (string index)
-        => (T) Context
+    public T? GetValue<T> (string index)
+        => (T?) Context
             .Where(d => d.Key == index)
             .Select(d => d.Value).FirstOrDefault();
 }

@@ -1,11 +1,9 @@
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using MonoUtils.Logic.Management;
 using MonoUtils.Ui.Color;
 
-namespace MonoUtils.Ui.Logic.Listener;
+namespace MonoUtils.Logic.Listener;
 
-public class ColorListener
+public sealed class ColorListener
 {
     private readonly List<(AnimatedColor color, IColorable colorable)> _mappings;
 
