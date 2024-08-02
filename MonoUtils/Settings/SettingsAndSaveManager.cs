@@ -7,16 +7,22 @@ namespace MonoUtils.Settings;
 public sealed class SettingsAndSaveManager<T>
 {
     private string _basePath;
-    private T _saveNumber;
+    private T _saveFileIndex;
     private readonly Dictionary<string, object> _settings;
     private readonly Dictionary<string, object> _saves;
     private readonly List<Type> _settingsImplementations;
     private readonly List<Type> _savesImplementations;
 
-    public SettingsAndSaveManager(string basePath, T saveNumber)
+    public string SaveFilePrefix { get; set; } = "save";
+
+    public string SaveFileType { get; set; } = "json";
+
+    public string SettingsFileType { get; set; } = "json";
+
+    public SettingsAndSaveManager(string basePath, T saveFileIndex)
     {
         _basePath = basePath;
-        _saveNumber = saveNumber;
+        _saveFileIndex = saveFileIndex;
         _settings = new Dictionary<string, object>();
         _saves = new Dictionary<string, object>();
         _settingsImplementations = new List<Type>();
@@ -61,7 +67,7 @@ public sealed class SettingsAndSaveManager<T>
     }
 
     public void SetSaveFile(T? save)
-        => _saveNumber = save;
+        => _saveFileIndex = save;
 
     public G GetSetting<G>() where G : ISettings
         => (G)_settings[typeof(G).Namespace.Split('.')[^1] + "." + typeof(G).Name];
@@ -77,15 +83,15 @@ public sealed class SettingsAndSaveManager<T>
 
     public void SaveSave()
     {
-        if (_saveNumber is null)
+        if (_saveFileIndex is null)
             return;
-        string filePath = $@"{_basePath}/save_{_saveNumber}.json";
+        string filePath = $@"{_basePath}/{SaveFilePrefix}{_saveFileIndex}.{SaveFileType}";
         SaveFile(filePath, _saves);
     }
 
     public void SaveSettings()
     {
-        string filePath = $@"{_basePath}/settings.json";
+        string filePath = $@"{_basePath}/settings.{SettingsFileType}";
         SaveFile(filePath, _settings);
     }
 
@@ -110,16 +116,16 @@ public sealed class SettingsAndSaveManager<T>
 
     public bool LoadSaves()
     {
-        if (_saveNumber is null)
+        if (_saveFileIndex is null)
             return false;
-        string filePath = $@"{_basePath}/save_{_saveNumber}.json";
+        string filePath = $@"{_basePath}/{SaveFilePrefix}{_saveFileIndex}.{SaveFileType}";
 
         return LoadFile(filePath, _saves, _savesImplementations);
     }
 
     public bool LoadSettings()
     {
-        string filePath = $@"{_basePath}/settings.json";
+        string filePath = $@"{_basePath}/settings.{SettingsFileType}";
 
         return LoadFile(filePath, _settings, _settingsImplementations);
     }
@@ -158,9 +164,9 @@ public sealed class SettingsAndSaveManager<T>
 
     public bool DeleteSave()
     {
-        if (_saveNumber is null)
+        if (_saveFileIndex is null)
             return false;
-        string filePath = $@"{_basePath}/save_{_saveNumber}.json";
+        string filePath = $@"{_basePath}/{SaveFilePrefix}{_saveFileIndex}.{SaveFileType}";
         return DeleteFile(filePath);
     }
 
