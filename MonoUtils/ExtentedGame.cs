@@ -8,26 +8,26 @@ using MonoUtils.Ui;
 
 namespace MonoUtils;
 
-public class SimpleGame : Game
+public class ExtentedGame : Game
 {
     protected readonly GraphicsDeviceManager Graphics;
     protected SpriteBatch SpriteBatch;
 
     protected Display Display;
-    protected SettingsAndSaveManager SettingsAndSaveManager;
+    protected SettingsAndSaveManager<string> SettingsAndSaveManager;
 
     protected DevConsole Console;
     protected bool IsConsoleActive;
     protected bool IsConsoleEnabled;
 
     protected string SaveDirectory = "saves";
-    protected int? SaveFile = null;
+    protected string SaveFile = string.Empty;
 
     protected bool Debug;
 
     protected string[] Args;
 
-    public SimpleGame()
+    public ExtentedGame()
     {
         Graphics = new GraphicsDeviceManager(this);
         Content.RootDirectory = "Content";
@@ -55,7 +55,7 @@ public class SimpleGame : Game
             Console);
         Log.Out = new LogAdapter(Console);
 
-        SettingsAndSaveManager = new SettingsAndSaveManager(SaveDirectory);
+        SettingsAndSaveManager = new SettingsAndSaveManager<string>(SaveDirectory, SaveFile);
         SettingsAndSaveManager.SetSaveFile(SaveFile);
 
         if (!SettingsAndSaveManager.LoadSettings())
