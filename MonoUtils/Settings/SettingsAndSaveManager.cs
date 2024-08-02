@@ -4,16 +4,16 @@ using Newtonsoft.Json.Linq;
 
 namespace MonoUtils.Settings;
 
-public sealed class SettingsAndSaveManager
+public sealed class SettingsAndSaveManager<T>
 {
     private string _basePath;
-    private int? _saveNumber;
+    private T _saveNumber;
     private readonly Dictionary<string, object> _settings;
     private readonly Dictionary<string, object> _saves;
     private readonly List<Type> _settingsImplementations;
     private readonly List<Type> _savesImplementations;
 
-    public SettingsAndSaveManager(string basePath, int? saveNumber = null)
+    public SettingsAndSaveManager(string basePath, T saveNumber)
     {
         _basePath = basePath;
         _saveNumber = saveNumber;
@@ -60,14 +60,14 @@ public sealed class SettingsAndSaveManager
         }
     }
 
-    public void SetSaveFile(int? save)
+    public void SetSaveFile(T? save)
         => _saveNumber = save;
 
-    public T GetSetting<T>() where T : ISettings
-        => (T)_settings[typeof(T).Namespace.Split('.')[^1] + "." + typeof(T).Name];
+    public G GetSetting<G>() where G : ISettings
+        => (G)_settings[typeof(G).Namespace.Split('.')[^1] + "." + typeof(G).Name];
 
-    public T GetSave<T>() where T : ISave
-        => (T)_saves[typeof(T).Namespace.Split('.')[^1] + "." + typeof(T).Name];
+    public G GetSave<G>() where G : ISave
+        => (G)_saves[typeof(G).Namespace.Split('.')[^1] + "." + typeof(G).Name];
 
     public void Save()
     {
