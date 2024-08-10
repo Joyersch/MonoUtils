@@ -13,7 +13,7 @@ public sealed class OpacityCommand : ICommand
         if (options[0].ToString() is null)
             return new[] { "Invalid input supplied!" };
 
-        if (!float.TryParse(options[0].ToString()!.Replace('.', ','), out float value))
+        if (!float.TryParse(options[0].ToString()!.Replace(',', '.'), out float value))
             return new[] { @$"Invalid value ""{value}""" };
 
         if (value > 1F)

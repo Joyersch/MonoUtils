@@ -140,6 +140,18 @@ public sealed class DevConsole : IManageable, ILayerable, IColorable, IMoveable
             _cursorDisplay.Draw(spriteBatch);
     }
 
+    /// <summary>
+    /// Simulates User input to run a specific command.
+    /// </summary>
+    /// <param name="command"></param>
+    public void RunCommand(string command)
+    {
+        char[] chars = command.ToCharArray();
+        foreach(char c in chars)
+            TextInput(null, new TextInputEventArgs(c));
+        TextInput(null, new TextInputEventArgs('\n', Keys.Enter));
+    }
+
     public void TextInput(object sender, TextInputEventArgs e)
     {
         string c = e.Character.ToString();
