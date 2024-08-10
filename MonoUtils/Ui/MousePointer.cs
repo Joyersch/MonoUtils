@@ -47,7 +47,7 @@ public sealed class MousePointer : IManageable, IMoveable
         var realCenter = _windowCenter;
 
         var cameraOffset = Display.Size / _camera.Zoom / 2;
-        var appliedOffset = _camera.Position - cameraOffset;
+        var appliedOffset = _camera.FullPosition - cameraOffset;
         var scale = _screenScale * _camera.Zoom;
 
         _canvasPosition = _realPosition / scale + appliedOffset;

@@ -7,49 +7,61 @@ namespace MonoUtils.Ui;
 public sealed class Camera : IMoveable, IHitbox
 {
     public Matrix CameraMatrix { get; private set; }
-    public Vector2 Position { get; private set; }
-    public Vector2 RealPosition { get; private set; }
-    public Vector2 Size { get; private set; }
-    public Vector2 RealSize { get; private set; }
-    public Rectangle Rectangle { get; private set; }
+
+    public Vector2 FullPosition { get; private set; }
+    public Vector2 FullSize { get; private set; }
+    public Rectangle FullBounds { get; private set; }
+
+    public Vector2 VisiblePosition { get; private set; }
+    public Vector2 VisibleSize { get; private set; }
+    public Rectangle VisibleBounds { get; private set; }
 
     public float Zoom = 2f;
 
-    public Rectangle[] Hitbox => new[] { Rectangle };
+    public Rectangle[] Hitbox => new[] { VisibleBounds };
 
-    public Camera(Vector2 position, Vector2 size)
+    public Camera(Vector2 fullPosition, Vector2 fullSize)
     {
-        Size = size;
-        Position = position;
-        RealPosition = Position - Size / Zoom / 2;
-        RealSize = Size / Zoom;
-        Rectangle = new Rectangle(RealPosition.ToPoint(), RealSize.ToPoint());
+        FullSize = fullSize;
+        FullPosition = fullPosition;
+        FullBounds = new Rectangle(FullPosition.ToPoint(), FullSize.ToPoint());
+
+        VisiblePosition = FullPosition - FullSize / Zoom / 2;
+        VisibleSize = FullSize / Zoom;
+        VisibleBounds = new Rectangle(VisiblePosition.ToPoint(), VisibleSize.ToPoint());
     }
 
     public void Update()
     {
         UpdateMatrix();
-        RealPosition = Position - Size / Zoom / 2;
-        RealSize = Size / Zoom;
-        Rectangle = new Rectangle(RealPosition.ToPoint(), RealSize.ToPoint());
+        FullBounds = new Rectangle(FullPosition.ToPoint(), FullSize.ToPoint());
+        VisiblePosition = FullPosition - FullSize / Zoom / 2;
+        VisibleSize = FullSize / Zoom;
+        VisibleBounds = new Rectangle(VisiblePosition.ToPoint(), VisibleSize.ToPoint());
     }
 
     private void UpdateMatrix()
     {
-        var position = Matrix.CreateTranslation(-Position.X, -Position.Y, 0);
-        var offset = Matrix.CreateTranslation(Size.X / 2, Size.Y / 2, 0);
+        var position = Matrix.CreateTranslation(-FullPosition.X, -FullPosition.Y, 0);
+        var offset = Matrix.CreateTranslation(FullSize.X / 2, FullSize.Y / 2, 0);
         CameraMatrix = position * Matrix.CreateScale(Zoom) * offset;
     }
 
     public Vector2 GetPosition()
-        => Position;
+        => FullPosition;
 
     public Vector2 GetSize()
-        => Size;
+        => FullSize;
 
     public void Move(Vector2 newPosition)
     {
-        Position = newPosition;
+        FullPosition = newPosition;
+        Update();
+    }
+
+    public void SetSize(Vector2 size)
+    {
+        FullSize = size;
         Update();
     }
 }
