@@ -9,13 +9,13 @@ public class Scene
     public Camera Camera { get; private set; }
     public Display Display { get; private set; }
 
-    public Scene(GraphicsDevice graphicsDevice, Vector2 screenSize)
+    public Scene(GraphicsDevice graphicsDevice, Vector2 screenSize, float defaultZoom)
     {
         GraphicsDevice = graphicsDevice;
         Display = new Display(graphicsDevice, screenSize);
         // Calculate the current screen onces
         Display.Update();
-        Camera = new Camera(Display);
+        Camera = new Camera(Display, defaultZoom);
     }
 
     public void Update(GameTime gameTime)

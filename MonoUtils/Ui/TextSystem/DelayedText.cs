@@ -22,7 +22,7 @@ public sealed class DelayedText : Text
     public bool HasPlayed { get; private set; }
     public int DisplayDelay { get; set; } = 125;
 
-    public new static float DefaultScale => 2F;
+    public new static float DefaultScale { get; set; } = 2F;
 
     public DelayedText(string text) : this(text, true, Vector2.Zero, DefaultScale,
         1)

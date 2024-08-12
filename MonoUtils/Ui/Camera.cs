@@ -21,7 +21,7 @@ public sealed class Camera : IMoveable, IHitbox, IUpdateable
 
     public float Zoom => _zoom;
 
-    private float _zoom = 1F;
+    private float _zoom;
     private float _zoomDifferance;
     private float _zoomIntent;
 
@@ -30,16 +30,18 @@ public sealed class Camera : IMoveable, IHitbox, IUpdateable
     public Rectangle[] Hitbox => new[] { Rectangle };
 
 
-    public Camera(Display display) : this(display.Size)
+    public Camera(Display display, float zoom = 1f) : this(display.Size, zoom)
+    {
+
+    }
+
+    public Camera(Vector2 size, float zoom = 1F) : this(Vector2.Zero, size, zoom)
     {
     }
 
-    public Camera(Vector2 size) : this(Vector2.Zero, size)
+    public Camera(Vector2 position, Vector2 size, float zoom = 1F)
     {
-    }
-
-    public Camera(Vector2 position, Vector2 size)
-    {
+        _zoom = zoom;
         Size = size;
         Position = position;
         Calculate();

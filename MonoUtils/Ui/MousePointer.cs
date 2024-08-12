@@ -22,22 +22,16 @@ public sealed class MousePointer : IManageable, IMoveable
     private Vector2 _screenScale;
     private Vector2 _windowCenter;
 
-    public bool UseRelative { get; set; } = false;
+    public bool UseRelative { get; set; }
     public float Speed { get; set; } = 1F;
 
     public static Texture2D Texture;
 
-    public MousePointer(Vector2 window, Scene scene) : this(window, scene, Vector2.Zero,
-        Vector2.Zero, Texture)
-    {
-    }
-
-    public MousePointer(Vector2 window, Scene scene, Vector2 position, Vector2 size, Texture2D texture)
+    public MousePointer( Scene scene)
     {
         _camera = scene.Camera;
         _display = scene.Display;
-        UpdateWindow(window);
-        _texture = texture;
+        UpdateWindow(scene.Display.WindowSize);
     }
 
     public Rectangle Rectangle => Rectangle.Empty;
@@ -70,7 +64,7 @@ public sealed class MousePointer : IManageable, IMoveable
         if (!CanDraw)
             return;
 
-        spriteBatch.Draw(_texture, new Rectangle((int)_realPosition.X - 6, (int)_realPosition.Y - 6, 12, 12),
+        spriteBatch.Draw(Texture, new Rectangle((int)_realPosition.X - 6, (int)_realPosition.Y - 6, 12, 12),
             Microsoft.Xna.Framework.Color.Red);
     }
 
@@ -85,8 +79,8 @@ public sealed class MousePointer : IManageable, IMoveable
     public void UpdateWindow(Vector2 window)
     {
         _window = window;
-        _windowCenter = new Vector2(_window.X / 2, _window.Y / 2);
-        _screenScale = new Vector2(_window.X / _display.Size.X, _window.Y / _display.Size.Y);
+        _windowCenter = _window / 2;
+        _screenScale = _window / _display.Size;
     }
 
     private void SetMousePositionToCenter()
@@ -105,7 +99,5 @@ public sealed class MousePointer : IManageable, IMoveable
         => Size;
 
     public void Move(Vector2 newPosition)
-    {
-        Position = newPosition;
-    }
+        => Position = newPosition;
 }

@@ -25,6 +25,8 @@ public class ExtentedGame : Game
     protected string SaveDirectory = "saves";
     protected string SaveFile = string.Empty;
 
+    protected float CameraZoom = 1F;
+
     protected bool Debug;
 
     protected string[] Args;
@@ -45,7 +47,7 @@ public class ExtentedGame : Game
         if (Args.Contains("--debug"))
             Debug = true;
 
-        Scene = new Scene(GraphicsDevice, ScreenSize);
+        Scene = new Scene(GraphicsDevice, ScreenSize, CameraZoom);
         Window.TextInput += OnTextInput;
 
         Global.CommandProcessor.Initialize();

@@ -46,7 +46,7 @@ public static class TextNotationProcessor
         builder.AddColor(color, newText.Length - colorIndex);
         cleanText += newText[colorIndex..newText.Length];
 
-        var text = new  Ui.TextSystem.Text(cleanText, scale);
+        var text = new  Ui.TextSystem.Text(cleanText, scale * 0.5F);
         text.ChangeColor(builder.GetColor());
         return text;
     }
