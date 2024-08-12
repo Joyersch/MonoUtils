@@ -38,4 +38,7 @@ public sealed class Backlog
         foreach (BacklogRow row in rowCollection)
             Add(row);
     }
+
+    public void Clear()
+        => _backlog.Clear();
 }

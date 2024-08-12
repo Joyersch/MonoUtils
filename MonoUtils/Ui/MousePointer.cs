@@ -13,6 +13,7 @@ public sealed class MousePointer : IManageable, IMoveable
     public static bool CanDraw;
     private readonly Texture2D _texture;
     private readonly Camera _camera;
+    private readonly Display _display;
 
     private Vector2 _canvasPosition;
     private Vector2 _realPosition;
@@ -26,15 +27,16 @@ public sealed class MousePointer : IManageable, IMoveable
 
     public static Texture2D Texture;
 
-    public MousePointer(Vector2 window, Camera camera) : this(window, camera, Vector2.Zero,
+    public MousePointer(Vector2 window, Scene scene) : this(window, scene, Vector2.Zero,
         Vector2.Zero, Texture)
     {
     }
 
-    public MousePointer(Vector2 window, Camera camera, Vector2 position, Vector2 size, Texture2D texture)
+    public MousePointer(Vector2 window, Scene scene, Vector2 position, Vector2 size, Texture2D texture)
     {
         UpdateWindow(window);
-        _camera = camera;
+        _camera = scene.Camera;
+        _display = scene.Display;
         _texture = texture;
     }
 
@@ -46,7 +48,7 @@ public sealed class MousePointer : IManageable, IMoveable
         _realPosition = Microsoft.Xna.Framework.Input.Mouse.GetState().Position.ToVector2();
         var realCenter = _windowCenter;
 
-        var cameraOffset = Display.Size / _camera.Zoom / 2;
+        var cameraOffset = _display.Size / _camera.Zoom / 2;
         var appliedOffset = _camera.Position - cameraOffset;
         var scale = _screenScale * _camera.Zoom;
 
@@ -84,7 +86,7 @@ public sealed class MousePointer : IManageable, IMoveable
     {
         _window = window;
         _windowCenter = new Vector2(_window.X / 2, _window.Y / 2);
-        _screenScale = new Vector2(_window.X / Display.CustomWidth, _window.Y / Display.CustomHeight);
+        _screenScale = new Vector2(_window.X / _display.Size.X, _window.Y / _display.Size.Y);
     }
 
     private void SetMousePositionToCenter()

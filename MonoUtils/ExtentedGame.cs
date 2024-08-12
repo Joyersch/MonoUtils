@@ -13,7 +13,7 @@ public class ExtentedGame : Game
     protected readonly GraphicsDeviceManager Graphics;
     protected SpriteBatch SpriteBatch;
 
-    protected Display Display;
+    protected Scene Scene;
     protected SettingsAndSaveManager<string> SettingsAndSaveManager;
 
     protected DevConsole Console;
@@ -43,7 +43,7 @@ public class ExtentedGame : Game
         if (Args.Contains("--debug"))
             Debug = true;
 
-        Display = new Display(GraphicsDevice);
+        Scene = new Scene(GraphicsDevice);
         Window.TextInput += OnTextInput;
 
         Global.CommandProcessor.Initialize();
@@ -51,7 +51,7 @@ public class ExtentedGame : Game
         if (!Directory.Exists(SaveDirectory))
             Directory.CreateDirectory(SaveDirectory);
 
-        Console = new DevConsole(Global.CommandProcessor, Vector2.Zero, Display.SimpleScale,
+        Console = new DevConsole(Global.CommandProcessor, Vector2.Zero, Scene.Display.SimpleScale,
             Console);
         Log.Out = new LogAdapter(Console);
 
@@ -71,23 +71,20 @@ public class ExtentedGame : Game
     {
         base.Update(gameTime);
 
-        Display.Update();
-
+        Scene.Update(gameTime);
         if (IsConsoleActive && IsConsoleEnabled)
             Console.Update(gameTime);
     }
 
-    protected override void Draw(GameTime gameTime)
-    {
-        base.Draw(gameTime);
-    }
-
     protected void DrawConsole()
+        => DrawConsole(SpriteBatch);
+
+    protected void DrawConsole(SpriteBatch spriteBatch)
     {
-        SpriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointClamp);
+        spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointClamp);
         if (IsConsoleActive && IsConsoleEnabled)
             Console.Draw(SpriteBatch);
-        SpriteBatch.End();
+        spriteBatch.End();
     }
 
     protected override void LoadContent()

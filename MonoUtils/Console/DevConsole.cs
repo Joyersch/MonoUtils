@@ -180,8 +180,8 @@ public sealed class DevConsole : IManageable, ILayerable, IColorable, IMoveable
             return;
         }
 
-        var output = Processor.Process(this, _currentInput.ToString(), Context).Select(s => new BacklogRow(s));
         Backlog.Add(new BacklogRow(_currentInput.ToString()));
+        var output = Processor.Process(this, _currentInput.ToString(), Context).Select(s => new BacklogRow(s));
         Backlog.AddRange(output);
         var length = output.Count();
 
