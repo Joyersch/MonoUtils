@@ -33,7 +33,7 @@ public class CollisionResolver<T> : IManageable where T : IMoveable, IManageable
 
     public void Update(GameTime gameTime)
     {
-        Rectangle = _camera.VisibleBounds;
+        Rectangle = _camera.Rectangle;
         if (ManageStationaryUpdate)
             foreach (var stationary in _stationaries)
                 stationary.Update(gameTime);
@@ -49,7 +49,7 @@ public class CollisionResolver<T> : IManageable where T : IMoveable, IManageable
     {
         if (ManageStationaryDraw)
             foreach (var stationary in _stationaries.Where(stationary =>
-                         stationary.Rectangle.Intersects(_camera.VisibleBounds)))
+                         stationary.Rectangle.Intersects(_camera.Rectangle)))
             {
                 stationary.Draw(spriteBatch);
             }
@@ -58,7 +58,7 @@ public class CollisionResolver<T> : IManageable where T : IMoveable, IManageable
             return;
 
         foreach (var dynamic in _dynamics.Where(dynamic =>
-                     dynamic.Rectangle.Intersects(_camera.VisibleBounds)))
+                     dynamic.Rectangle.Intersects(_camera.Rectangle)))
         {
             dynamic.Draw(spriteBatch);
         }
