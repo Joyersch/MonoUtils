@@ -33,10 +33,11 @@ public class RatioBox : IButton
     public event Action<object> Click;
 
     public static Texture2D Texture;
-    private static readonly Vector2 ImageSize = new Vector2(8, 8);
+    private static Vector2 ImageSize { get; set; } = new Vector2(8, 8);
 
+    public static float DefaultScale { get; set; } = 3F;
 
-    public RatioBox(RatioGroup group) : this(group, 3F)
+    public RatioBox(RatioGroup group) : this(group, DefaultScale)
     {
     }
 

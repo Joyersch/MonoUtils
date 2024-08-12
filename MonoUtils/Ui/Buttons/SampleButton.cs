@@ -31,12 +31,13 @@ public sealed class SampleButton : IButton
     public static Texture2D Texture;
     private static readonly Vector2 ImageSize = new Vector2(32, 16);
 
+    public static float DefaultScale { get; set; } = 4F;
 
     public SampleButton() : this(Vector2.Zero)
     {
     }
 
-    public SampleButton(Vector2 position) : this(position, 4F)
+    public SampleButton(Vector2 position) : this(position, DefaultScale)
     {
     }
 

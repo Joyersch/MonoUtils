@@ -10,6 +10,8 @@ public class Checkbox : TextButton<SquareButton>
 
     public Action<bool> ValueChanged;
 
+    public static float DefaultScale { get; set; } = 4F;
+
     public Checkbox() : this(false)
     {
     }
@@ -18,7 +20,7 @@ public class Checkbox : TextButton<SquareButton>
     {
     }
 
-    public Checkbox(bool state) : this(4F, state)
+    public Checkbox(bool state) : this(DefaultScale, state)
     {
     }
 

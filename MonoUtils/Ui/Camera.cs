@@ -13,6 +13,10 @@ public sealed class Camera : IMoveable, IHitbox, IUpdateable
     public Vector2 RealPosition { get; private set; }
     public Vector2 Size { get; private set; }
     public Vector2 RealSize { get; private set; }
+
+    /// <summary>
+    /// The visible area of the camera
+    /// </summary>
     public Rectangle Rectangle { get; private set; }
 
     public float Zoom => _zoom;

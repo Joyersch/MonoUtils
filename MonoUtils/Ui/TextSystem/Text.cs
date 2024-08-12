@@ -23,7 +23,7 @@ public class Text : IColorable, IMoveable, IManageable
 
     public int Length => _letters.Count;
 
-    public static float DefaultLetterScale => 2F;
+    public static float DefaultLetterScale { get; set; } = 2F;
 
     public Text(string text) : this(text, Vector2.Zero, DefaultLetterScale, 1)
     {

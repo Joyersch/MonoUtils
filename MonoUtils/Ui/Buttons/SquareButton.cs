@@ -29,13 +29,15 @@ public sealed class SquareButton : IButton
     public event Action<object> Click;
 
     public static Texture2D Texture;
-    private static readonly Vector2 ImageSize = new Vector2(8, 8);
+    private static Vector2 ImageSize { get; set; } = new Vector2(8, 8);
+
+    public static float DefaultScale { get; set; } = 4F;
 
     public SquareButton() : this(Vector2.Zero)
     {
     }
 
-    public SquareButton(Vector2 position) : this(position, 4F)
+    public SquareButton(Vector2 position) : this(position, DefaultScale)
     {
     }
 

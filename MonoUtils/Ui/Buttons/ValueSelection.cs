@@ -42,7 +42,7 @@ public class ValueSelection<T> : IManageable, IMoveable, IInteractable
         _position = position;
         ValidValues = validValues;
         _pointer = startValueIndex;
-        _decreaseButton = new SquareTextButton(_left, position, scale * 4F);
+        _decreaseButton = new SquareTextButton(_left, position, scale * SquareTextButton.DefaultScale);
         _decreaseButton.Click += DecreaseClicked;
 
         // get the longest value
@@ -57,7 +57,7 @@ public class ValueSelection<T> : IManageable, IMoveable, IInteractable
         var buttonLength = _decreaseButton.Rectangle.Width + 8;
         var decreaseAndTextSize = new Vector2(_longestValidValue + buttonLength, 0);
         var increasePosition = position + decreaseAndTextSize;
-        _increaseButton = new SquareTextButton(_right, increasePosition, scale * 4F);
+        _increaseButton = new SquareTextButton(_right, increasePosition, scale * SquareTextButton.DefaultScale);
         _increaseButton.Click += IncreaseClicked;
 
         var rectangle = new Rectangle(position.ToPoint(), new Vector2(_longestValidValue + buttonLength * 2, _decreaseButton.GetSize().Y).ToPoint());
