@@ -20,6 +20,8 @@ public class ExtentedGame : Game
     protected bool IsConsoleActive;
     protected bool IsConsoleEnabled;
 
+    protected Vector2 ScreenSize = new Vector2(Display.Width, Display.Height);
+
     protected string SaveDirectory = "saves";
     protected string SaveFile = string.Empty;
 
@@ -43,7 +45,7 @@ public class ExtentedGame : Game
         if (Args.Contains("--debug"))
             Debug = true;
 
-        Scene = new Scene(GraphicsDevice);
+        Scene = new Scene(GraphicsDevice, ScreenSize);
         Window.TextInput += OnTextInput;
 
         Global.CommandProcessor.Initialize();
@@ -69,9 +71,9 @@ public class ExtentedGame : Game
     
     protected override void Update(GameTime gameTime)
     {
+        Scene.Update(gameTime);
         base.Update(gameTime);
 
-        Scene.Update(gameTime);
         if (IsConsoleActive && IsConsoleEnabled)
             Console.Update(gameTime);
     }

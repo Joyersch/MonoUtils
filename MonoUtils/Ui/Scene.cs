@@ -1,8 +1,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using MonoUtils.Ui;
 
-namespace MonoUtils;
+namespace MonoUtils.Ui;
 
 public class Scene
 {
@@ -10,10 +9,10 @@ public class Scene
     public Camera Camera { get; private set; }
     public Display Display { get; private set; }
 
-    public Scene(GraphicsDevice graphicsDevice)
+    public Scene(GraphicsDevice graphicsDevice, Vector2 screenSize)
     {
         GraphicsDevice = graphicsDevice;
-        Display = new Display(graphicsDevice);
+        Display = new Display(graphicsDevice, screenSize);
         // Calculate the current screen onces
         Display.Update();
         Camera = new Camera(Display);

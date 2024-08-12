@@ -34,9 +34,9 @@ public sealed class MousePointer : IManageable, IMoveable
 
     public MousePointer(Vector2 window, Scene scene, Vector2 position, Vector2 size, Texture2D texture)
     {
-        UpdateWindow(window);
         _camera = scene.Camera;
         _display = scene.Display;
+        UpdateWindow(window);
         _texture = texture;
     }
 
