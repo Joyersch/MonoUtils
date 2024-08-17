@@ -12,7 +12,7 @@ public sealed class CounterButtonAddon : ButtonAddon
     public CounterButtonAddon(IButton button, int startStates, float scale = 1F) : base(button)
     {
         _states = startStates;
-        _text = new Text("", GetPosition(), scale);
+        _text = new Text("", GetPosition(), scale * Text.DefaultLetterScale);
         UpdateText();
         Button.Click += delegate
         {

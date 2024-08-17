@@ -49,7 +49,7 @@ public class ValueSelection<T> : IManageable, IMoveable, IInteractable
         _longestValidValue = 0;
         foreach (var validValue in validValues)
         {
-            var text = new Text(validValue.ToString());
+            var text = new Text(validValue.ToString(), scale * Text.DefaultLetterScale);
             if (_longestValidValue < text.Rectangle.Width)
                 _longestValidValue = text.Rectangle.Width;
         }
@@ -64,7 +64,7 @@ public class ValueSelection<T> : IManageable, IMoveable, IInteractable
         _rectangle = rectangle;
         _size = rectangle.Size.ToVector2();
 
-        _display = new Text(validValues[_pointer].ToString(), Vector2.Zero, scale);
+        _display = new Text(validValues[_pointer].ToString(), Vector2.Zero, scale * Text.DefaultLetterScale);
         _display.InRectangle(Rectangle)
             .OnCenter()
             .Centered()

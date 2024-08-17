@@ -59,8 +59,8 @@ public sealed class DevConsole : IManageable, ILayerable, IColorable, IMoveable
         _size = ImageSize * scale * 5;
         _position = position;
         _scale = Vector2.One * scale * 5;
-        _maxText = new Text("[block]", scale);
-        _currentInput = new Text(string.Empty, scale);
+        _maxText = new Text("[block]", scale * 2);
+        _currentInput = new Text(string.Empty, scale * 2);
 
         Backlog = console is null ? new Backlog() : console.Backlog;
 
@@ -70,12 +70,12 @@ public sealed class DevConsole : IManageable, ILayerable, IColorable, IMoveable
         _lines = new Text[_maxLinesY];
         for (int i = 0; i < _maxLinesY; i++)
         {
-            _lines[i] = new Text(string.Empty, scale);
+            _lines[i] = new Text(string.Empty, scale * 2);
             _lines[i].Move(position + new Vector2(0, _maxText.Size.Y) * i);
         }
 
         _currentInput.ChangeText(string.Empty);
-        _cursorDisplay = new Text("_", scale);
+        _cursorDisplay = new Text("_", scale * 2);
 
         _drawCursorInvoker = new OverTimeInvoker(500F);
         _drawCursorInvoker.Trigger += UpdateCursor;
@@ -83,7 +83,7 @@ public sealed class DevConsole : IManageable, ILayerable, IColorable, IMoveable
         _currentInput.Move(position + new Vector2(0, _size.Y - _maxText.Size.Y));
 
         Context = console is null ? new ContextProvider() : console.Context;
-        ChangeColor(console?.GetColor() ?? new[] { new Microsoft.Xna.Framework.Color(75, 75, 75) });
+        ChangeColor(console?.GetColor() ?? [new Color(75, 75, 75)]);
     }
 
     private void UpdateCursor()
@@ -232,14 +232,14 @@ public sealed class DevConsole : IManageable, ILayerable, IColorable, IMoveable
         _position = newPosition;
     }
 
-    public void ChangeColor(Microsoft.Xna.Framework.Color[] input)
+    public void ChangeColor(Color[] input)
         => _color = input[0];
 
     public int ColorLength()
         => 1;
 
-    public Microsoft.Xna.Framework.Color[] GetColor()
-        => new[] { _color };
+    public Color[] GetColor()
+        => [_color];
 
     public Vector2 GetPosition()
         => _position;

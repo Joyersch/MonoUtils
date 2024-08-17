@@ -18,7 +18,7 @@ public sealed class HoldButtonAddon : ButtonAddon
     {
         _startTime = startTime;
         _time = _startTime;
-        _timer = new Text($"{_startTime / 1000F:n2}", button.GetPosition(), scale);
+        _timer = new Text($"{_startTime / 1000F:n2}", button.GetPosition(), scale * Text.DefaultLetterScale);
 
         button.Click += delegate
         {

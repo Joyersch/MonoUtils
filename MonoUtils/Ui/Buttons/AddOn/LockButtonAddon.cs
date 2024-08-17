@@ -16,7 +16,7 @@ public sealed class LockButtonAddon : ButtonAddon
 
     public LockButtonAddon(IButton button, float scale = 1F) : base(button)
     {
-        _text = new Text("[locklocked]", GetPosition(), scale);
+        _text = new Text("[locklocked]", GetPosition(), scale * Text.DefaultLetterScale);
 
         button.Enter += _ => InvokeEnter();
         button.Click += delegate

@@ -29,7 +29,7 @@ public class TextButton<T> : IButton where T : IButton
         _button.Leave += _ => Leave?.Invoke(this);
         _button.Enter += _ => Enter?.Invoke(this);
         _button.Click +=_ => Click?.Invoke(this);
-        Text = new Text(text, scale);
+        Text = new Text(text, scale * Text.DefaultLetterScale);
         Text.InRectangle(_button.Rectangle)
             .OnCenter()
             .Centered()

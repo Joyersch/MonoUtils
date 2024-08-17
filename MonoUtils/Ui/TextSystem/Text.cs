@@ -29,7 +29,7 @@ public class Text : IColorable, IMoveable, IManageable
     {
     }
 
-    public Text(string text, float scale) : this(text, Vector2.Zero, scale * DefaultLetterScale, 1)
+    public Text(string text, float scale) : this(text, Vector2.Zero, scale, 1)
     {
     }
 
@@ -37,7 +37,7 @@ public class Text : IColorable, IMoveable, IManageable
     {
     }
 
-    public Text(string text, Vector2 position, float scale) : this(text, position, scale * DefaultLetterScale, 1)
+    public Text(string text, Vector2 position, float scale) : this(text, position, scale, 1)
     {
     }
 

@@ -1,14 +1,15 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using MonoUtils.Logic;
 using MonoUtils.Logic.Management;
 using MonoUtils.Ui.Color;
 
-namespace MonoUtils.Logic;
+namespace MonoUtils.Ui;
 
 public sealed class Timer : IManageable, IMoveable, IColorable
 {
     private readonly OverTimeInvoker _invoker;
-    private readonly Ui.TextSystem.Text _display;
+    private readonly TextSystem.Text _display;
 
     private readonly double _time;
     private bool _invoked;
@@ -49,7 +50,7 @@ public sealed class Timer : IManageable, IMoveable, IColorable
             Trigger?.Invoke();
         };
 
-        _display = new Ui.TextSystem.Text($"{time/1000:n2}", position, scale);
+        _display = new TextSystem.Text($"{time/1000:n2}", position, scale * TextSystem.Text.DefaultLetterScale);
     }
 
     public Rectangle Rectangle => _invoker.Rectangle;
@@ -86,13 +87,13 @@ public sealed class Timer : IManageable, IMoveable, IColorable
     public void Start()
         => _invoker.Start();
 
-    public void ChangeColor(Color[] input)
+    public void ChangeColor(Microsoft.Xna.Framework.Color[] input)
         => _display.ChangeColor(input);
 
     public int ColorLength()
         => _display.ColorLength();
 
-    public Color[] GetColor()
+    public Microsoft.Xna.Framework.Color[] GetColor()
     => _display.GetColor();
 
     public void Stop()
