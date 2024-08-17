@@ -38,10 +38,12 @@ public sealed class DevConsole : IManageable, ILayerable, IColorable, IMoveable
 
     public Vector2 ImageSize = new Vector2(128, 72);
 
-    public new static Texture2D Texture;
+    public static float DefaultScale { get; set; } = 5F;
+
+    public static Texture2D Texture;
 
     public DevConsole(CommandProcessor processor, Vector2 position) : this(processor,
-        position, 10F, null)
+        position, DefaultScale, null)
     {
     }
 
