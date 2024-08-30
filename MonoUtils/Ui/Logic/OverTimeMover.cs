@@ -17,8 +17,10 @@ public sealed class OverTimeMover : IManageable
     
     public bool IsMoving { get; private set; }
 
+    public Rectangle Rectangle { get; } = Rectangle.Empty;
+
     public event Action ArrivedOnDestination;
-    
+
     public enum MoveMode
     {
         Lin,
@@ -26,7 +28,6 @@ public sealed class OverTimeMover : IManageable
     }
 
     public OverTimeMover(IMoveable moveable, Vector2 moveTo, float moveInTime, MoveMode moveMode)
-
     {
         _moveable = moveable;
         _mode = moveMode;
@@ -34,8 +35,6 @@ public sealed class OverTimeMover : IManageable
         _destination = moveTo;
         _start = _moveable.GetPosition();
     }
-
-    public Rectangle Rectangle { get; } = Rectangle.Empty;
 
     public void Update(GameTime gameTime)
     {
@@ -71,6 +70,12 @@ public sealed class OverTimeMover : IManageable
         _currentMoveTime = 0;
     }
 
+    public void Stop()
+    {
+        IsMoving = false;
+        _currentMoveTime = 0;
+    }
+
     public void ChangeDestination(Vector2 newDestination)
         => _destination = newDestination;
 
@@ -82,9 +87,6 @@ public sealed class OverTimeMover : IManageable
 
     public void Draw(SpriteBatch spriteBatch)
     {
-    }
-
-    public void DrawStatic(SpriteBatch spriteBatch)
-    {
+        // Nothing to draw
     }
 }
