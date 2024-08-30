@@ -29,7 +29,7 @@ public class ColorTransition : IUpdateable, IColorable
 
         if (_processedTime >= _passTime)
         {
-            FinishedTransition.Invoke();
+            FinishedTransition?.Invoke();
             _color = _end;
             return;
         }
