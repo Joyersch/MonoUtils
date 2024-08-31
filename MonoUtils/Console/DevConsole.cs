@@ -249,7 +249,7 @@ public sealed class DevConsole : IManageable, ILayerable, IColorable, IMoveable
 
     public void ScrollUp()
     {
-            Backlog.MovePointerUp();
+        Backlog.MovePointerUp();
     }
 
     public void ScrollDown()

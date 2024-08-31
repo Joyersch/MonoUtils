@@ -27,7 +27,7 @@ public sealed class MousePointer : IManageable, IMoveable
 
     public static Texture2D Texture;
 
-    public MousePointer( Scene scene)
+    public MousePointer(Scene scene)
     {
         _camera = scene.Camera;
         _display = scene.Display;

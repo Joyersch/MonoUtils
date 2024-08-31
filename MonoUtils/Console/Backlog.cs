@@ -40,5 +40,8 @@ public sealed class Backlog
     }
 
     public void Clear()
-        => _backlog.Clear();
+    {
+        _backlog.Clear();
+        _pointer = 0;
+    }
 }
