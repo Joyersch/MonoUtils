@@ -5,6 +5,7 @@ using MonoUtils.Logging;
 using MonoUtils.Logic.Management;
 using MonoUtils.Ui;
 using MonoUtils.Ui.Logic;
+using Point = System.Drawing.Point;
 
 namespace MonoUtils.Logic;
 
@@ -13,6 +14,8 @@ namespace MonoUtils.Logic;
 /// </summary>
 public class CameraTripod : IManageable
 {
+    public static bool Debug { get; set; }
+
     private readonly Camera _camera;
 
     public Rectangle Rectangle { get; private set; }
@@ -119,8 +122,23 @@ public class CameraTripod : IManageable
         _cameraMover.Update(gameTime);
     }
 
+    /// <summary>
+    /// Please only call this for debugging purposes!
+    /// </summary>
+    /// <param name="spriteBatch"></param>
     public void Draw(SpriteBatch spriteBatch)
     {
-        // Nothing to draw
+        if (!Debug)
+            return;
+
+        foreach (var anchor in _anchors)
+        {
+            var texture = SampleObject.Texture;
+            Vector2 position = texture.Bounds.Location.ToVector2() + anchor.Position;
+            Vector2 size = new Vector2(texture.Width, texture.Height / 4F);
+            var onTexture = new Rectangle(texture.Bounds.Location, size.ToPoint());
+            var inGame = new Rectangle(position.ToPoint(), size.ToPoint());
+            spriteBatch.Draw(texture, inGame, onTexture, Color.White);
+        }
     }
 }
