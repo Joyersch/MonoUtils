@@ -70,10 +70,13 @@ public class ExtentedGame : Game
         
         TextProvider.Initialize();
     }
-    
+
+    /// <summary>
+    /// Please remember to call Scene.Update(gameTime)!
+    /// </summary>
+    /// <param name="gameTime"></param>
     protected override void Update(GameTime gameTime)
     {
-        Scene.Update(gameTime);
         base.Update(gameTime);
 
         if (IsConsoleActive && IsConsoleEnabled)
