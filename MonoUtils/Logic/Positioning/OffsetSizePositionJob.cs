@@ -22,8 +22,8 @@ public class OffsetSizePositionJob : PositionCalculatorJob
     {
         var bySize = _moveable.GetSize() * _percent;
 
-        if (_onlyX) return new Vector2(prior.X + bySize.X, prior.Y);
-        if (_onlyX) return new Vector2(prior.X, prior.Y + bySize.Y);
+        if (_onlyX) bySize.Y = 0;
+        if (_onlyY) bySize.X = 0;
         return prior + bySize;
     }
 }
