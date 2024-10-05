@@ -98,7 +98,7 @@ public sealed class PositionCalculator : ICalculator
 
     public PositionCalculator ByGridX(float x)
     {
-        _jobs.Add(new OffsetGridPositionJob(x, onlyY: true));
+        _jobs.Add(new OffsetGridPositionJob(x, onlyX: true));
         return this;
     }
 
