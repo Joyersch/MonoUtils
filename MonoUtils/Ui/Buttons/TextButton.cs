@@ -28,12 +28,12 @@ public class TextButton<T> : IButton where T : IButton
         _button = button;
         _button.Leave += _ => Leave?.Invoke(this);
         _button.Enter += _ => Enter?.Invoke(this);
-        _button.Click +=_ => Click?.Invoke(this);
+        _button.Click += _ => Click?.Invoke(this);
         Text = new Text(text, scale * Text.DefaultLetterScale);
         Text.InRectangle(_button)
             .OnCenter()
             .Centered()
-            .Move();
+            .Apply();
     }
 
     public float Layer
@@ -44,6 +44,9 @@ public class TextButton<T> : IButton where T : IButton
 
     public bool IsHover => _button.IsHover;
 
+    public float Scale => _button.Scale;
+
+
     public virtual void Update(GameTime gameTime)
     {
         _button.Update(gameTime);
@@ -51,7 +54,7 @@ public class TextButton<T> : IButton where T : IButton
         Text.InRectangle(_button)
             .OnCenter()
             .Centered()
-            .Move();
+            .Apply();
     }
 
     public void UpdateInteraction(GameTime gameTime, IHitbox toCheck)
@@ -77,7 +80,7 @@ public class TextButton<T> : IButton where T : IButton
         Text.InRectangle(_button)
             .OnCenter()
             .Centered()
-            .Move();
+            .Apply();
     }
 
     public void ChangeColor(Microsoft.Xna.Framework.Color[] input)
@@ -88,4 +91,10 @@ public class TextButton<T> : IButton where T : IButton
 
     public Microsoft.Xna.Framework.Color[] GetColor()
         => _button.GetColor();
+
+    public void SetScale(float scale)
+    {
+        _button.SetScale(scale);
+        Text.SetScale(scale);
+    }
 }

@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using MonoUtils.Helper;
 using MonoUtils.Logic.Management;
+using MonoUtils.Ui;
 
 namespace MonoUtils.Logic.Hitboxes;
 
@@ -10,7 +11,7 @@ public sealed class HitboxProvider : IHitbox, IUpdateable
     private readonly ISpatial _object;
     private Rectangle[] _hitbox;
     private Rectangle[] _baseHitbox;
-    private readonly Vector2 _scale;
+    private Vector2 _scale;
     public Rectangle[] Hitbox => _hitbox;
 
     public HitboxProvider(ISpatial @object, Rectangle[] hitbox, Vector2 scale)
@@ -40,4 +41,8 @@ public sealed class HitboxProvider : IHitbox, IUpdateable
             , (int)(position.Y + hitbox.Y * scale.Y)
             , (int)(hitbox.Width * scale.X)
             , (int)(hitbox.Height * scale.Y));
+
+
+    public void SetScale(Vector2 scale)
+        => _scale = scale;
 }

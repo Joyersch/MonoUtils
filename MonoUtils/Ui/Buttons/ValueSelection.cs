@@ -9,82 +9,50 @@ using MonoUtils.Ui.TextSystem;
 
 namespace MonoUtils.Ui.Buttons;
 
-public class ValueSelection<T> : IManageable, IMoveable, IInteractable
+public class ValueSelection<T> : IManageable, IMoveable, IInteractable, IScaleable
 {
-    private Vector2 _position;
-    private readonly Vector2 _size;
-    private readonly Vector2 _scale;
-    private Microsoft.Xna.Framework.Color _color;
-    private Rectangle _rectangle;
-
     private readonly Text _display;
     private readonly SquareTextButton _decreaseButton;
     private readonly SquareTextButton _increaseButton;
+
+    private Vector2 _position;
+    private Vector2 _size;
+    private Rectangle _rectangle;
+
+    private float _initialScale;
+    private float _extendedScale = 1F;
+    public float Scale => _extendedScale * _extendedScale;
+    public Rectangle Rectangle => _rectangle;
 
     private readonly string _left = "[left]";
     private readonly string _right = "[right]";
 
     public event Action<object> ValueChanged;
 
-    public Rectangle Rectangle => _rectangle;
-
     public List<T> ValidValues { get; private set; }
 
     public string Value => ValidValues[_pointer].ToString();
 
-    public bool LoopOverValues = false;
-
     private int _pointer;
     private int _longestValidValue;
 
-    public ValueSelection(Vector2 position, float scale, List<T> validValues, int startValueIndex)
+    public bool LoopOverValues;
+
+    public ValueSelection(Vector2 position, float initialScale, List<T> validValues, int startValueIndex)
     {
-        _position = position;
         ValidValues = validValues;
+        _position = position;
+        _initialScale = initialScale;
         _pointer = startValueIndex;
-        _decreaseButton = new SquareTextButton(_left, position, scale * SquareTextButton.DefaultScale);
+
+        _decreaseButton = new SquareTextButton(_left, position, initialScale * SquareTextButton.DefaultScale);
         _decreaseButton.Click += DecreaseClicked;
 
-        // get the longest value
-        _longestValidValue = 0;
-        foreach (var validValue in validValues)
-        {
-            var text = new Text(validValue.ToString(), scale * Text.DefaultLetterScale);
-            if (_longestValidValue < text.Rectangle.Width)
-                _longestValidValue = text.Rectangle.Width;
-        }
-
-        var buttonLength = _decreaseButton.Rectangle.Width + 8;
-        var decreaseAndTextSize = new Vector2(_longestValidValue + buttonLength, 0);
-        var increasePosition = position + decreaseAndTextSize;
-        _increaseButton = new SquareTextButton(_right, increasePosition, scale * SquareTextButton.DefaultScale);
+        _increaseButton = new SquareTextButton(_right, Vector2.Zero, Scale * SquareTextButton.DefaultScale);
         _increaseButton.Click += IncreaseClicked;
 
-        var rectangle = new Rectangle(position.ToPoint(), new Vector2(_longestValidValue + buttonLength * 2, _decreaseButton.GetSize().Y).ToPoint());
-        _rectangle = rectangle;
-        _size = rectangle.Size.ToVector2();
-
-        _display = new Text(validValues[_pointer].ToString(), Vector2.Zero, scale * Text.DefaultLetterScale);
-        _display.InRectangle(this)
-            .OnCenter()
-            .Centered()
-            .Move();
-
-        var halfText = _display.GetSize().X / 2;
-        var longestHalfText = _longestValidValue / 2;
-        var distance = longestHalfText - halfText;
-
-        _decreaseButton.GetAnchor(_display)
-            .SetMainAnchor(AnchorCalculator.Anchor.Left)
-            .SetSubAnchor(AnchorCalculator.Anchor.Right)
-            .SetDistanceX(distance + 8)
-            .Move();
-
-        _increaseButton.GetAnchor(_display)
-            .SetMainAnchor(AnchorCalculator.Anchor.Right)
-            .SetSubAnchor(AnchorCalculator.Anchor.Left)
-            .SetDistanceX(distance + 8)
-            .Move();
+        _display = new Text(validValues[_pointer].ToString(), Vector2.Zero, Scale * Text.DefaultLetterScale);
+        UpdateTextValue();
     }
 
     private void IncreaseClicked(object obj)
@@ -107,41 +75,42 @@ public class ValueSelection<T> : IManageable, IMoveable, IInteractable
     {
         _display.ChangeText(Value);
 
-        var halfText = _display.GetSize().X / 2;
-        var longestHalfText = _longestValidValue / 2;
-        var distance = longestHalfText - halfText;
+        _longestValidValue = 0;
+        foreach (var validValue in ValidValues)
+        {
+            var text = new Text(validValue.ToString());
+            text.SetScale(_extendedScale);
+            if (_longestValidValue < text.Rectangle.Width)
+                _longestValidValue = text.Rectangle.Width;
+        }
+
+        var buttonLength = _decreaseButton.Rectangle.Width + 8;
+
+        var rectangle = new Rectangle(_position.ToPoint(),
+            new Vector2(_longestValidValue + buttonLength * 2, _decreaseButton.GetSize().Y).ToPoint());
+        _rectangle = rectangle;
+        _size = rectangle.Size.ToVector2();
 
         _display.InRectangle(this)
             .OnCenter()
             .Centered()
-            .Move();
+            .Apply();
 
-        _decreaseButton.GetAnchor(_display)
+        var halfText = _display.GetSize().X / 2;
+        var longestHalfText = _longestValidValue / 2;
+        var distance = (longestHalfText - halfText) / 2;
+
+        _decreaseButton.GetAnchor(this)
             .SetMainAnchor(AnchorCalculator.Anchor.Left)
-            .SetSubAnchor(AnchorCalculator.Anchor.Right)
-            .SetDistanceX(distance + 8)
-            .Move();
-
-        _increaseButton.GetAnchor(_display)
-            .SetMainAnchor(AnchorCalculator.Anchor.Right)
             .SetSubAnchor(AnchorCalculator.Anchor.Left)
-            .SetDistanceX(distance + 8)
-            .Move();
+            .Apply();
+
+        _increaseButton.GetAnchor(this)
+            .SetMainAnchor(AnchorCalculator.Anchor.Right)
+            .SetSubAnchor(AnchorCalculator.Anchor.Right)
+            .Apply();
 
         ValueChanged?.Invoke(ValidValues[_pointer]);
-    }
-
-
-    public void Move(Vector2 newPosition)
-    {
-        var offset = newPosition - _position;
-        _decreaseButton.Move(_decreaseButton.GetPosition() + offset);
-
-        _display.Move(_display.Position + offset);
-
-        _increaseButton.Move(_increaseButton.GetPosition() + offset);
-        _position = newPosition;
-        _rectangle = this.GetRectangle();
     }
 
     public void UpdateInteraction(GameTime gameTime, IHitbox toCheck)
@@ -164,9 +133,24 @@ public class ValueSelection<T> : IManageable, IMoveable, IInteractable
         _decreaseButton.Draw(spriteBatch);
     }
 
+    public void SetScale(float scale)
+    {
+        _display.SetScale(scale);
+        _increaseButton.SetScale(scale);
+        _decreaseButton.SetScale(scale);
+        _extendedScale = scale;
+        UpdateTextValue();
+    }
+
     public Vector2 GetPosition()
         => _position;
 
     public Vector2 GetSize()
         => _size;
+
+    public void Move(Vector2 newPosition)
+    {
+        _position = newPosition;
+        UpdateTextValue();
+    }
 }

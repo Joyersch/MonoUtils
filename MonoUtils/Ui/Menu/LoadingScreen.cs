@@ -42,14 +42,14 @@ public sealed class LoadingScreen : IManageable
             .OnCenter()
             .OnY(0.25F)
             .Centered()
-            .Move();
+            .Apply();
 
         _progress = new Text(goal, 2F * scale);
         _progress.InRectangle(this)
             .OnCenter()
             .OnY(0.45F)
             .Centered()
-            .Move();
+            .Apply();
 
         StringBuilder builder = new();
         for (int i = 0; i < _loadbarLength; i++)
@@ -60,7 +60,7 @@ public sealed class LoadingScreen : IManageable
             .OnCenter()
             .OnY(0.6F)
             .Centered()
-            .Move();
+            .Apply();
 
         _lazyDots = new OverTimeInvoker(666F);
         _lazyDots.Trigger += () =>
@@ -105,7 +105,7 @@ public sealed class LoadingScreen : IManageable
             .OnCenter()
             .OnY(0.25F)
             .Centered()
-            .Move();
+            .Apply();
 
         if (ProgressEnabled)
         {
@@ -115,7 +115,7 @@ public sealed class LoadingScreen : IManageable
                 .OnCenter()
                 .OnY(0.45F)
                 .Centered()
-                .Move();
+                .Apply();
         }
 
         if (_max == 0)
@@ -136,7 +136,7 @@ public sealed class LoadingScreen : IManageable
             .OnCenter()
             .OnY(0.6F)
             .Centered()
-            .Move();
+            .Apply();
     }
 
     public void Draw(SpriteBatch spriteBatch)

@@ -82,4 +82,10 @@ public sealed class LockButtonAddon : ButtonAddon
         base.ChangeColor(input);
         _savedButtonColor = input[0];
     }
+
+    public override void SetScale(float scale)
+    {
+        base.SetScale(scale);
+        _text.SetScale(scale);
+    }
 }

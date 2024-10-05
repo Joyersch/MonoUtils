@@ -21,7 +21,7 @@ public class OffsetFixedPositionJob : PositionCalculatorJob
     {
         var potential = _position;
         if (_onlyX) potential.Y = 0;
-        if (_onlyY) potential.Y = 0;
+        if (_onlyY) potential.X = 0;
         return potential + prior;
     }
 }

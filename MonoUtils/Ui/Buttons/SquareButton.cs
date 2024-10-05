@@ -9,8 +9,11 @@ namespace MonoUtils.Ui.Buttons;
 public sealed class SquareButton : IButton
 {
     private Vector2 _position;
-    private readonly Vector2 _size;
-    private readonly Vector2 _scale;
+    private readonly float _initialScale;
+    private float _extendedScale;
+    public float Scale => _initialScale * _extendedScale;
+    private Vector2 _size;
+    private Vector2 _drawingScale;
     private Microsoft.Xna.Framework.Color _color;
     private Rectangle _imageLocation;
 
@@ -41,11 +44,12 @@ public sealed class SquareButton : IButton
     {
     }
 
-    public SquareButton(Vector2 position, float scale)
+    public SquareButton(Vector2 position, float initialScale)
     {
         _position = position;
-        _size = ImageSize * scale;
-        _scale = Vector2.One * scale;
+        _initialScale = initialScale;
+        _size = ImageSize * initialScale;
+        _drawingScale = Vector2.One * initialScale;
         _color = Microsoft.Xna.Framework.Color.White;
 
         var hitbox = new[]
@@ -53,7 +57,7 @@ public sealed class SquareButton : IButton
             new Rectangle(0, 1, 8, 6),
             new Rectangle(1, 0, 6, 8)
         };
-        _hitbox = new HitboxProvider(this, hitbox, _scale);
+        _hitbox = new HitboxProvider(this, hitbox, _drawingScale);
         _rectangle = this.GetRectangle();
 
         _mouseMat = new MouseActionsMat(this);
@@ -84,7 +88,7 @@ public sealed class SquareButton : IButton
             _color,
             0F,
             Vector2.Zero,
-            _scale,
+            _drawingScale,
             SpriteEffects.None,
             Layer);
     }
@@ -110,5 +114,14 @@ public sealed class SquareButton : IButton
         => 1;
 
     public Microsoft.Xna.Framework.Color[] GetColor()
-        => new[] { _color };
+        => [_color];
+
+    public void SetScale(float scale)
+    {
+        _extendedScale = scale;
+        _size = ImageSize * Scale;
+        _drawingScale = Vector2.One * Scale;
+        _rectangle = this.GetRectangle();
+        _hitbox.SetScale(_drawingScale);
+    }
 }

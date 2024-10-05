@@ -55,7 +55,7 @@ public class ExtentedGame : Game
         if (!Directory.Exists(SaveDirectory))
             Directory.CreateDirectory(SaveDirectory);
 
-        Console = new DevConsole(Global.CommandProcessor, Vector2.Zero, Scene.Display.SimpleScale,
+        Console = new DevConsole(Global.CommandProcessor, Vector2.Zero, Scene.Display.Scale,
             Console);
         Log.Out = new LogAdapter(Console);
 

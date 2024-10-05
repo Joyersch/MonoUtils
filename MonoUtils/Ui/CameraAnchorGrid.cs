@@ -84,7 +84,7 @@ public sealed class CameraAnchorGrid : IManageable
                     .OnCenter()
                     .Centered()
                     .ByGrid(x, y)
-                    .Move();
+                    .Apply();
                 i++;
             }
         }

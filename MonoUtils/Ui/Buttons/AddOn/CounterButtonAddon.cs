@@ -48,4 +48,10 @@ public sealed class CounterButtonAddon : ButtonAddon
         base.Move(newPosition);
         _text.Move(newPosition);
     }
+
+    public override void SetScale(float scale)
+    {
+        base.SetScale(scale);
+        _text.SetScale(scale);
+    }
 }

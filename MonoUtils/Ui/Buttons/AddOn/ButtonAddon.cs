@@ -72,4 +72,9 @@ public class ButtonAddon : IButton
 
     protected void InvokeClick()
         => Click?.Invoke(Button);
+
+    public float Scale => Button.Scale;
+
+    public virtual void SetScale(float scale)
+    => Button.SetScale(scale);
 }

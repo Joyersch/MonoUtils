@@ -4,7 +4,7 @@ using MonoUtils.Logic;
 
 namespace MonoUtils.Ui;
 
-public sealed class Display : IRectangle
+public sealed class Display : IRectangle, IScaleable
 {
     private readonly GraphicsDevice _device;
     private readonly Vector2 _expectedSize;
@@ -24,14 +24,14 @@ public sealed class Display : IRectangle
     /// <summary>
     /// Scale between the current screen and the expected size
     /// </summary>
-    public Vector2 Scale => Size / _expectedSize;
+    public Vector2 ComplexScale => Size / _expectedSize;
 
     /// <summary>
     /// Simplified scale which takes the minimum of both of X and Y.
     /// </summary>
-    public float SimpleScale => Math.Min(Scale.X, Scale.Y);
+    public float Scale => Math.Min(ComplexScale.X, ComplexScale.Y);
 
-    public event Action<Vector2> OnResize;
+    public event Action<float> OnResize;
     private Vector2 _lastSize;
 
     public Display(GraphicsDevice device, Vector2 expectedExpectedSize)
@@ -46,5 +46,14 @@ public sealed class Display : IRectangle
             OnResize?.Invoke(Scale);
 
         _lastSize = Size;
+    }
+
+    /// <summary>
+    /// This does nothing. Calls will be ignored. This exists for Interface complience
+    /// </summary>
+    /// <param name="scale"></param>
+    public void SetScale(float scale)
+    {
+        // Ignored
     }
 }

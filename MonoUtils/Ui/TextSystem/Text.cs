@@ -8,11 +8,16 @@ using MonoUtils.Ui.Color;
 
 namespace MonoUtils.Ui.TextSystem;
 
-public class Text : IColorable, IMoveable, IManageable
+public class Text : IColorable, IMoveable, IManageable, IScaleable
 {
     private List<Letter> _letters;
+    private string _text;
     protected readonly int Spacing;
     private readonly float _letterScale;
+    private float _extendedScale = 1F;
+    private float _fullScale;
+    public float Scale => _fullScale;
+
     public Vector2 Position;
     public Vector2 Size;
     public Rectangle Rectangle { get; private set; }
@@ -43,15 +48,18 @@ public class Text : IColorable, IMoveable, IManageable
 
     public Text(string text, Vector2 position, float scale, int spacing)
     {
+        _text = text;
         Spacing = spacing;
         _letterScale = scale;
+        _fullScale = _letterScale * _extendedScale;
         Position = position;
         ChangeText(text);
     }
 
     public void ChangeText(string text)
     {
-        var letters = Letter.Parse(text, _letterScale);
+        _text = text;
+        var letters = Letter.Parse(text, _fullScale);
 
         int length = 0;
         int index = 0;
@@ -62,7 +70,7 @@ public class Text : IColorable, IMoveable, IManageable
             letter.Move(position + new Vector2(0, letter.FullSize.Y) - new Vector2(0, letter.Rectangle.Height));
             if (_letters is not null && _letters.Count > index)
                 letter.DrawColor = _letters[index++].DrawColor;
-            length += (int)(letter.Size.X + Spacing * _letterScale);
+            length += (int)(letter.Size.X + Spacing * _fullScale);
         }
 
         _letters = letters;
@@ -151,5 +159,12 @@ public class Text : IColorable, IMoveable, IManageable
         {
             _letters[i].DrawColor = color;
         }
+    }
+
+    public void SetScale(float scale)
+    {
+        _extendedScale = scale;
+        _fullScale = _letterScale * _extendedScale;
+        ChangeText(_text);
     }
 }

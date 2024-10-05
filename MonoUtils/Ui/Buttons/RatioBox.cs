@@ -11,8 +11,12 @@ public class RatioBox : IButton
     private readonly RatioGroup _group;
     private readonly int _groupId;
     private Vector2 _position;
-    private readonly Vector2 _size;
-    private readonly Vector2 _scale;
+    private readonly float _initialScale;
+    private float _extendedScale = 1F;
+    private Vector2 _size;
+    private Vector2 _drawingScale;
+
+    public float Scale => _extendedScale * _extendedScale;
     private Microsoft.Xna.Framework.Color _color;
     private Rectangle _imageLocation;
 
@@ -41,11 +45,11 @@ public class RatioBox : IButton
     {
     }
 
-    public RatioBox(RatioGroup group, float scale) : this(group, Vector2.Zero, scale)
+    public RatioBox(RatioGroup group, float initialScale) : this(group, Vector2.Zero, initialScale)
     {
     }
 
-    public RatioBox(RatioGroup group, Vector2 position, float scale)
+    public RatioBox(RatioGroup group, Vector2 position, float initialScale)
     {
         _group = group;
         _group.UpdateStatus += delegate(int i)
@@ -56,8 +60,9 @@ public class RatioBox : IButton
         _groupId = _group.Register(this);
 
         _position = position;
-        _size = ImageSize * scale;
-        _scale = Vector2.One * scale;
+        _initialScale = initialScale;
+        _size = ImageSize * Scale;
+        _drawingScale = Vector2.One * Scale;
         _color = Microsoft.Xna.Framework.Color.White;
 
         var hitbox = new[]
@@ -65,7 +70,7 @@ public class RatioBox : IButton
             new Rectangle(1, 0, 6, 8),
             new Rectangle(0, 1, 8, 6)
         };
-        _hitbox = new HitboxProvider(this, hitbox, _scale);
+        _hitbox = new HitboxProvider(this, hitbox, _drawingScale);
         _rectangle = this.GetRectangle();
 
         _mouseMat = new MouseActionsMat(this);
@@ -100,7 +105,7 @@ public class RatioBox : IButton
             _color,
             0F,
             Vector2.Zero,
-            _scale,
+            _drawingScale,
             SpriteEffects.None,
             Layer);
     }
@@ -126,5 +131,13 @@ public class RatioBox : IButton
         => 1;
 
     public Microsoft.Xna.Framework.Color[] GetColor()
-        => new[] { _color };
+        => [_color];
+    
+    public void SetScale(float scale)
+    {
+        _extendedScale = scale;
+        _size = ImageSize * Scale;
+        _drawingScale = Vector2.One * Scale;
+        _rectangle = this.GetRectangle();
+    }
 }

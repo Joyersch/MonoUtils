@@ -1,8 +1,9 @@
 using Microsoft.Xna.Framework;
+using MonoUtils.Ui;
 
 namespace MonoUtils.Logic;
 
-public sealed class AnchorCalculator
+public sealed class AnchorCalculator : ICalculator
 {
     private readonly IMoveable _main;
     private readonly IMoveable _sub;
@@ -11,6 +12,7 @@ public sealed class AnchorCalculator
     private Anchor _subAnchor;
 
     private Vector2 _distance;
+    private IScaleable _distanceScale;
 
     public enum Anchor
     {
@@ -55,6 +57,12 @@ public sealed class AnchorCalculator
         return this;
     }
 
+    public AnchorCalculator SetDistanceScale(IScaleable scale)
+    {
+        _distanceScale = scale;
+        return this;
+    }
+
     public AnchorCalculator SetDistance(Vector2 distance)
     {
         _distance = distance;
@@ -64,7 +72,7 @@ public sealed class AnchorCalculator
     public AnchorCalculator SetDistance(float distance)
         => SetDistance(new Vector2(distance, distance));
 
-    public void Move()
+    public void Apply()
         => _sub.Move(Calculate());
 
     public Vector2 Calculate()
@@ -83,7 +91,11 @@ public sealed class AnchorCalculator
             Anchor.BottomRight => new Vector2(1, 1),
         };
 
-        subOffset += _distance * direction;
+        float scale = 1F;
+
+        if (_distanceScale != null)
+            scale = _distanceScale.Scale;
+        subOffset += _distance * scale * direction;
         return mainPoint + subOffset;
     }
 

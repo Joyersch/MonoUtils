@@ -72,4 +72,10 @@ public sealed class HoldButtonAddon : ButtonAddon
         base.Move(newPosition);
         _timer.Move(newPosition);
     }
+
+    public override void SetScale(float scale)
+    {
+        base.SetScale(scale);
+        _timer.SetScale(scale);
+    }
 }

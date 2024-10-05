@@ -3,7 +3,7 @@ using MonoUtils.Logic.Positioning;
 
 namespace MonoUtils.Logic;
 
-public sealed class PositionCalculator
+public sealed class PositionCalculator : ICalculator
 {
     private readonly IRectangle _area;
     private IMoveable _moveable;
@@ -126,7 +126,7 @@ public sealed class PositionCalculator
         return this;
     }
 
-    public void Move()
+    public void Apply()
     {
         if (_moveable is null)
             return;
