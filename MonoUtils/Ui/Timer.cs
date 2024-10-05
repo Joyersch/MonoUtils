@@ -6,7 +6,7 @@ using MonoUtils.Ui.Color;
 
 namespace MonoUtils.Ui;
 
-public sealed class Timer : IManageable, IMoveable, IColorable
+public sealed class Timer : IManageable, IMoveable, IColorable, IScaleable
 {
     private readonly OverTimeInvoker _invoker;
     private readonly TextSystem.Text _display;
@@ -17,6 +17,8 @@ public sealed class Timer : IManageable, IMoveable, IColorable
     public event Action Trigger;
 
     private string _prefix;
+
+    public float Scale => _display.Scale;
 
     public Timer(double time, bool start = false) : this(3F, time, string.Empty, start)
     {
@@ -106,5 +108,10 @@ public sealed class Timer : IManageable, IMoveable, IColorable
     {
         _invoked = false;
         _invoker.Reset();
+    }
+
+    public void SetScale(float scale)
+    {
+        _display.SetScale(scale);
     }
 }
