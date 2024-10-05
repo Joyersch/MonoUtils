@@ -3,9 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace MonoUtils.Logic;
 
-public interface IDrawable
+public interface IDrawable : IRectangle
 {
-    public Rectangle Rectangle { get; }
-
     public void Draw(SpriteBatch spriteBatch);
 }

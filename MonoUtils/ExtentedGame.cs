@@ -20,7 +20,7 @@ public class ExtentedGame : Game
     protected bool IsConsoleActive;
     protected bool IsConsoleEnabled;
 
-    protected Vector2 ScreenSize = new Vector2(Display.Width, Display.Height);
+    protected Vector2 ScreenSize = new(1280F, 720F);
 
     protected string SaveDirectory = "saves";
     protected string SaveFile = string.Empty;

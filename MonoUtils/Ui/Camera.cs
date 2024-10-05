@@ -6,12 +6,12 @@ using IUpdateable = MonoUtils.Logic.IUpdateable;
 
 namespace MonoUtils.Ui;
 
-public sealed class Camera : IMoveable, IHitbox, IUpdateable
+public sealed class Camera : IMoveable, IHitbox, IUpdateable, IRectangle
 {
     public Matrix CameraMatrix { get; private set; }
     public Vector2 Position { get; private set; }
     public Vector2 RealPosition { get; private set; }
-    public Vector2 Size { get; private set; }
+    public Vector2 Size => _display.Size;
     public Vector2 RealSize { get; private set; }
 
     /// <summary>
@@ -25,24 +25,20 @@ public sealed class Camera : IMoveable, IHitbox, IUpdateable
     private float _zoomDifferance;
     private float _zoomIntent;
 
+    private Display _display;
+
     public float ZoomSpeed = 100F;
 
-    public Rectangle[] Hitbox => new[] { Rectangle };
+    public Rectangle[] Hitbox => [Rectangle];
 
-
-    public Camera(Display display, float zoom = 1f) : this(display.Size, zoom)
-    {
-
-    }
-
-    public Camera(Vector2 size, float zoom = 1F) : this(Vector2.Zero, size, zoom)
+    public Camera(Display display, float zoom = 1F) : this(display, Vector2.Zero, zoom)
     {
     }
 
-    public Camera(Vector2 position, Vector2 size, float zoom = 1F)
+    public Camera(Display display, Vector2 position, float zoom = 1F)
     {
         _zoom = zoom;
-        Size = size;
+        _display = display;
         Position = position;
         Calculate();
     }

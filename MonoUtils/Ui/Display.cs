@@ -1,79 +1,50 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
+using MonoUtils.Logic;
 
 namespace MonoUtils.Ui;
 
-public sealed class Display
+public sealed class Display : IRectangle
 {
-    public readonly RenderTarget2D Target;
-
-    public static readonly float Width = 1280F;
-    public static readonly float Height = 720F;
-
-    // In theory Scale.X and Scale.Y should always be the same for this game
-    public float SimpleScale => Scale.X;
-
-    /// <summary>
-    /// Area of the entire game window
-    /// </summary>
-    public Rectangle Window { get; private set; }
-
-    /// <summary>
-    /// Size of the entire game window
-    /// </summary>
-    public Vector2 WindowSize { get; private set; }
-
-    /// <summary>
-    /// Area of the <see cref="Target"/>.
-    /// </summary>
-    public Rectangle Screen { get; private set; }
-    /// <summary>
-    /// Size of the <see cref="Target"/>.
-    /// </summary>
-    public Vector2 Size { get; private set; }
-
-    public Vector2 Scale => WindowSize / Size;
-
-    //SHOUTOUT: https://youtu.be/yUSB_wAVtE8
-
     private readonly GraphicsDevice _device;
+    private readonly Vector2 _expectedSize;
 
-    public Display(GraphicsDevice device) : this(device, new Vector2(Width, Height))
-    {
-    }
+    /// <summary>
+    /// Rectangle of the current screen
+    /// </summary>
+    public Rectangle Window => _device.PresentationParameters.Bounds;
 
-    public Display(GraphicsDevice device, Vector2 size)
+    public Rectangle Rectangle => Window;
+
+    /// <summary>
+    /// Size of the current screen
+    /// </summary>
+    public Vector2 Size => Window.Size.ToVector2();
+
+    /// <summary>
+    /// Scale between the current screen and the expected size
+    /// </summary>
+    public Vector2 Scale => Size / _expectedSize;
+
+    /// <summary>
+    /// Simplified scale which takes the minimum of both of X and Y.
+    /// </summary>
+    public float SimpleScale => Math.Min(Scale.X, Scale.Y);
+
+    public event Action<Vector2> OnResize;
+    private Vector2 _lastSize;
+
+    public Display(GraphicsDevice device, Vector2 expectedExpectedSize)
     {
         _device = device;
-        Screen = _device.PresentationParameters.Bounds;
-        WindowSize = _device.PresentationParameters.Bounds.Size.ToVector2();
-        Target = new RenderTarget2D(device, (int)size.X, (int)size.Y);
+        _expectedSize = expectedExpectedSize;
     }
 
     public void Update()
     {
-        Screen = _device.PresentationParameters.Bounds;
-        WindowSize = _device.PresentationParameters.Bounds.Size.ToVector2();
-        //SHOUTOUT: https://youtu.be/yUSB_wAVtE8
-        var backbufferAspectRatio = WindowSize.X / WindowSize.Y;
-        var screenAspectRatio = (float)Target.Width / Target.Height;
+        if (_lastSize != Size)
+            OnResize?.Invoke(Scale);
 
-        var x = 0f;
-        var y = 0f;
-        float w = Screen.Width;
-        float h = Screen.Height;
-        if (backbufferAspectRatio > screenAspectRatio)
-        {
-            w = h * screenAspectRatio;
-            x = (Screen.Width - w) / 2f;
-        }
-        else if (backbufferAspectRatio < screenAspectRatio)
-        {
-            h = w / screenAspectRatio;
-            y = (Screen.Height - h) / 2f;
-        }
-
-        Size = new Vector2(Target.Width, Target.Height);
-        Window = new Rectangle((int)x, (int)y, (int)w, (int)h);
+        _lastSize = Size;
     }
 }

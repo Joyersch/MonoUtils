@@ -31,7 +31,7 @@ public sealed class MousePointer : IManageable, IMoveable
     {
         _camera = scene.Camera;
         _display = scene.Display;
-        UpdateWindow(scene.Display.WindowSize);
+        UpdateWindow(scene.Display.Size);
     }
 
     public Rectangle Rectangle => Rectangle.Empty;

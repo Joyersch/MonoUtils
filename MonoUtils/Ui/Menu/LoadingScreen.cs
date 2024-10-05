@@ -36,15 +36,16 @@ public sealed class LoadingScreen : IManageable
         _goal = goal;
         _area = new Rectangle(position.ToPoint(), size.ToPoint());
 
+
         _loading = new Text("Loading", 5F * scale);
-        _loading.InRectangle(_area)
+        _loading.InRectangle(this)
             .OnCenter()
             .OnY(0.25F)
             .Centered()
             .Move();
 
         _progress = new Text(goal, 2F * scale);
-        _progress.InRectangle(_area)
+        _progress.InRectangle(this)
             .OnCenter()
             .OnY(0.45F)
             .Centered()
@@ -55,7 +56,7 @@ public sealed class LoadingScreen : IManageable
             builder.Append('|');
 
         _bar = new Text(builder.ToString(), Vector2.Zero, 2F * scale, 0);
-        _bar.InRectangle(_area)
+        _bar.InRectangle(this)
             .OnCenter()
             .OnY(0.6F)
             .Centered()
@@ -100,7 +101,7 @@ public sealed class LoadingScreen : IManageable
         _lazyDots.Update(gameTime);
 
         _loading.Update(gameTime);
-        _loading.InRectangle(_area)
+        _loading.InRectangle(this)
             .OnCenter()
             .OnY(0.25F)
             .Centered()
@@ -110,7 +111,7 @@ public sealed class LoadingScreen : IManageable
         {
             _progress.ChangeText($"{_goal}: {_current}/{_max}");
             _progress.Update(gameTime);
-            _progress.InRectangle(_area)
+            _progress.InRectangle(this)
                 .OnCenter()
                 .OnY(0.45F)
                 .Centered()
@@ -131,7 +132,7 @@ public sealed class LoadingScreen : IManageable
 
         _bar.ChangeColor(colorBuilder.GetColor());
         _bar.Update(gameTime);
-        _bar.InRectangle(_area)
+        _bar.InRectangle(this)
             .OnCenter()
             .OnY(0.6F)
             .Centered()

@@ -30,7 +30,7 @@ public class TextButton<T> : IButton where T : IButton
         _button.Enter += _ => Enter?.Invoke(this);
         _button.Click +=_ => Click?.Invoke(this);
         Text = new Text(text, scale * Text.DefaultLetterScale);
-        Text.InRectangle(_button.Rectangle)
+        Text.InRectangle(_button)
             .OnCenter()
             .Centered()
             .Move();
@@ -48,7 +48,7 @@ public class TextButton<T> : IButton where T : IButton
     {
         _button.Update(gameTime);
         Text.Update(gameTime);
-        Text.InRectangle(_button.Rectangle)
+        Text.InRectangle(_button)
             .OnCenter()
             .Centered()
             .Move();
@@ -74,7 +74,7 @@ public class TextButton<T> : IButton where T : IButton
     public void Move(Vector2 newPosition)
     {
         _button.Move(newPosition);
-        Text.InRectangle(_button.Rectangle)
+        Text.InRectangle(_button)
             .OnCenter()
             .Centered()
             .Move();

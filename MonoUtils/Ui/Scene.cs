@@ -13,8 +13,6 @@ public class Scene
     {
         GraphicsDevice = graphicsDevice;
         Display = new Display(graphicsDevice, screenSize);
-        // Calculate the current screen onces
-        Display.Update();
         Camera = new Camera(Display, defaultZoom);
     }
 

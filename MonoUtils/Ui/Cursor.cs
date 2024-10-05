@@ -23,7 +23,7 @@ public sealed class Cursor : IMoveable, IHitbox, ILayerable, IManageable
 
     public float Layer { get; set; }
 
-    public bool PixelPerfect { get; set; } = true;
+    public bool PixelPerfect { get; set; } = false;
 
     public static Texture2D Texture;
 
