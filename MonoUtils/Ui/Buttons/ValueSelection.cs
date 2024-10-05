@@ -61,6 +61,7 @@ public class ValueSelection<T> : IManageable, IMoveable, IInteractable, IScaleab
         if (_pointer > ValidValues.Count - 1)
             _pointer = LoopOverValues ? 0 : ValidValues.Count - 1;
         UpdateTextValue();
+        ValueChanged?.Invoke(ValidValues[_pointer]);
     }
 
     private void DecreaseClicked(object obj)
@@ -69,6 +70,7 @@ public class ValueSelection<T> : IManageable, IMoveable, IInteractable, IScaleab
         if (_pointer < 0)
             _pointer = LoopOverValues ? ValidValues.Count - 1 : 0;
         UpdateTextValue();
+        ValueChanged?.Invoke(ValidValues[_pointer]);
     }
 
     private void UpdateTextValue()
@@ -109,8 +111,6 @@ public class ValueSelection<T> : IManageable, IMoveable, IInteractable, IScaleab
             .SetMainAnchor(AnchorCalculator.Anchor.Right)
             .SetSubAnchor(AnchorCalculator.Anchor.Right)
             .Apply();
-
-        ValueChanged?.Invoke(ValidValues[_pointer]);
     }
 
     public void UpdateInteraction(GameTime gameTime, IHitbox toCheck)
