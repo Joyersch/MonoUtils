@@ -8,6 +8,7 @@ namespace MonoUtils.Ui.TextSystem;
 public sealed class ClickableText : Text, IInteractable, IHitbox
 {
     private readonly float _scale;
+    private float _extendedScale;
     public event Action<object>? Leave;
     public event Action<object>? Enter;
     public event Action<object>? Click;
@@ -60,7 +61,7 @@ public sealed class ClickableText : Text, IInteractable, IHitbox
     public override void Update(GameTime gameTime)
     {
         base.Update(gameTime);
-        _highlight.ChangeText(string.Concat(Enumerable.Repeat(".", (int)(Rectangle.Width / _scale))));
+        _highlight.ChangeText(string.Concat(Enumerable.Repeat(".", (int)(Rectangle.Width / (_scale * _extendedScale)))));
         _highlight.Update(gameTime);
     }
 
@@ -92,5 +93,12 @@ public sealed class ClickableText : Text, IInteractable, IHitbox
     {
         base.ChangeColor(color);
         _highlight.ChangeColor(color);
+    }
+
+    public override void SetScale(float scale)
+    {
+        base.SetScale(scale);
+        _highlight.SetScale(scale);
+        _extendedScale = scale;
     }
 }

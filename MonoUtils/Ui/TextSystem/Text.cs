@@ -161,7 +161,7 @@ public class Text : IColorable, IMoveable, IManageable, IScaleable
         }
     }
 
-    public void SetScale(float scale)
+    public virtual void SetScale(float scale)
     {
         _extendedScale = scale;
         _fullScale = _letterScale * _extendedScale;
