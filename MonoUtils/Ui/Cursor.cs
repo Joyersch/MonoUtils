@@ -9,11 +9,16 @@ using IUpdateable = MonoUtils.Logic.IUpdateable;
 
 namespace MonoUtils.Ui;
 
-public sealed class Cursor : IMoveable, IHitbox, ILayerable, IManageable
+public sealed class Cursor : IMoveable, IHitbox, ILayerable, IManageable, IScaleable
 {
     private Vector2 _position;
-    private readonly Vector2 _size;
-    private readonly Vector2 _scale;
+    private readonly float _initialScale;
+    private float _extendedScale = 1F;
+    private Vector2 _drawingScale;
+    public float Scale => _initialScale * _extendedScale;
+    private Vector2 _baseSize = new Vector2(7, 10);
+    private Vector2 _size;
+
     private HitboxProvider _hitboxProvider;
 
     public Rectangle[] Hitbox => _hitboxProvider.Hitbox;
@@ -31,20 +36,20 @@ public sealed class Cursor : IMoveable, IHitbox, ILayerable, IManageable
     {
     }
 
-    public Cursor(float scale) : this(Vector2.Zero, scale)
+    public Cursor(float initialScale) : this(Vector2.Zero, initialScale)
     {
     }
 
-    public Cursor(Vector2 position, float scale = 1F)
+    public Cursor(Vector2 position, float initialScale = 1F)
     {
         _position = position;
-        var size = new Vector2(7, 10);
-        _size = size * scale;
-        _scale = Vector2.One * scale;
+        _initialScale = initialScale;
+        _size = _baseSize * Scale;
+        _drawingScale = Vector2.One * Scale;
 
         var box = new Rectangle(0, 0, 1, 1);
         var hitbox = new[] { box };
-        _hitboxProvider = new HitboxProvider(this, hitbox, _scale);
+        _hitboxProvider = new HitboxProvider(this, hitbox, _drawingScale);
     }
 
     public void Update(GameTime gameTime)
@@ -62,7 +67,7 @@ public sealed class Cursor : IMoveable, IHitbox, ILayerable, IManageable
             Microsoft.Xna.Framework.Color.White,
             0F,
             Vector2.Zero,
-            _scale,
+            _drawingScale,
             SpriteEffects.None,
             Layer);
     }
@@ -76,5 +81,14 @@ public sealed class Cursor : IMoveable, IHitbox, ILayerable, IManageable
     public void Move(Vector2 newPosition)
     {
         _position = newPosition;
+    }
+
+    public void SetScale(float scale)
+    {
+        _extendedScale = scale;
+        _size = _baseSize * Scale;
+        _drawingScale = Vector2.One * Scale;
+        _rectangle = this.GetRectangle();
+        _hitboxProvider.SetScale(_drawingScale);
     }
 }

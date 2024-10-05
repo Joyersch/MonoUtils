@@ -56,7 +56,7 @@ public sealed class MousePointer : IManageable, IMoveable
         else
             _canvasCenter = Position;
 
-        Position -= (_canvasCenter - _canvasPosition) * Speed;
+        Position -= (_canvasCenter - _canvasPosition) * Speed * (_display.Scale / 2);
     }
 
     public void Draw(SpriteBatch spriteBatch)
