@@ -15,8 +15,8 @@ public class Text : IColorable, IMoveable, IManageable, IScaleable
     protected readonly int Spacing;
     private readonly float _letterScale;
     private float _extendedScale = 1F;
-    private float _fullScale;
-    public float Scale => _fullScale;
+    private float _fullBaseScale;
+    public float Scale => _fullBaseScale;
 
     public Vector2 Position;
     public Vector2 Size;
@@ -51,7 +51,7 @@ public class Text : IColorable, IMoveable, IManageable, IScaleable
         _text = text;
         Spacing = spacing;
         _letterScale = scale;
-        _fullScale = _letterScale * _extendedScale;
+        _fullBaseScale = _letterScale * _extendedScale;
         Position = position;
         ChangeText(text);
     }
@@ -59,7 +59,7 @@ public class Text : IColorable, IMoveable, IManageable, IScaleable
     public void ChangeText(string text)
     {
         _text = text;
-        var letters = Letter.Parse(text, _fullScale);
+        var letters = Letter.Parse(text, _fullBaseScale);
 
         int length = 0;
         int index = 0;
@@ -70,7 +70,7 @@ public class Text : IColorable, IMoveable, IManageable, IScaleable
             letter.Move(position + new Vector2(0, letter.FullSize.Y) - new Vector2(0, letter.Rectangle.Height));
             if (_letters is not null && _letters.Count > index)
                 letter.DrawColor = _letters[index++].DrawColor;
-            length += (int)(letter.Size.X + Spacing * _fullScale);
+            length += (int)(letter.Size.X + Spacing * _fullBaseScale);
         }
 
         _letters = letters;
@@ -164,7 +164,7 @@ public class Text : IColorable, IMoveable, IManageable, IScaleable
     public virtual void SetScale(float scale)
     {
         _extendedScale = scale;
-        _fullScale = _letterScale * _extendedScale;
+        _fullBaseScale = _letterScale * _extendedScale;
         ChangeText(_text);
     }
 }
