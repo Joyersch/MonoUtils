@@ -12,6 +12,7 @@ public sealed class DelayedText : Text
 
     private Vector2 _fullSize;
     private float _scale;
+    private float _extendedScale = 1F;
 
     private float _savedGameTime;
     private float _waitedStartTime;
@@ -102,5 +103,12 @@ public sealed class DelayedText : Text
     }
 
     public Text GetFullBaseCopy()
-        => new Text(_toDisplayText, Position, _scale, Spacing);
+        => new Text(_toDisplayText, Position, _scale * _extendedScale, Spacing);
+
+    public override void SetScale(float scale)
+    {
+        base.SetScale(scale);
+        _extendedScale = scale;
+        _fullSize = GetFullBaseCopy().GetSize();
+    }
 }
