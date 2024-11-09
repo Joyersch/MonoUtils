@@ -1,19 +1,16 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using MonoUtils.Helper;
 using MonoUtils.Logic;
 using MonoUtils.Logic.Management;
+using MonoUtils.Ui;
 using MonoUtils.Ui.Color;
 using MonoUtils.Ui.TextSystem;
 
 namespace MonoUtils.Console;
 
-public sealed class DevConsole : IManageable, ILayerable, IColorable, IMoveable
+public sealed class DevConsole : IManageable, ILayerable, IColorable
 {
-    private Vector2 _position;
-    private Vector2 _size;
-    private Vector2 _scale;
     private Color _color;
 
     private Text _currentInput;
@@ -24,6 +21,7 @@ public sealed class DevConsole : IManageable, ILayerable, IColorable, IMoveable
     private int _maxLinesY;
     private bool _isDrawingCursor;
     private OverTimeInvoker _drawCursorInvoker;
+    private Blank _background;
 
     public CommandProcessor Processor { get; private set; }
 
@@ -31,56 +29,48 @@ public sealed class DevConsole : IManageable, ILayerable, IColorable, IMoveable
 
     private Text[] _lines;
 
-    private Rectangle _rectangle;
-    public Rectangle Rectangle => _rectangle;
+    public Rectangle Rectangle => _scene.Camera.Rectangle;
+
+    private Scene _scene;
 
     public float Layer { get; set; }
 
-    public Vector2 ImageSize = new Vector2(128, 72);
-
-    public static float DefaultScale { get; set; } = 5F;
-
-    public static Texture2D Texture;
-
-    public DevConsole(CommandProcessor processor, Vector2 position) : this(processor,
-        position, DefaultScale, null)
+    public DevConsole(CommandProcessor processor, Scene scene) : this(processor,
+        scene, null)
     {
     }
 
-    public DevConsole(CommandProcessor processor, Vector2 position, float scale) : this(processor, position, scale,
-        null)
-    {
-    }
-
-    public DevConsole(CommandProcessor processor, Vector2 position, float scale, DevConsole? console)
+    public DevConsole(CommandProcessor processor, Scene scene, DevConsole? console)
     {
         Processor = console is null ? processor : console.Processor;
-
-        _size = ImageSize * scale * 5;
-        _position = position;
-        _scale = Vector2.One * scale * 5;
-        _maxText = new Text("[block]", scale * 2);
-        _currentInput = new Text(string.Empty, scale * 2);
+        _scene = scene;
+        _maxText = new Text("[block]", scene.Display.Scale * 4);
+        _currentInput = new Text(string.Empty, scene.Display.Scale * 4);
 
         Backlog = console is null ? new Backlog() : console.Backlog;
 
-        _maxLinesY = (int)(_size / _maxText.Size).Y - 1;
+        _maxLinesY = (int)(scene.Camera.Size / _maxText.Size).Y - 1;
         _toDisplay = new List<BacklogRow>();
+
+        _background = new Blank(Vector2.Zero, scene.Display.Size)
+        {
+            Color = new Color(0, 0, 0, 128)
+        };
 
         _lines = new Text[_maxLinesY];
         for (int i = 0; i < _maxLinesY; i++)
         {
-            _lines[i] = new Text(string.Empty, scale * 2);
-            _lines[i].Move(position + new Vector2(0, _maxText.Size.Y) * i);
+            _lines[i] = new Text(string.Empty, scene.Display.Scale * 4);
+            _lines[i].Move(new Vector2(0, _maxText.Size.Y) * i);
         }
 
         _currentInput.ChangeText(string.Empty);
-        _cursorDisplay = new Text("_", scale * 2);
+        _cursorDisplay = new Text("_", scene.Display.Scale * 4);
 
         _drawCursorInvoker = new OverTimeInvoker(500F);
         _drawCursorInvoker.Trigger += UpdateCursor;
 
-        _currentInput.Move(position + new Vector2(0, _size.Y - _maxText.Size.Y));
+        _currentInput.Move(new Vector2(0, scene.Camera.Size.Y - _maxText.Size.Y));
 
         Context = console is null ? new ContextProvider() : console.Context;
         ChangeColor(console?.GetColor() ?? [new Color(75, 75, 75)]);
@@ -94,14 +84,14 @@ public sealed class DevConsole : IManageable, ILayerable, IColorable, IMoveable
 
     public void Update(GameTime gameTime)
     {
-        _rectangle = this.GetRectangle();
         _drawCursorInvoker.Update(gameTime);
+        _background.Update(gameTime);
         _toDisplay = Backlog.GetRangeFromPointer(_maxLinesY);
 
         for (int line = 0; line < _lines.Length; line++)
         {
             Text l = _lines[line];
-            l.Move(GetPosition() + new Vector2(0, _maxText.Size.Y) * line);
+            l.Move(new Vector2(0, _maxText.Size.Y) * line);
             if (_toDisplay.Count > line)
             {
                 var text = _toDisplay[line].Text;
@@ -111,7 +101,7 @@ public sealed class DevConsole : IManageable, ILayerable, IColorable, IMoveable
                     // Quick fix to cut of overlapping lines.
                     // There should be a better solution like a linebreak but that would invoke effort!
                     l.ChangeText(text.Substring(0, i--));
-                } while (l.Rectangle.Width > GetSize().X);
+                } while (l.Rectangle.Width > _scene.Camera.Size.X);
 
                 l.ChangeColor(_toDisplay[line].ColorSet.Color);
             }
@@ -125,16 +115,8 @@ public sealed class DevConsole : IManageable, ILayerable, IColorable, IMoveable
 
     public void Draw(SpriteBatch spriteBatch)
     {
-        spriteBatch.Draw(
-            Texture,
-            _position,
-            null,
-            _color,
-            0F,
-            Vector2.Zero,
-            _scale,
-            SpriteEffects.None,
-            Layer);
+        _background.Draw(spriteBatch);
+
         foreach (Text text in _lines)
             text.Draw(spriteBatch);
         _currentInput.Draw(spriteBatch);
@@ -149,7 +131,7 @@ public sealed class DevConsole : IManageable, ILayerable, IColorable, IMoveable
     public void RunCommand(string command)
     {
         char[] chars = command.ToCharArray();
-        foreach(char c in chars)
+        foreach (char c in chars)
             TextInput(null, new TextInputEventArgs(c));
         TextInput(null, new TextInputEventArgs('\n', Keys.Enter));
     }
@@ -176,7 +158,7 @@ public sealed class DevConsole : IManageable, ILayerable, IColorable, IMoveable
             _currentInput.ChangeText(oldText);
 
             // only add the new character if the size allows for one
-            if (newMaxWidth < _size.X)
+            if (newMaxWidth < _scene.Camera.Size.X)
                 _currentInput.ChangeText(_currentInput + c ?? string.Empty);
 
             return;
@@ -223,13 +205,12 @@ public sealed class DevConsole : IManageable, ILayerable, IColorable, IMoveable
 
     public void Move(Vector2 newPosition)
     {
-        var offset = newPosition - _position;
+        var offset = newPosition;
 
         foreach (var line in _lines)
             line.Move(line.Position + offset);
 
         _currentInput.Move(_currentInput.Position + offset);
-        _position = newPosition;
     }
 
     public void ChangeColor(Color[] input)
@@ -240,12 +221,6 @@ public sealed class DevConsole : IManageable, ILayerable, IColorable, IMoveable
 
     public Color[] GetColor()
         => [_color];
-
-    public Vector2 GetPosition()
-        => _position;
-
-    public Vector2 GetSize()
-        => _size;
 
     public void ScrollUp()
     {

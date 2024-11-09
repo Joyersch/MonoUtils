@@ -14,20 +14,20 @@ public static class Global
 {
     public static readonly CommandProcessor CommandProcessor = new();
 
-    public static SoundSettingsListener SoundSettingsListener;
-
     public static void Initialize(ContentManager content)
     {
         SampleObject.Texture = content.GetTexture("placeholder");
         Cursor.Texture = content.GetTexture("cursor");
-        Letter.Initialize();
+
         DefaultLetters.Texture = content.GetTexture("Font/DefaultLetters");
         ActionSymbols.Texture = content.GetTexture("Font/ActionSymbols");
         ButtonAddonIcons.Texture = content.GetTexture("Font/ButtonAddons");
         SampleButton.Texture = content.GetTexture("Button/empty");
         SquareButton.Texture = content.GetTexture("Button/square");
         RatioBox.Texture = content.GetTexture("Button/ratio");
-        DevConsole.Texture = content.GetTexture("console");
+        Blank.Texture = content.GetTexture("Dot");
+
+        Letter.Initialize();
     }
 
     public static string ReadFromResources(string file)

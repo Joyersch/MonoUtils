@@ -8,7 +8,7 @@ using MonoUtils.Ui;
 
 namespace MonoUtils;
 
-public class ExtentedGame : Game
+public class ExtendedGame : Game
 {
     protected readonly GraphicsDeviceManager Graphics;
     protected SpriteBatch SpriteBatch;
@@ -31,7 +31,9 @@ public class ExtentedGame : Game
 
     protected string[] Args;
 
-    public ExtentedGame()
+    protected bool ConsoleVisible => IsConsoleActive && IsConsoleEnabled;
+
+    public ExtendedGame()
     {
         Graphics = new GraphicsDeviceManager(this);
         Content.RootDirectory = "Content";
@@ -55,8 +57,7 @@ public class ExtentedGame : Game
         if (!Directory.Exists(SaveDirectory))
             Directory.CreateDirectory(SaveDirectory);
 
-        Console = new DevConsole(Global.CommandProcessor, Vector2.Zero, Scene.Display.Scale,
-            Console);
+        Console = new DevConsole(Global.CommandProcessor, Scene, Console);
         Log.Out = new LogAdapter(Console);
 
         SettingsAndSaveManager = new SettingsAndSaveManager<string>(SaveDirectory, SaveFile);
@@ -89,7 +90,7 @@ public class ExtentedGame : Game
     protected void DrawConsole(SpriteBatch spriteBatch)
     {
         spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointClamp);
-        if (IsConsoleActive && IsConsoleEnabled)
+        if (ConsoleVisible)
             Console.Draw(SpriteBatch);
         spriteBatch.End();
     }

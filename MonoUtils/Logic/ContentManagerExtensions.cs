@@ -18,4 +18,7 @@ public static class ContentManagerExtensions
 
     public static Audio.SoundEffect GetSfx(this Microsoft.Xna.Framework.Content.ContentManager contentManager, string name)
         => contentManager.Load<Audio.SoundEffect>("SFX/" + name);
+
+    public static Effect GetEffect(this Microsoft.Xna.Framework.Content.ContentManager contentManager, string name)
+        => contentManager.Load<Effect>("Shaders/" + name);
 }
