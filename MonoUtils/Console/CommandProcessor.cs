@@ -63,6 +63,10 @@ public sealed class CommandProcessor : IProcessor
         }
 
         string[] split = search.Split(" ");
+
+        if (Commands.All(c => !c.Attribute.Name.ToLower().StartsWith(split[0].ToLower())))
+            return null;
+
         var entry = Commands.First(c => c.Attribute.Name.ToLower().StartsWith(split[0].ToLower()));
 
         foreach (var options in entry.Options)
