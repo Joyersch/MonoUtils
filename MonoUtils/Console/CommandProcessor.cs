@@ -57,20 +57,20 @@ public sealed class CommandProcessor : IProcessor
     {
         if (!search.Contains(' '))
         {
-            return Commands.FirstOrDefault(c => c.Attribute.Name.StartsWith(search),
+            return Commands.FirstOrDefault(c => c.Attribute.Name.ToLower().StartsWith(search.ToLower()),
                 (new CommandAttribute() { Name = string.Empty }, [],
-                    null)!).Attribute.Name;
+                    null)!).Attribute.Name.ToLower();
         }
 
         string[] split = search.Split(" ");
-        var entry = Commands.First(c => c.Attribute.Name.StartsWith(split[0]));
+        var entry = Commands.First(c => c.Attribute.Name.ToLower().StartsWith(split[0].ToLower()));
 
         foreach (var options in entry.Options)
         {
             if (split.Length - 1 != options.Depth
-                || !options.Name.StartsWith(split[options.Depth])
+                || !options.Name.ToLower().StartsWith(split[options.Depth].ToLower())
                 || split[options.Depth].Length >= options.Name.Length
-                || (split[options.Depth - 1] != options.RootOptionName && options.RootOptionName is not null))
+                || (options.RootOptionName is not null && split[options.Depth - 1].ToLower() != options.RootOptionName.ToLower()))
                 continue;
 
             string[] @return = new string[split.Length - 1];

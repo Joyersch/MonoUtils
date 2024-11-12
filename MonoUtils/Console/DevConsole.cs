@@ -208,7 +208,7 @@ public sealed class DevConsole : IManageable
                 break;
             case '\t':
                 if (_input.Length < _prediction.Length)
-                    _input = _prediction;
+                    _input = CalculateInput();
                 break;
             default:
                 string possibleInput = CalculateInput() + c + "_";
@@ -226,7 +226,7 @@ public sealed class DevConsole : IManageable
         if (match.Length < _input.Length)
             return _input;
 
-        return match;
+        return _input + match[_input.Length..];
     }
 
     private Color[] CalculateInputColor()
