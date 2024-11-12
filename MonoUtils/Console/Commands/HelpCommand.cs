@@ -22,6 +22,12 @@ public sealed class HelpCommand : ICommand
             @return.Add("The following options are accepted:");
         foreach (var option in result.Options)
         {
+            // Options will need to be grouped by there parent option than sorted by depth
+            // This will remove all depth options but for a full page there will need to be more options.
+            // Or help option0 option1 will give depth on call.
+            // Have not decided yet.
+            if (option.Depth >= 2)
+                continue;
             string message = option.Name;
             if ((option.Description ?? string.Empty).Trim().Length > 0)
                 message += $" - {option.Description}";
