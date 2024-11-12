@@ -4,7 +4,7 @@ namespace MonoUtils.Console;
 
 public sealed class CommandProcessor : IProcessor
 {
-    public List<(string Name, string Description, ICommand Command)> Commands = new();
+    public List<(CommandAttribute Attribute, ICommand Command)> Commands { get; } = new();
 
     public void Initialize()
     {
@@ -30,7 +30,7 @@ public sealed class CommandProcessor : IProcessor
                 if (attribute is null)
                     continue;
 
-                Commands.Add((attribute.Name, attribute.Description, commandInstance));
+                Commands.Add((attribute, commandInstance));
             }
         }
     }
@@ -39,10 +39,10 @@ public sealed class CommandProcessor : IProcessor
     {
         var commandSplit = fullCommand.Split(" ");
 
-        if (Commands.All(c => c.Name != commandSplit[0]))
+        if (Commands.All(c => c.Attribute.Name != commandSplit[0]))
             return new[] { "This command does not exist!" };
 
-        var command = Commands.FirstOrDefault(c => c.Name == commandSplit[0]);
+        var command = Commands.FirstOrDefault(c => c.Attribute.Name == commandSplit[0]);
 
         var options = new object[commandSplit.Length - 1];
         for (int i = 0; i < options.Length; i++)
@@ -50,4 +50,7 @@ public sealed class CommandProcessor : IProcessor
 
         return command.Command.Execute(caller, options, context);
     }
+
+    public string? PossibleMatch(string search)
+        => Commands.FirstOrDefault(c => c.Attribute.Name.StartsWith(search), (new CommandAttribute(){Name = string.Empty},null)!).Attribute.Name;
 }

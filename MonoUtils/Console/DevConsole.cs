@@ -4,20 +4,19 @@ using Microsoft.Xna.Framework.Input;
 using MonoUtils.Logic;
 using MonoUtils.Logic.Management;
 using MonoUtils.Ui;
-using MonoUtils.Ui.Color;
 using MonoUtils.Ui.TextSystem;
 
 namespace MonoUtils.Console;
 
-public sealed class DevConsole : IManageable, ILayerable, IColorable
+public sealed class DevConsole : IManageable
 {
-    private Color _color;
-
     private Text _inputDisplay;
     private Text _cursorDisplay;
     private Text _maxText;
+    private Text _calculationText;
 
     private string _input = string.Empty;
+    private string _prediction = string.Empty;
 
     private Text[] _lines;
 
@@ -28,27 +27,34 @@ public sealed class DevConsole : IManageable, ILayerable, IColorable
     private OverTimeInvoker _drawCursorInvoker;
     private Blank _background;
 
+    private List<string> _priorCommands = [];
+    private int _priorPointer;
+    private bool _keyUpDown;
+    private bool _keyDownDown;
+    private bool _keyPageUpDown;
+    private bool _keyPageDownDown;
+
     public Backlog Backlog { get; private set; }
 
-    public CommandProcessor Processor { get; private set; }
+    public IProcessor Processor { get; private set; }
 
     public ContextProvider Context { get; private set; }
-    public float Layer { get; set; }
-
 
     public Rectangle Rectangle => _scene.Camera.Rectangle;
 
+    public event Action Close;
 
-    public DevConsole(CommandProcessor processor, Scene scene) : this(processor,
+    public DevConsole(IProcessor processor, Scene scene) : this(processor,
         scene, null)
     {
     }
 
-    public DevConsole(CommandProcessor processor, Scene scene, DevConsole? console)
+    public DevConsole(IProcessor processor, Scene scene, DevConsole? console)
     {
         Processor = console is null ? processor : console.Processor;
         _scene = scene;
         _maxText = new Text("[block]", scene.Display.Scale * 4);
+        _calculationText = new Text(string.Empty, scene.Display.Scale * 4);
         _inputDisplay = new Text(string.Empty, scene.Display.Scale * 4);
 
         Backlog = console is null ? new Backlog() : console.Backlog;
@@ -77,7 +83,6 @@ public sealed class DevConsole : IManageable, ILayerable, IColorable
         _inputDisplay.Move(new Vector2(0, scene.Camera.Size.Y - _maxText.Size.Y));
 
         Context = console is null ? new ContextProvider() : console.Context;
-        ChangeColor(console?.GetColor() ?? [new Color(75, 75, 75)]);
     }
 
     private void UpdateCursor()
@@ -113,10 +118,42 @@ public sealed class DevConsole : IManageable, ILayerable, IColorable
                 l.ChangeText(string.Empty);
         }
 
-        _inputDisplay.Update(gameTime);
-        _inputDisplay.ChangeText(_input);
+        if (Keyboard.GetState().IsKeyDown(Keys.Up) && !_keyUpDown)
+        {
+            _keyUpDown = true;
+            _priorPointer++;
+            if (_priorPointer >= _priorCommands.Count)
+                _priorPointer = _priorCommands.Count;
+            _input = _priorCommands[^_priorPointer];
+        }
 
-        _cursorDisplay.Move(_inputDisplay.Position + new Vector2(_inputDisplay.Size.X, 0));
+        _keyUpDown = Keyboard.GetState().IsKeyDown(Keys.Up);
+
+        if (Keyboard.GetState().IsKeyDown(Keys.Down) && !_keyDownDown)
+        {
+            _priorPointer--;
+            if (_priorPointer < 0)
+                _priorPointer = 0;
+            _input = _priorPointer == 0 ? string.Empty : _priorCommands[^_priorPointer];
+        }
+
+        _keyDownDown = Keyboard.GetState().IsKeyDown(Keys.Down);
+
+        if (Keyboard.GetState().IsKeyDown(Keys.PageUp) && !_keyPageUpDown)
+            Backlog.MovePointerUp();
+        _keyPageUpDown = Keyboard.GetState().IsKeyDown(Keys.PageUp);
+
+        if (Keyboard.GetState().IsKeyDown(Keys.PageDown) && !_keyPageDownDown)
+            Backlog.MovePointerDown();
+        _keyPageDownDown = Keyboard.GetState().IsKeyDown(Keys.PageDown);
+
+        _prediction = Processor.PossibleMatch(_input) ?? string.Empty;
+        _inputDisplay.Update(gameTime);
+        _inputDisplay.ChangeText(CalculateInput());
+        _inputDisplay.ChangeColor(CalculateInputColor());
+
+        _calculationText.ChangeText(_input);
+        _cursorDisplay.Move(_inputDisplay.Position + new Vector2(_calculationText.Size.X, 0));
         _cursorDisplay.Update(gameTime);
     }
 
@@ -137,18 +174,20 @@ public sealed class DevConsole : IManageable, ILayerable, IColorable
     /// <param name="command"></param>
     public void RunCommand(string command)
     {
-        _input = command;
-        Backlog.Add(new BacklogRow(_input));
-        var output = Processor.Process(this, _inputDisplay.ToString(), Context).Select(s => new BacklogRow(s))
+        _priorCommands.Add(command);
+        Backlog.Add(new BacklogRow(command));
+        var output = Processor.Process(this, command, Context).Select(s => new BacklogRow(s))
             .ToArray();
         Backlog.AddRange(output);
-        var length = output.Count();
+        var length = output.Length;
 
         if (Backlog.Count > _maxLinesY)
-            for (int i = -1; i < length; i++)
+        {
+            int moveBy = Backlog.Count - _maxLinesY;
+            if (moveBy > length) moveBy = length;
+            for (int i = 0; i < moveBy; i++)
                 Backlog.MovePointerDown();
-
-        _input = string.Empty;
+        }
     }
 
     public void TextInput(object sender, TextInputEventArgs e)
@@ -162,29 +201,52 @@ public sealed class DevConsole : IManageable, ILayerable, IColorable
                     _input = _input[..^1];
                 break;
             case (char)27:
+                Close?.Invoke();
                 break;
             case '\r':
                 RunCommand(_input);
+                _input = string.Empty;
+                _priorPointer = 0;
+                break;
+            case '\t':
+                if (_input.Length < _prediction.Length)
+                    _input = _prediction;
                 break;
             default:
-                AddToInput(c);
+                string possibleInput = CalculateInput() + c + "_";
+                _calculationText.ChangeText(possibleInput);
+                if (_calculationText.Rectangle.Width < _scene.Camera.Size.X)
+                    _input += c;
                 break;
         }
     }
 
-    private void AddToInput(string value)
+    private string CalculateInput()
     {
-        var oldText = _inputDisplay.ToString();
-        // get the maximum string for comparisons
-        _inputDisplay.ChangeText(_inputDisplay + (value ?? string.Empty) + "_");
-        int newMaxWidth = _inputDisplay.Rectangle.Width;
+        string match = _prediction;
 
-        // reset string after acquiring the length!
-        _inputDisplay.ChangeText(oldText);
+        if (match.Length < _input.Length)
+            return _input;
 
-        // only add the new character if the size allows for one
-        if (newMaxWidth < _scene.Camera.Size.X)
-            _input = _inputDisplay + value ?? string.Empty;
+        return match;
+    }
+
+    private Color[] CalculateInputColor()
+    {
+        Color[] whites = new Color[_input.Length];
+        int grayCount = _prediction.Length - _input.Length;
+
+        if (grayCount < 0)
+            grayCount = 0;
+
+        Color[] grays = new Color[grayCount];
+
+        for (int i = 0; i < whites.Length; i++)
+            whites[i] = Color.White;
+        for (int i = 0; i < grays.Length; i++)
+            grays[i] = Color.Gray;
+
+        return whites.Concat(grays).ToArray();
     }
 
     public void Write(string text, int line = -1)
@@ -212,34 +274,5 @@ public sealed class DevConsole : IManageable, ILayerable, IColorable
             Backlog[line].SetText(text);
             Backlog[line].SetColor(color);
         }
-    }
-
-    public void Move(Vector2 newPosition)
-    {
-        var offset = newPosition;
-
-        foreach (var line in _lines)
-            line.Move(line.Position + offset);
-
-        _inputDisplay.Move(_inputDisplay.Position + offset);
-    }
-
-    public void ChangeColor(Color[] input)
-        => _color = input[0];
-
-    public int ColorLength()
-        => 1;
-
-    public Color[] GetColor()
-        => [_color];
-
-    public void ScrollUp()
-    {
-        Backlog.MovePointerUp();
-    }
-
-    public void ScrollDown()
-    {
-        Backlog.MovePointerDown();
     }
 }
