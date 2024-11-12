@@ -13,27 +13,31 @@ public sealed class DevConsole : IManageable, ILayerable, IColorable
 {
     private Color _color;
 
-    private Text _currentInput;
+    private Text _inputDisplay;
     private Text _cursorDisplay;
     private Text _maxText;
-    public Backlog Backlog { get; private set; }
+
+    private string _input = string.Empty;
+
+    private Text[] _lines;
+
+    private Scene _scene;
     private List<BacklogRow> _toDisplay;
     private int _maxLinesY;
     private bool _isDrawingCursor;
     private OverTimeInvoker _drawCursorInvoker;
     private Blank _background;
 
+    public Backlog Backlog { get; private set; }
+
     public CommandProcessor Processor { get; private set; }
 
     public ContextProvider Context { get; private set; }
+    public float Layer { get; set; }
 
-    private Text[] _lines;
 
     public Rectangle Rectangle => _scene.Camera.Rectangle;
 
-    private Scene _scene;
-
-    public float Layer { get; set; }
 
     public DevConsole(CommandProcessor processor, Scene scene) : this(processor,
         scene, null)
@@ -45,7 +49,7 @@ public sealed class DevConsole : IManageable, ILayerable, IColorable
         Processor = console is null ? processor : console.Processor;
         _scene = scene;
         _maxText = new Text("[block]", scene.Display.Scale * 4);
-        _currentInput = new Text(string.Empty, scene.Display.Scale * 4);
+        _inputDisplay = new Text(string.Empty, scene.Display.Scale * 4);
 
         Backlog = console is null ? new Backlog() : console.Backlog;
 
@@ -64,13 +68,13 @@ public sealed class DevConsole : IManageable, ILayerable, IColorable
             _lines[i].Move(new Vector2(0, _maxText.Size.Y) * i);
         }
 
-        _currentInput.ChangeText(string.Empty);
+        _inputDisplay.ChangeText(string.Empty);
         _cursorDisplay = new Text("_", scene.Display.Scale * 4);
 
         _drawCursorInvoker = new OverTimeInvoker(500F);
         _drawCursorInvoker.Trigger += UpdateCursor;
 
-        _currentInput.Move(new Vector2(0, scene.Camera.Size.Y - _maxText.Size.Y));
+        _inputDisplay.Move(new Vector2(0, scene.Camera.Size.Y - _maxText.Size.Y));
 
         Context = console is null ? new ContextProvider() : console.Context;
         ChangeColor(console?.GetColor() ?? [new Color(75, 75, 75)]);
@@ -109,7 +113,10 @@ public sealed class DevConsole : IManageable, ILayerable, IColorable
                 l.ChangeText(string.Empty);
         }
 
-        _cursorDisplay.Move(_currentInput.Position + new Vector2(_currentInput.Size.X, 0));
+        _inputDisplay.Update(gameTime);
+        _inputDisplay.ChangeText(_input);
+
+        _cursorDisplay.Move(_inputDisplay.Position + new Vector2(_inputDisplay.Size.X, 0));
         _cursorDisplay.Update(gameTime);
     }
 
@@ -119,7 +126,7 @@ public sealed class DevConsole : IManageable, ILayerable, IColorable
 
         foreach (Text text in _lines)
             text.Draw(spriteBatch);
-        _currentInput.Draw(spriteBatch);
+        _inputDisplay.Draw(spriteBatch);
         if (_isDrawingCursor)
             _cursorDisplay.Draw(spriteBatch);
     }
@@ -130,42 +137,10 @@ public sealed class DevConsole : IManageable, ILayerable, IColorable
     /// <param name="command"></param>
     public void RunCommand(string command)
     {
-        char[] chars = command.ToCharArray();
-        foreach (char c in chars)
-            TextInput(null, new TextInputEventArgs(c));
-        TextInput(null, new TextInputEventArgs('\n', Keys.Enter));
-    }
-
-    public void TextInput(object sender, TextInputEventArgs e)
-    {
-        string c = e.Character.ToString();
-
-        if (c == "\b")
-        {
-            if (_currentInput.Length > 0)
-                _currentInput.ChangeText(_currentInput.ToString()[..^1]);
-            return;
-        }
-
-        if (e.Key != Keys.Enter)
-        {
-            var oldText = _currentInput.ToString();
-            // get the maximum string for comparisons
-            _currentInput.ChangeText(_currentInput + (c ?? string.Empty) + "_");
-            int newMaxWidth = _currentInput.Rectangle.Width;
-
-            // reset string after acquiring the length!
-            _currentInput.ChangeText(oldText);
-
-            // only add the new character if the size allows for one
-            if (newMaxWidth < _scene.Camera.Size.X)
-                _currentInput.ChangeText(_currentInput + c ?? string.Empty);
-
-            return;
-        }
-
-        Backlog.Add(new BacklogRow(_currentInput.ToString()));
-        var output = Processor.Process(this, _currentInput.ToString(), Context).Select(s => new BacklogRow(s));
+        _input = command;
+        Backlog.Add(new BacklogRow(_input));
+        var output = Processor.Process(this, _inputDisplay.ToString(), Context).Select(s => new BacklogRow(s))
+            .ToArray();
         Backlog.AddRange(output);
         var length = output.Count();
 
@@ -173,7 +148,43 @@ public sealed class DevConsole : IManageable, ILayerable, IColorable
             for (int i = -1; i < length; i++)
                 Backlog.MovePointerDown();
 
-        _currentInput.ChangeText(string.Empty);
+        _input = string.Empty;
+    }
+
+    public void TextInput(object sender, TextInputEventArgs e)
+    {
+        string c = e.Character.ToString();
+
+        switch (e.Character)
+        {
+            case '\b':
+                if (_input.Length > 0)
+                    _input = _input[..^1];
+                break;
+            case (char)27:
+                break;
+            case '\r':
+                RunCommand(_input);
+                break;
+            default:
+                AddToInput(c);
+                break;
+        }
+    }
+
+    private void AddToInput(string value)
+    {
+        var oldText = _inputDisplay.ToString();
+        // get the maximum string for comparisons
+        _inputDisplay.ChangeText(_inputDisplay + (value ?? string.Empty) + "_");
+        int newMaxWidth = _inputDisplay.Rectangle.Width;
+
+        // reset string after acquiring the length!
+        _inputDisplay.ChangeText(oldText);
+
+        // only add the new character if the size allows for one
+        if (newMaxWidth < _scene.Camera.Size.X)
+            _input = _inputDisplay + value ?? string.Empty;
     }
 
     public void Write(string text, int line = -1)
@@ -210,7 +221,7 @@ public sealed class DevConsole : IManageable, ILayerable, IColorable
         foreach (var line in _lines)
             line.Move(line.Position + offset);
 
-        _currentInput.Move(_currentInput.Position + offset);
+        _inputDisplay.Move(_inputDisplay.Position + offset);
     }
 
     public void ChangeColor(Color[] input)
