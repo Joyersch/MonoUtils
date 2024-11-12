@@ -42,8 +42,6 @@ public sealed class DevConsole : IManageable
 
     public Rectangle Rectangle => _scene.Camera.Rectangle;
 
-    public event Action Close;
-
     public DevConsole(IProcessor processor, Scene scene) : this(processor,
         scene, null)
     {
@@ -201,7 +199,7 @@ public sealed class DevConsole : IManageable
                     _input = _input[..^1];
                 break;
             case (char)27:
-                Close?.Invoke();
+                _input = string.Empty;
                 break;
             case '\r':
                 RunCommand(_input);
