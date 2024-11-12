@@ -6,6 +6,6 @@ public sealed class ClearCommand : ICommand
     public IEnumerable<string> Execute(DevConsole console, object[] options, ContextProvider context)
     {
         console.Backlog.Clear();
-        return new[] { string.Empty };
+        return [];
     }
 }
