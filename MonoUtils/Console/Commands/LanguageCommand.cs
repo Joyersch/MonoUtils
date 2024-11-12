@@ -5,6 +5,8 @@ namespace MonoUtils.Console.Commands;
 public sealed class LanguageCommand : ICommand
 {
     [Command(Description = "Change the used language", Name = "lang")]
+    [CommandOptions(Name = "de", Depth = 1, Description = "German")]
+    [CommandOptions(Name = "en", Depth = 1, Description = "German")]
     public IEnumerable<string> Execute(DevConsole console, object[] options, ContextProvider context)
     {
         if (options.Length < 1)

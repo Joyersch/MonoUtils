@@ -4,7 +4,8 @@ namespace MonoUtils.Console;
 
 public sealed class CommandProcessor : IProcessor
 {
-    public List<(CommandAttribute Attribute, ICommand Command)> Commands { get; } = new();
+    public List<(CommandAttribute Attribute, CommandOptionsAttribute[] Options, ICommand Command)> Commands { get; } =
+        new();
 
     public void Initialize()
     {
@@ -27,10 +28,11 @@ public sealed class CommandProcessor : IProcessor
             foreach (var method in methods)
             {
                 var attribute = method.GetCustomAttribute<CommandAttribute>();
+                var options = method.GetCustomAttributes<CommandOptionsAttribute>().ToArray();
                 if (attribute is null)
                     continue;
 
-                Commands.Add((attribute, commandInstance));
+                Commands.Add((attribute, options, commandInstance));
             }
         }
     }
@@ -52,5 +54,30 @@ public sealed class CommandProcessor : IProcessor
     }
 
     public string? PossibleMatch(string search)
-        => Commands.FirstOrDefault(c => c.Attribute.Name.StartsWith(search), (new CommandAttribute(){Name = string.Empty},null)!).Attribute.Name;
+    {
+        if (!search.Contains(' '))
+        {
+            return Commands.FirstOrDefault(c => c.Attribute.Name.StartsWith(search),
+                (new CommandAttribute() { Name = string.Empty }, [],
+                    null)!).Attribute.Name;
+        }
+
+        string[] split = search.Split(" ");
+        var entry = Commands.First(c => c.Attribute.Name.StartsWith(split[0]));
+
+        foreach (var options in entry.Options)
+        {
+            if (split.Length - 1 != options.Depth
+                || !options.Name.StartsWith(split[options.Depth])
+                || split[options.Depth].Length >= options.Name.Length
+                || (split[options.Depth - 1] != options.RootOptionName && options.RootOptionName is not null))
+                continue;
+
+            string[] @return = new string[split.Length - 1];
+            Array.Copy(split, @return, split.Length - 1);
+            return string.Join(' ', @return) + ' ' + options.Name;
+        }
+
+        return null;
+    }
 }
