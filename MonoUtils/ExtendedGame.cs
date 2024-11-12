@@ -58,7 +58,6 @@ public class ExtendedGame : Game
             Directory.CreateDirectory(SaveDirectory);
 
         Console = new DevConsole(Global.CommandProcessor, Scene, Console);
-        Console.Close += ToggleConsole;
         Log.Out = new LogAdapter(Console);
 
         SettingsAndSaveManager = new SettingsAndSaveManager<string>(SaveDirectory, SaveFile);
