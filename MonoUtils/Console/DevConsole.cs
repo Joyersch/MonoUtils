@@ -181,8 +181,7 @@ public sealed class DevConsole : IManageable
 
         if (Backlog.Count > _maxLinesY)
         {
-            int moveBy = Backlog.Count - _maxLinesY;
-            if (moveBy > length) moveBy = length;
+            int moveBy = Backlog.Count - _maxLinesY - Backlog.Pointer;
             for (int i = 0; i < moveBy; i++)
                 Backlog.MovePointerDown();
         }

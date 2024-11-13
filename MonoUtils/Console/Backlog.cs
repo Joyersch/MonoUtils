@@ -8,6 +8,8 @@ public sealed class Backlog
 
     public int Count => _backlog.Count;
 
+    public int Pointer => _pointer;
+
     public BacklogRow this[int i] => _backlog[i];
 
     public Backlog()
