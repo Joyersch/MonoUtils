@@ -18,16 +18,14 @@ public sealed class HelpCommand : ICommand
             console.Processor.Commands.FirstOrDefault(command => command.Attribute.Name == options[0].ToString());
 
         @return.Add(result.Attribute.Description);
-        if (result.Options.Length > 0)
-            @return.Add("The following options are accepted:");
-        foreach (var option in result.Options)
+        if (result.Options.Length == 0)
+            return @return;
+
+        @return.Add("The following options are accepted:");
+        foreach (var option in result.Options.Where(o =>
+                     o.Depth == options.Length &&
+                     (o.Depth == 1 || o.RootOptionName == options[o.Depth - 1].ToString())))
         {
-            // Options will need to be grouped by there parent option than sorted by depth
-            // This will remove all depth options but for a full page there will need to be more options.
-            // Or help option0 option1 will give depth on call.
-            // Have not decided yet.
-            if (option.Depth >= 2)
-                continue;
             string message = option.Name;
             if ((option.Description ?? string.Empty).Trim().Length > 0)
                 message += $" - {option.Description}";
